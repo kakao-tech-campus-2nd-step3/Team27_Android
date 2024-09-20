@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TogetherPet</string>
+    <string name="title">Together PET</string>
+    <string name="bottom_home">홈</string>
+    <string name="bottom_walkingPet">산책하기</string>
+    <string name="bottom_searchingPet">같이찾기</string>
+    <string name="bottom_diary">반려일기</string>
+    <string name="bottom_community">커뮤니티</string>
 </resources>
