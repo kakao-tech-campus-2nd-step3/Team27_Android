@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">TogetherPet</string>
+    <string name="title">Together PET</string>
+    <string name="bottom_home">홈</string>
+    <string name="bottom_walkingPet">산책하기</string>
+    <string name="bottom_searchingPet">같이찾기</string>
+    <string name="bottom_diary">반려일기</string>
+    <string name="bottom_community">커뮤니티</string>
     <string name="together_text">"<b>"투게더 펫"</b>"에서는\n반려동물 정보를 공유해\n위급시 반려동물을 함께 찾을 수 있어요</string>
 </resources>
