@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="KTC_red_pink">#FBB2B2</color>
+    <color name="KTC_red">#EF6773</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="pink_0.3">#FBB2B2</color>
+    <color name="dark_gray">#979797</color>
+</resources>
