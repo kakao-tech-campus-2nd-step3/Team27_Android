@@ -70,5 +70,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="60dp"/>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
