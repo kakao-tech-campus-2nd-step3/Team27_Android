@@ -16,8 +16,8 @@
         app:layout_constraintStart_toStartOf="@id/image_sub"
         android:layout_marginTop="70dp"
         android:text="반려동물 정보 등록"
-        android:textSize="23sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextHeadingLarge"
+        android:includeFontPadding="false"/>
 
     <TextView
         android:id="@+id/info_reg_subtitle"
@@ -27,8 +27,8 @@
         app:layout_constraintStart_toStartOf="@id/info_reg_main_text"
         android:layout_marginTop="12dp"
         android:text="반려동물 정보를 등록하시면\n위급시 빠르게 반려동물 정보를 공유할 수 있어요"
-        android:textSize="17sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"/>
 
     <TextView
         android:id="@+id/info_reg_subtitle_red"
@@ -39,8 +39,8 @@
         android:layout_marginTop="1dp"
         android:textColor="@color/KTC_red"
         android:text="(*는 입력 필수항목 입니다)"
-        android:textSize="12sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextSmallRed"
+        android:includeFontPadding="false"/>
 
     <TextView
         android:id="@+id/step_one_circle"
@@ -142,8 +142,8 @@
         android:layout_marginTop="26dp"
         android:layout_marginStart="37dp"
         android:text="반려동물의 사진을 등록해 주세요.*"
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"/>
 
 
     <TextView

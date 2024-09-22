@@ -16,8 +16,8 @@
         app:layout_constraintStart_toStartOf="@id/name_sub"
         android:layout_marginTop="70dp"
         android:text="반려동물 정보 등록"
-        android:textSize="23sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextHeadingLarge"
+        android:includeFontPadding="false"/>
 
     <TextView
         android:id="@+id/info_reg_subtitle"
@@ -27,8 +27,9 @@
         app:layout_constraintStart_toStartOf="@id/info_reg_main_text"
         android:layout_marginTop="12dp"
         android:text="반려동물 정보를 등록하시면\n위급시 빠르게 반려동물 정보를 공유할 수 있어요"
-        android:textSize="17sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        />
 
     <TextView
         android:id="@+id/info_reg_subtitle_red"
@@ -37,10 +38,11 @@
         app:layout_constraintTop_toBottomOf="@id/info_reg_subtitle"
         app:layout_constraintStart_toStartOf="@id/name_input_field"
         android:layout_marginTop="1dp"
-        android:textColor="@color/KTC_red"
         android:text="(*는 입력 필수항목 입니다)"
         android:textSize="12sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textAppearance="@style/TogetherPetTextSmallRed"
+        android:includeFontPadding="false"/>
 
     <TextView
         android:id="@+id/step_one_circle"
@@ -116,8 +118,8 @@
         app:layout_constraintStart_toStartOf="@id/species_input_field"
         android:layout_marginTop="27dp"
         android:text="종을 선택해 주세요."
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"/>
 
 
     <EditText
@@ -142,8 +144,8 @@
         app:layout_constraintStart_toStartOf="@id/neutering_input_field"
         android:layout_marginTop="27dp"
         android:text="중성화 여부를 선택해 주세요."
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"/>
 
     <EditText
         android:id="@+id/neutering_input_field"
@@ -198,8 +200,8 @@
         app:layout_constraintStart_toStartOf="@id/age_input_field"
         android:layout_marginTop="27dp"
         android:text="나이를 입력해 주세요."
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"/>
 
     <EditText
         android:id="@+id/age_input_field"
@@ -223,8 +225,8 @@
         app:layout_constraintStart_toStartOf="@id/name_input_field"
         android:layout_marginTop="26dp"
         android:text="이름을 입력해 주세요."
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"/>
 
     <EditText
         android:id="@+id/name_input_field"
