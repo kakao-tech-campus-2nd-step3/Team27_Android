@@ -164,7 +164,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/feature_sub_red"
-        android:background="@drawable/red_regtangle"
+        android:background="@drawable/stroke_red_box"
         android:layout_marginTop="17dp"
         android:paddingStart="23dp"
         android:paddingTop="10dp"
