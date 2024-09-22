@@ -11,13 +11,13 @@
         android:id="@+id/start_main_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:fontFamily="@font/noto_sans_kr_regular"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/together_text"
+        android:layout_marginTop="247dp"
+        android:textSize="23sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/start_white_button"
@@ -31,7 +31,7 @@
         android:text="반려동물 정보 등록 후 시작하기"
         android:elevation="4dp"
         android:gravity="center"
-        android:textSize="20.5sp"/>
+        android:textSize="21sp"/>
 
     <TextView
         android:id="@+id/start_pink_button"
@@ -47,7 +47,7 @@
         android:paddingStart="45dp"
         android:gravity="center"
 
-        android:textSize="20.5sp"/>
+        android:textSize="21sp"/>
 
     <ImageView
         android:id="@+id/icon_sos"
@@ -64,11 +64,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="다음에 등록 하기"
-        android:textSize="20.5sp"
+        android:textSize="21sp"
         app:layout_constraintTop_toBottomOf="@+id/start_pink_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="60dp"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
