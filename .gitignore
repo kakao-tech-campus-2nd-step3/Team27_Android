@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=kotlin,android,androidstudio,windows
 
 ### Android ###
+.kotlin/
 # Gradle files
 .gradle/
 build/
