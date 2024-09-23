@@ -22,14 +22,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text='@string/title'
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:fontFamily="@font/noto_sans_font"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="40dp"/>
+            android:layout_marginTop="62dp"
+            android:textAppearance="@style/TogetherPetTextHeadingLarge"
+            android:includeFontPadding="false"
+            />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -75,6 +74,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/bottom_navigation"
         app:labelVisibilityMode="labeled"
-        android:background="@color/white" />
+        android:background="@color/white"
+        app:itemActiveIndicatorStyle="@color/transparent"
+        app:itemRippleColor="@color/transparent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
