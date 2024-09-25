@@ -9,37 +9,44 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-
 class NetworkModule {
 
     //todo : 수정 필요
     val BASE_URL = ""
 
+    @Provides
+    @Singleton
     private fun getApiClient(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(provideOkHttpClient(AppInterceptor()))
+            .client(provideLoginOkHttpClient(LoginInterceptor()))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
     @Provides
     @Singleton
-    private fun provideOkHttpClient(interceptor: AppInterceptor): OkHttpClient
-            = OkHttpClient.Builder().run {
-        addInterceptor(interceptor)
-        build()
+    private fun provideLoginOkHttpClient(interceptor: LoginInterceptor): OkHttpClient =
+        OkHttpClient.Builder().run {
+            addInterceptor(interceptor)
+            build()
+        }
+
+    @Provides
+    @Singleton
+    private fun provideLoginInterceptor(): LoginInterceptor {
+        return LoginInterceptor()
     }
 
-    class AppInterceptor : Interceptor {
+    class LoginInterceptor : Interceptor {
+        // todo header 값 수정 필요
         val header = ""
 
-        override fun intercept(chain: Interceptor.Chain) : okhttp3.Response = with(chain) {
+        override fun intercept(chain: Interceptor.Chain): okhttp3.Response = with(chain) {
             val newRequest = request().newBuilder()
-                .addHeader("Authorization", header)
+                .addHeader(header, header)
                 .build()
             proceed(newRequest)
         }
     }
-}
 }

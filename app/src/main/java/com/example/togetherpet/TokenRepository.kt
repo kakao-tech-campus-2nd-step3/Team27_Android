@@ -1,7 +1,6 @@
 package com.example.togetherpet
 
-import javax.inject.Inject
-
-class TokenRepository @Inject constructor(private val tokenDataSource: TokenDataSource) {
-
+interface TokenRepository {
+    // todo : 수정 필요
+    suspend fun postToken(token: String) : Boolean
 }
