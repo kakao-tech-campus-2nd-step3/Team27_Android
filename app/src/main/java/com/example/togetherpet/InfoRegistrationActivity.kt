@@ -9,8 +9,6 @@ class InfoRegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info_registration)
-        Log.d("testt", Utility.getKeyHash(this))
-
 
     }
 }
