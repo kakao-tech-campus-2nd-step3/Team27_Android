@@ -1,6 +1,7 @@
 package com.example.togetherpet
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -48,7 +49,9 @@ class LoginActivity : AppCompatActivity() {
                     UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
                 } else if (token != null) {
                     Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
-                    viewModel.postTokenToServer(token.accessToken)
+                    // viewModel.postTokenToServer(token.accessToken)
+                    val intent = Intent(this@LoginActivity, InfoRegistrationActivity::class.java)
+                    startActivity(intent)
                 }
             }
         } else {
