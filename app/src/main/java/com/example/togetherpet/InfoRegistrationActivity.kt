@@ -3,6 +3,7 @@ package com.example.togetherpet
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
 
 class InfoRegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -10,11 +11,8 @@ class InfoRegistrationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_info_registration)
         enableEdgeToEdge()
 
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-
-        val fragment = RegistrationStartFragment()
-
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_reg) as NavHostFragment
+        val navController = navHostFragment.navController
 
     }
 }

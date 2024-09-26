@@ -152,7 +152,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="338dp"
         android:layout_height="34dp"
-        android:layout_marginBottom="43dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/red_button"
         android:text="다음"
         android:textSize="18sp"

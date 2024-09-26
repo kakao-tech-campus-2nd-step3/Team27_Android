@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.togetherpet.databinding.FragmentInfoRegistrationImageBinding
 import com.example.togetherpet.databinding.FragmentInfoRegistrationStartBinding
 
@@ -32,7 +33,7 @@ class RegistrationStartFragment : Fragment() {
     }
 
     private fun goToNextScreen(){
-        Toast.makeText(activity, "next", Toast.LENGTH_SHORT).show()
+        findNavController().navigate(R.id.action_registrationStartFragment_to_registrationPetFragment)
     }
 
     private fun goToFindScreen(){
