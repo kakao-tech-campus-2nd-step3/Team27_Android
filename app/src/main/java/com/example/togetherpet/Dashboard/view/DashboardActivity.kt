@@ -1,19 +1,21 @@
-package com.example.togetherpet.Dashboard.view
+package com.example.togetherpet.dashboard.view
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.togetherpet.dashboard.viewModel.DashboardViewModel
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.ActivityDashboardBinding
-import com.example.togetherpet.fragment.CommunityFragment
-import com.example.togetherpet.fragment.DiaryFragment
 import com.example.togetherpet.fragment.HomeFragment
-import com.example.togetherpet.fragment.SearchingPetFragment
-import com.example.togetherpet.fragment.WalkingPetFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
+    private val dashboardViewModel: DashboardViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -22,8 +24,13 @@ class DashboardActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        setNaviClickListener()
+        handleItemClick()   //사용자가 클릭한 메뉴 정보를 viewModel에 전달
         setFragment(HomeFragment()) // 디폴트 Fragment 설정
+
+        //viewModel이 선택한 Fragment 나타내기
+        dashboardViewModel.selectedFragment.observe(this) { fragment ->
+            setFragment(fragment)
+        }
     }
 
     private fun setFragment(fragment: Fragment) {
@@ -32,36 +39,10 @@ class DashboardActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun setNaviClickListener() {
+    private fun handleItemClick() {
         binding.homeBottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.bottom_home -> {
-                    setFragment(HomeFragment())
-                    true
-                }
-
-                R.id.bottom_community -> {
-                    setFragment(CommunityFragment())
-                    true
-                }
-
-                R.id.bottom_searching -> {
-                    setFragment(SearchingPetFragment())
-                    true
-                }
-
-                R.id.bottom_diary -> {
-                    setFragment(DiaryFragment())
-                    true
-                }
-
-                R.id.bottom_walking -> {
-                    setFragment(WalkingPetFragment())
-                    true
-                }
-
-                else -> false
-            }
+            dashboardViewModel.selectFragmentToShow(item.itemId)
+            true
         }
     }
 }
