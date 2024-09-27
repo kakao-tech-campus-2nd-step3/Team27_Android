@@ -12,7 +12,7 @@ import com.example.togetherpet.databinding.FragmentInfoRegistrationStartBinding
 
 
 class RegistrationStartFragment : Fragment() {
-    private lateinit var binding : FragmentInfoRegistrationStartBinding
+    private var binding : FragmentInfoRegistrationStartBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,13 +20,13 @@ class RegistrationStartFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentInfoRegistrationStartBinding.inflate(inflater)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
+        binding?.apply {
             startWhiteButton.setOnClickListener { goToNextScreen() }
             startPinkButton.setOnClickListener { goToFindScreen() }
         }

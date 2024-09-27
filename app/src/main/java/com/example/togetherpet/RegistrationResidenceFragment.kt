@@ -11,7 +11,7 @@ import com.example.togetherpet.databinding.FragmentInfoRegistrationResidenceBind
 
 
 class RegistrationResidenceFragment : Fragment() {
-    private lateinit var binding : FragmentInfoRegistrationResidenceBinding
+    private var binding : FragmentInfoRegistrationResidenceBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -19,13 +19,13 @@ class RegistrationResidenceFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentInfoRegistrationResidenceBinding.inflate(inflater)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
+        binding?.apply {
             nextButton.setOnClickListener { goToNextScreen() }
         }
     }

@@ -21,7 +21,13 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideLoginService() : LoginService{
-        return getApiClient().create()
+        return getApiClient().create(LoginService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePetService() : PetService{
+        return getApiClient().create(PetService::class.java)
     }
 
     fun getApiClient(): Retrofit {

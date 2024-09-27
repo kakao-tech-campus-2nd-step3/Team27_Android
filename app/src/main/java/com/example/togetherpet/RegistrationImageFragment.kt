@@ -10,7 +10,7 @@ import com.example.togetherpet.databinding.FragmentInfoRegistrationImageBinding
 
 
 class RegistrationImageFragment : Fragment() {
-    private lateinit var binding : FragmentInfoRegistrationImageBinding
+    private var binding : FragmentInfoRegistrationImageBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -18,13 +18,13 @@ class RegistrationImageFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentInfoRegistrationImageBinding.inflate(inflater)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
+        binding?.apply {
             nextButton.setOnClickListener { goToNextScreen() }
         }
     }
@@ -33,5 +33,8 @@ class RegistrationImageFragment : Fragment() {
         Toast.makeText(activity, "next", Toast.LENGTH_SHORT).show()
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 }

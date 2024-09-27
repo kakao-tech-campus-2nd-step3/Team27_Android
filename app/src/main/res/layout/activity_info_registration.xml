@@ -14,6 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:navGraph="@navigation/reg_navigation_graph"
+        app:defaultNavHost="true"
         />
     
 </androidx.constraintlayout.widget.ConstraintLayout>
