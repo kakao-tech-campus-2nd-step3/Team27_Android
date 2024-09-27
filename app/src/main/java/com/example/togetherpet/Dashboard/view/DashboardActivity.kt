@@ -1,4 +1,4 @@
-package com.example.togetherpet.activity
+package com.example.togetherpet.Dashboard.view
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
