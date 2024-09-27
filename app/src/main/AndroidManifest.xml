@@ -19,11 +19,11 @@
             android:name=".InfoRegistrationActivity"
             android:exported="false" />
         <activity
-            android:name=".Dashboard.view.DashboardActivity"
+            android:name=".dashboard.view.DashboardActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".Login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

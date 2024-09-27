@@ -147,7 +147,7 @@
         android:textAppearance="@style/TogetherPetTextMedium"
         android:includeFontPadding="false"/>
 
-    <EditText
+    <TextView
         android:id="@+id/neutering_input_field"
         android:layout_width="338dp"
         android:layout_height="47dp"
@@ -158,6 +158,7 @@
         android:background="@drawable/stroke_red_box"
         android:layout_marginTop="17dp"
         android:paddingStart="23dp"
+        android:focusable="false"
         />
 
     <RadioGroup
@@ -171,7 +172,7 @@
         app:layout_constraintBottom_toBottomOf="@id/neutering_input_field"
         >
         <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/button_woman"
+            android:id="@+id/button_neutering_true"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="20dp"
@@ -181,7 +182,7 @@
             android:text="O"/>
 
         <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/button_man"
+            android:id="@+id/button_neutering_false"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="20dp"

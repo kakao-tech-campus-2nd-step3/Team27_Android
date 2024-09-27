@@ -10,5 +10,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class DataSourceModule {
     @Binds
     abstract fun bindTokenDataSource(tokenDataSourceImpl: TokenDataSourceImpl) : TokenDataSource
+    @Binds
+    abstract fun bindPetDataSource(petDataSourceImpl: PetDataSourceImpl) : PetDataSource
 
 }

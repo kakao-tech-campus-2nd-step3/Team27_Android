@@ -1,4 +1,4 @@
-package com.example.togetherpet
+package com.example.togetherpet.Registration
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.example.togetherpet.databinding.FragmentInfoRegistrationImageBinding
+import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentInfoRegistrationStartBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class RegistrationStartFragment : Fragment() {
-    private lateinit var binding : FragmentInfoRegistrationStartBinding
+    private var binding : FragmentInfoRegistrationStartBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,13 +21,13 @@ class RegistrationStartFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentInfoRegistrationStartBinding.inflate(inflater)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
+        binding?.apply {
             startWhiteButton.setOnClickListener { goToNextScreen() }
             startPinkButton.setOnClickListener { goToFindScreen() }
         }
@@ -38,6 +39,11 @@ class RegistrationStartFragment : Fragment() {
 
     private fun goToFindScreen(){
         Toast.makeText(activity, "find", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 }

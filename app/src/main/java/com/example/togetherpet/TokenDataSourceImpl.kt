@@ -1,6 +1,8 @@
 package com.example.togetherpet
 
 import android.util.Log
+import com.example.togetherpet.Login.LoginResponseDto
+import com.example.togetherpet.Login.LoginService
 import javax.inject.Inject
 
 

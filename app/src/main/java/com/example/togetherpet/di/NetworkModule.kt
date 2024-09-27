@@ -1,5 +1,7 @@
-package com.example.togetherpet
+package com.example.togetherpet.di
 
+import com.example.togetherpet.Login.LoginService
+import com.example.togetherpet.PetService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -8,7 +10,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -20,8 +21,14 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideLoginService() : LoginService{
-        return getApiClient().create()
+    fun provideLoginService() : LoginService {
+        return getApiClient().create(LoginService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePetService() : PetService {
+        return getApiClient().create(PetService::class.java)
     }
 
     fun getApiClient(): Retrofit {

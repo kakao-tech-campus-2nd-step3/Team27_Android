@@ -1,4 +1,4 @@
-package com.example.togetherpet
+package com.example.togetherpet.Login
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
