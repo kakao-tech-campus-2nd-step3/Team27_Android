@@ -11,7 +11,7 @@ class PetRepositoryImpl @Inject constructor(private val petDataSource: PetDataSo
         neutering: Boolean,
         petFeature: String,
         petImage: String
-    ) : PetResponseDto {
+    ): PetResponseDto {
         val petPostRequestDto =
             PetPostRequestDto(name, petAge, petSpecies, neutering, petFeature, petImage)
         val result = runCatching {
@@ -21,8 +21,7 @@ class PetRepositoryImpl @Inject constructor(private val petDataSource: PetDataSo
         }.onFailure {
             Log.d("testt", it.toString())
         }
-        return petDataSource.postPetInfo(petPostRequestDto)
-
+        return PetResponseDto("mock")
     }
 
 }

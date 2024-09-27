@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentInfoRegistrationResidenceBinding
@@ -14,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RegistrationResidenceFragment : Fragment() {
     private var binding : FragmentInfoRegistrationResidenceBinding? = null
+    private val sharedViewModel : RegistrationViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +35,7 @@ class RegistrationResidenceFragment : Fragment() {
     }
 
     private fun goToNextScreen(){
+        sharedViewModel.setPetFeature(binding?.featureInputField?.text.toString())
         findNavController().navigate(R.id.action_registrationResidenceFragment_to_registrationImageFragment)
     }
 

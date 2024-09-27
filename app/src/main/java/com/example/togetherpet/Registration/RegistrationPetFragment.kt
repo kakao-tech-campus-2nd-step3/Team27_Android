@@ -38,7 +38,7 @@ class RegistrationPetFragment : Fragment() {
         sharedViewModel.setPetName(binding?.nameInputField?.text.toString())
         sharedViewModel.setPetAge(binding?.ageInputField?.text.toString().toInt())
         sharedViewModel.setPetSpecies(binding?.speciesInputField?.text.toString())
-        sharedViewModel.setNeutering(false)
+        sharedViewModel.setNeutering(binding?.buttonNeuteringTrue?.isChecked == true)
         findNavController().navigate(R.id.action_registrationPetFragment_to_registrationResidenceFragment)
     }
 
