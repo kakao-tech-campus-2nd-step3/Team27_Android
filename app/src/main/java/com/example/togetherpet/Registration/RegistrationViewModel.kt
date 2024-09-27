@@ -1,9 +1,8 @@
-package com.example.togetherpet
+package com.example.togetherpet.Registration
 
-import android.media.Image
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.togetherpet.PetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,27 +33,27 @@ class RegistrationViewModel @Inject constructor(private val petRepository: PetRe
     val petImage: StateFlow<String> get() = _petImage.asStateFlow()
 
 
-    private fun setName(name: String) {
+    fun setPetName(name: String) {
         _petName.value = name
     }
 
-    private fun setPetAge(petAge: Int) {
+    fun setPetAge(petAge: Int) {
         _petAge.value = petAge
     }
 
-    private fun setPetSpecies(petSpecies: String) {
+    fun setPetSpecies(petSpecies: String) {
         _petSpecies.value = petSpecies
     }
 
-    private fun setNeutering(neutering: Boolean) {
+    fun setNeutering(neutering: Boolean) {
         _neutering.value = neutering
     }
 
-    private fun setPetFeature(petFeature: String) {
+    fun setPetFeature(petFeature: String) {
         _petFeature.value = petFeature
     }
 
-    private fun setPetImage(petImage: String) {
+    fun setPetImage(petImage: String) {
         _petImage.value = petImage
     }
 

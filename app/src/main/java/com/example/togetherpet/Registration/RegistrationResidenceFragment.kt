@@ -1,15 +1,17 @@
-package com.example.togetherpet
+package com.example.togetherpet.Registration
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentInfoRegistrationResidenceBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class RegistrationResidenceFragment : Fragment() {
     private var binding : FragmentInfoRegistrationResidenceBinding? = null
 
@@ -32,6 +34,11 @@ class RegistrationResidenceFragment : Fragment() {
 
     private fun goToNextScreen(){
         findNavController().navigate(R.id.action_registrationResidenceFragment_to_registrationImageFragment)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 

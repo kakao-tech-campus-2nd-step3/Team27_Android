@@ -1,17 +1,21 @@
-package com.example.togetherpet
+package com.example.togetherpet.Registration
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentInfoRegistrationPetBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class RegistrationPetFragment : Fragment() {
     private var binding : FragmentInfoRegistrationPetBinding? = null
+    private val sharedViewModel : RegistrationViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +35,16 @@ class RegistrationPetFragment : Fragment() {
     }
 
     private fun goToNextScreen(){
+        sharedViewModel.setPetName(binding?.nameInputField?.text.toString())
+        sharedViewModel.setPetAge(binding?.ageInputField?.text.toString().toInt())
+        sharedViewModel.setPetSpecies(binding?.speciesInputField?.text.toString())
+        sharedViewModel.setNeutering(false)
         findNavController().navigate(R.id.action_registrationPetFragment_to_registrationResidenceFragment)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 }

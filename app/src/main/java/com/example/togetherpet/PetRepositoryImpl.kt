@@ -1,5 +1,6 @@
 package com.example.togetherpet
 
+import android.util.Log
 import javax.inject.Inject
 
 class PetRepositoryImpl @Inject constructor(private val petDataSource: PetDataSource) : PetRepository {
@@ -13,7 +14,15 @@ class PetRepositoryImpl @Inject constructor(private val petDataSource: PetDataSo
     ) : PetResponseDto {
         val petPostRequestDto =
             PetPostRequestDto(name, petAge, petSpecies, neutering, petFeature, petImage)
+        val result = runCatching {
+            petDataSource.postPetInfo(petPostRequestDto)
+        }.onSuccess {
+            Log.d("testt", " ")
+        }.onFailure {
+            Log.d("testt", it.toString())
+        }
         return petDataSource.postPetInfo(petPostRequestDto)
+
     }
 
 }
