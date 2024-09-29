@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.togetherpet.dashboard.viewModel.DashboardViewModel
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.ActivityDashboardBinding
-import com.example.togetherpet.fragment.HomeFragment
+import com.example.togetherpet.home.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
