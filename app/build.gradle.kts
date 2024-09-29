@@ -24,6 +24,7 @@ android {
         manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = gradleLocalProperties(rootDir, providers).getProperty("KAKAO_NATIVE_APP_KEY")
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -46,9 +47,10 @@ android {
         viewBinding = true
         buildConfig = true
     }
-}
 
+}
 dependencies {
+    val roomVersion = "2.6.1"
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -67,9 +69,10 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.google.dagger:hilt-android:2.48.1")
     kapt("com.google.dagger:hilt-compiler:2.48.1")
+    implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.activity:activity-ktx:1.9.2")
     implementation("androidx.fragment:fragment-ktx:1.8.3")
-    implementation("androidx.room:room-runtime:2.6.1")
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 }
