@@ -7,7 +7,11 @@
     <fragment
         android:id="@+id/registrationImageFragment"
         android:name="com.example.togetherpet.Registration.RegistrationImageFragment"
-        android:label="RegistrationImageFragment" />
+        android:label="RegistrationImageFragment" >
+        <action
+            android:id="@+id/action_registrationImageFragment_to_registrationNicknameFragment"
+            app:destination="@id/registrationNicknameFragment" />
+    </fragment>
     <fragment
         android:id="@+id/registrationPetFragment"
         android:name="com.example.togetherpet.Registration.RegistrationPetFragment"
@@ -32,4 +36,8 @@
             android:id="@+id/action_registrationStartFragment_to_registrationPetFragment"
             app:destination="@id/registrationPetFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/registrationNicknameFragment"
+        android:name="com.example.togetherpet.Registration.RegistrationNicknameFragment"
+        android:label="RegistrationNicknameFragment" />
 </navigation>
