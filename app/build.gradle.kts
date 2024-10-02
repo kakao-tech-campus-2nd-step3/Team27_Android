@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation("com.kakao.sdk:v2-user:2.20.6")
     implementation("com.kakao.maps.open:android:2.11.9")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.google.dagger:hilt-android:2.48.1")
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.1")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.1")
