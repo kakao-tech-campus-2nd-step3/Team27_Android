@@ -1,14 +1,19 @@
 package com.example.togetherpet.dashboard.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.togetherpet.dashboard.viewModel.DashboardViewModel
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.ActivityDashboardBinding
-import com.example.togetherpet.home.HomeFragment
+import com.example.togetherpet.home.view.HomeFragment
+import com.example.togetherpet.home.viewModel.HomeViewModel
+import com.example.togetherpet.testData.viewModel.MissingViewModel
+import com.example.togetherpet.testData.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

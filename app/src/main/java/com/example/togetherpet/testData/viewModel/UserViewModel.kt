@@ -28,7 +28,10 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
         )
 
         viewModelScope.launch {
-            userRepository.insertUser(dummyUser)
+            val existingUser = userRepository.getUserByName(dummyUser.userNickname)
+            if (existingUser == null){
+                userRepository.insertUser(dummyUser)
+            }
             _user.value = userRepository.getUserById(0)
         }
     }

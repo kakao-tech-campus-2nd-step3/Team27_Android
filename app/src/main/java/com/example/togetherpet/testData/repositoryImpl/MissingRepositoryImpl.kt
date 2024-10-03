@@ -9,11 +9,11 @@ class MissingRepositoryImpl(private val missingDao: MissingDao) : MissingReposit
         missingDao.insert(missing)
     }
 
-    override suspend fun getMissingPetById(id: Int): Missing? {
-        return missingDao.getMissingPetById(id)
-    }
-
     override suspend fun getAllMissingPets(): List<Missing> {
         return missingDao.getAllMissingPets()
+    }
+
+    override suspend fun getMissingPetByName(name: String): Missing? {
+        return missingDao.getMissingPetByName(name)
     }
 }

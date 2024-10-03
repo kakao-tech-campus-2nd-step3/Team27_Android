@@ -75,4 +75,6 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("com.github.bumptech.glide:glide:4.16.0")    //Glide : url -> 이미지 로딩
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 }
