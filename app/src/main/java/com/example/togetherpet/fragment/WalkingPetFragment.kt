@@ -45,17 +45,15 @@ import java.util.Arrays
 class WalkingPetFragment : Fragment() {
     private var _binding: FragmentWalkingPetBinding? = null
     private val binding get() = _binding!!
-    var kakaoMap : KakaoMap? = null
-    lateinit var locationPermissionRequest : ActivityResultLauncher<Array<String>>
-    lateinit var fusedLocationClient : FusedLocationProviderClient
-    lateinit var locationCallback : LocationCallback
+    var kakaoMap: KakaoMap? = null
+    lateinit var locationPermissionRequest: ActivityResultLauncher<Array<String>>
+    lateinit var fusedLocationClient: FusedLocationProviderClient
+    lateinit var locationCallback: LocationCallback
     private val locArray = ArrayList<LatLng>()
 
 
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentWalkingPetBinding.inflate(inflater, container, false)
         return binding.root
@@ -70,8 +68,7 @@ class WalkingPetFragment : Fragment() {
     }
 
 
-
-    fun drawLine(latLng: LatLng){
+    fun drawLine(latLng: LatLng) {
         val layer = kakaoMap?.routeLineManager?.layer
         val lineStyle = RouteLineStyle.from(16f, Color.RED)
         lineStyle.strokeColor = Color.BLACK
@@ -82,54 +79,55 @@ class WalkingPetFragment : Fragment() {
             arrayOf(locArray.last(), latLng)
         ).setStyles(stylesSet.getStyles(0))
 
-        val options = RouteLineOptions.from(segment)
-            .setStylesSet(stylesSet)
+        val options = RouteLineOptions.from(segment).setStylesSet(stylesSet)
 
         val routeLine = layer?.addRouteLine(options)
     }
 
-    fun initVar(){
+    fun initVar() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         initMap()
         initListener()
         initResultLauncher()
     }
 
-    fun initResultLauncher(){
+    fun initResultLauncher() {
         locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
             when {
                 permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
                 }
+
                 permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                } else -> {
-                Toast.makeText(requireContext(), "권한 거절", Toast.LENGTH_SHORT).show()
-            }
+                }
+
+                else -> {
+                    Toast.makeText(requireContext(), "권한 거절", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
-    fun initListener(){
-        binding.walkingStartButton.setOnClickListener{
+    fun initListener() {
+        binding.walkingStartButton.setOnClickListener {
             showBoard()
             initBoard()
             binding.walkingStartButton.visibility = View.GONE
             startWalkingTracker()
         }
-        binding.walkingDisplayBoard.setOnClickListener{
+        binding.walkingDisplayBoard.setOnClickListener {
             // 지도의 스와이프을 막기 위해서 생성. 실제로 하는 역할 X
         }
-        binding.walkingStopButton.setOnClickListener{
+        binding.walkingStopButton.setOnClickListener {
 
         }
     }
 
-    fun initMap(){
+    fun initMap() {
         var loc = LatLng.from(0.0, 0.0)
         checkPermission()
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 loc = LatLng.from(location?.latitude ?: 0.0, location?.longitude ?: 0.0)
                 locArray.add(loc)
             }
@@ -155,7 +153,7 @@ class WalkingPetFragment : Fragment() {
         })
     }
 
-    fun startWalkingTracker(){
+    fun startWalkingTracker() {
 
         checkPermission()
 
@@ -173,38 +171,40 @@ class WalkingPetFragment : Fragment() {
                     val longitude = location.longitude
                     Log.d("testt", "Latitude: $latitude, Longitude: $longitude")
                     val latLng = LatLng.from(latitude, longitude)
-                    kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(latLng))
-                    Toast.makeText(requireContext(), latLng.toString(), Toast.LENGTH_SHORT).show()
-                    drawLine(latLng)
-                    locArray.add(latLng)
+                    if(isMoveNow(latLng)) {
+                        kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(latLng))
+                        Toast.makeText(requireContext(), latLng.toString(), Toast.LENGTH_SHORT)
+                            .show()
+                        drawLine(latLng)
+                        locArray.add(latLng)
+                    }
                 }
             }
         }
 
         fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
+            locationRequest, locationCallback, Looper.getMainLooper()
         )
     }
 
-    fun checkPermission(){
+    fun checkPermission() {
         if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            locationPermissionRequest.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION))
+            locationPermissionRequest.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
             return
         }
     }
 
-    fun showBoard(){
+    fun showBoard() {
         binding.walkingDisplayBoard.visibility = View.VISIBLE
         binding.walkingStopButton.visibility = View.VISIBLE
         binding.calorieText.visibility = View.VISIBLE
@@ -216,10 +216,21 @@ class WalkingPetFragment : Fragment() {
         binding.walkingGoalText.visibility = View.VISIBLE
     }
 
-    fun initBoard(){
+    fun initBoard() {
         binding.calorieValue.text = "0"
         binding.timeValue.text = "00:00:00"
         binding.distanceValue.text = "0"
+    }
+
+    fun isMoveNow(latLng: LatLng) : Boolean {
+        val lastLatLng = locArray.last()
+
+        return if (latLng.latitude > lastLatLng.latitude + 0.00002 ||
+            latLng.latitude < lastLatLng.latitude - 0.00002 ||
+            latLng.longitude > lastLatLng.longitude + 0.00002 ||
+            latLng.longitude < lastLatLng.longitude - 0.00002) {
+            true
+        } else false
     }
 
     override fun onPause() {
