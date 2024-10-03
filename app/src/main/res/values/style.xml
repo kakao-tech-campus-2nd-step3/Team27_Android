@@ -8,6 +8,14 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TogetherPetWalkingDisplayLarge" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/KTC_red_pink</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
     <style name="TogetherPetTextMedium" parent="TextAppearance.AppCompat">
         <!-- thin & 15px -->
         <item name="android:textColor">@color/black</item>
