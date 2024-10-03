@@ -24,7 +24,7 @@ class RegistrationViewModel @Inject constructor(private val petRepository: PetRe
 
     // todo : 이미지 타입 미정
     private val _petImage = MutableStateFlow<String>(" ")
-    val name: StateFlow<String> get() = _petName.asStateFlow()
+    val petName: StateFlow<String> get() = _petName.asStateFlow()
     val petAge: StateFlow<Int> get() = _petAge.asStateFlow()
     val petSpecies: StateFlow<String> get() = _petSpecies.asStateFlow()
     val neutering: StateFlow<Boolean> get() = _neutering.asStateFlow()
