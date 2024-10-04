@@ -35,9 +35,7 @@ class PetListAdapter(
         val pet = missingPetList[position]
         val viewHolder = holder as ViewHolder
         viewHolder.name.text = pet.missingPetName
-        /*//viewHolder.date.text = "D+" + pet.missingDate + "H"
-        viewHolder.date.text = context.getString(R.string.sos_missing_date, pet.missingDate)*/
-        // pet.missingDate가 String 타입이라면, Int로 변환
+
         val missingDateInt = pet.missingDate
         viewHolder.date.text = context.getString(R.string.sos_missing_date, missingDateInt)
 
