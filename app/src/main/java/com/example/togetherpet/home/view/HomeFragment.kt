@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
                         Log.d("yeong", "Missing data: $missingInfo")
 
                         if (missingInfo.isNotEmpty()) {
-                            binding.homeMissingPetList.adapter = PetListAdapter(missingInfo)
+                            binding.homeMissingPetList.adapter = PetListAdapter(requireContext(),missingInfo)
                             binding.homeLogo.visibility = View.GONE
                             binding.homeSos.visibility = View.VISIBLE
                         } else {

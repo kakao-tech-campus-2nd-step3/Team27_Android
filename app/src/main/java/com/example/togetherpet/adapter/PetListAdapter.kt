@@ -1,5 +1,6 @@
 package com.example.togetherpet.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.togetherpet.testData.entity.Missing
 import de.hdodenhof.circleimageview.CircleImageView
 
 class PetListAdapter(
+    private val context: Context,
     private val missingPetList: List<Missing>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -33,7 +35,12 @@ class PetListAdapter(
         val pet = missingPetList[position]
         val viewHolder = holder as ViewHolder
         viewHolder.name.text = pet.missingPetName
-        viewHolder.date.text = "D+" + pet.missingDate + "H"
+        /*//viewHolder.date.text = "D+" + pet.missingDate + "H"
+        viewHolder.date.text = context.getString(R.string.sos_missing_date, pet.missingDate)*/
+        // pet.missingDate가 String 타입이라면, Int로 변환
+        val missingDateInt = pet.missingDate
+        viewHolder.date.text = context.getString(R.string.sos_missing_date, missingDateInt)
+
         viewHolder.place.text = pet.missingPlace
         Glide.with(viewHolder.img.context).load(pet.missingPetImgUrl).into(holder.img)
     }
