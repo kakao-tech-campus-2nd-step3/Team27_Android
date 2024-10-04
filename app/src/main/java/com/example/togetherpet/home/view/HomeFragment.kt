@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.togetherpet.databinding.FragmentHomeBinding
 import com.example.togetherpet.home.viewModel.HomeViewModel
@@ -16,6 +15,8 @@ import com.example.togetherpet.adapter.PetListAdapter
 import com.example.togetherpet.testData.viewModel.MissingViewModel
 import com.example.togetherpet.testData.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -34,30 +35,37 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.homeMissingPetList.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        userViewModel.addDummyUser()
-        missingViewModel.addDummyMissingPet()
-        homeViewModel.loadData()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val userJob = async { userViewModel.addDummyUser() }
+            val missingJob = async { missingViewModel.addDummyMissingPet() }
 
-        homeViewModel.missingPets.observe(viewLifecycleOwner) { pets ->
-            Log.d(
-                "yeong",
-                "Current missing pets: ${pets.size} (isEmpty: ${pets.isEmpty()})"
-            )
-            binding.homeMissingPetList.adapter = PetListAdapter(pets)
+            //더미 데이터 생성이 완료될 때까지 기다림
+            awaitAll(userJob, missingJob)
 
-            if (pets.isEmpty()) {
-                binding.homeSos.visibility = View.GONE
-                binding.homeLogo.visibility = View.VISIBLE
-            } else {
-                binding.homeLogo.visibility = View.GONE
-                binding.homeSos.visibility = View.VISIBLE
+            homeViewModel.loadData()
+
+            homeViewModel.isDataLoaded.collect { isLoaded ->
+                if (isLoaded) {
+                    // 데이터 로드가 완료된 후에만 관찰을 시작
+                    homeViewModel.missingPets.collect { missingInfo ->
+                        Log.d("yeong", "Missing data: $missingInfo")
+
+                        if (missingInfo.isNotEmpty()) {
+                            binding.homeMissingPetList.adapter = PetListAdapter(missingInfo)
+                            binding.homeLogo.visibility = View.GONE
+                            binding.homeSos.visibility = View.VISIBLE
+                        } else {
+                            binding.homeSos.visibility = View.GONE
+                            binding.homeLogo.visibility = View.VISIBLE
+                        }
+                    }
+                }
             }
         }
     }

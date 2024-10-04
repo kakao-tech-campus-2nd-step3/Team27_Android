@@ -15,7 +15,7 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> get() = _user
 
-    fun addDummyUser() {
+    suspend fun addDummyUser() {
         val dummyUser = User(
             userNickname = "전대용봉탕", petName = "꾸릉이",
             petImgUrl = "https://ibb.co/cF78XxW",

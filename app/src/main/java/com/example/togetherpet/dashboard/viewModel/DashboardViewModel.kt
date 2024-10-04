@@ -22,8 +22,8 @@ class DashboardViewModel : ViewModel() {
             R.id.bottom_searching -> SearchingPetFragment()
             R.id.bottom_diary -> DiaryFragment()
             R.id.bottom_walking -> WalkingPetFragment()
-            else -> null
+            else -> HomeFragment()
         }
-        fragment?.let { _selectedFragment.value = fragment }
+        _selectedFragment.value = fragment
     }
 }

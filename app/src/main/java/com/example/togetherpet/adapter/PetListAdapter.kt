@@ -10,8 +10,9 @@ import com.example.togetherpet.R
 import com.example.togetherpet.testData.entity.Missing
 import de.hdodenhof.circleimageview.CircleImageView
 
-class PetListAdapter(private val missingPetList: List<Missing>) :
-    RecyclerView.Adapter<PetListAdapter.ViewHolder>() {
+class PetListAdapter(
+    private val missingPetList: List<Missing>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.list_missingPet_name)
@@ -28,13 +29,14 @@ class PetListAdapter(private val missingPetList: List<Missing>) :
     }
 
     //Replace the contents of a view
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val pet = missingPetList[position]
-        holder.name.text = pet.missingPetName
-        holder.date.text = "D+" + pet.missingDate + "H"
-        holder.place.text = pet.missingPlace
-        Glide.with(holder.img.context).load(pet.missingPetImgUrl).into(holder.img)
+        val viewHolder = holder as ViewHolder
+        viewHolder.name.text = pet.missingPetName
+        viewHolder.date.text = "D+" + pet.missingDate + "H"
+        viewHolder.place.text = pet.missingPlace
+        Glide.with(viewHolder.img.context).load(pet.missingPetImgUrl).into(holder.img)
     }
 
-    override fun getItemCount(): Int = missingPetList.size
+    override fun getItemCount(): Int = missingPetList.count()
 }
