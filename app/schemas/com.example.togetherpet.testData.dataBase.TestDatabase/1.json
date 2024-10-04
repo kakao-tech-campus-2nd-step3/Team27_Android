@@ -1,0 +1,126 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "6bb6a35faf6e811de0d8f0a33fa92629",
+    "entities": [
+      {
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userNickname` TEXT NOT NULL, `petName` TEXT NOT NULL, `petImgUrl` TEXT NOT NULL, `todayWalkCount` INTEGER NOT NULL, `todayWalkDistance` REAL NOT NULL, `todayWalkTime` TEXT NOT NULL, `avgWalkCount` INTEGER NOT NULL, `avgWalkDistance` REAL NOT NULL, `avgWalkTime` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userNickname",
+            "columnName": "userNickname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "petName",
+            "columnName": "petName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "petImgUrl",
+            "columnName": "petImgUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "todayWalkCount",
+            "columnName": "todayWalkCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "todayWalkDistance",
+            "columnName": "todayWalkDistance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "todayWalkTime",
+            "columnName": "todayWalkTime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgWalkCount",
+            "columnName": "avgWalkCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgWalkDistance",
+            "columnName": "avgWalkDistance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgWalkTime",
+            "columnName": "avgWalkTime",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "userId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "missing",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`missingId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `missingPetName` TEXT NOT NULL, `missingDate` INTEGER NOT NULL, `missingPlace` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "missingId",
+            "columnName": "missingId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "missingPetName",
+            "columnName": "missingPetName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "missingDate",
+            "columnName": "missingDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "missingPlace",
+            "columnName": "missingPlace",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "missingId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6bb6a35faf6e811de0d8f0a33fa92629')"
+    ]
+  }
+}
