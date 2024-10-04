@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.togetherpet.R
 import com.example.togetherpet.fragment.CommunityFragment
 import com.example.togetherpet.fragment.DiaryFragment
-import com.example.togetherpet.fragment.HomeFragment
+import com.example.togetherpet.home.view.HomeFragment
 import com.example.togetherpet.fragment.SearchingPetFragment
 import com.example.togetherpet.fragment.WalkingPetFragment
 
@@ -22,8 +22,8 @@ class DashboardViewModel : ViewModel() {
             R.id.bottom_searching -> SearchingPetFragment()
             R.id.bottom_diary -> DiaryFragment()
             R.id.bottom_walking -> WalkingPetFragment()
-            else -> null
+            else -> HomeFragment()
         }
-        fragment?.let { _selectedFragment.value = fragment }
+        _selectedFragment.value = fragment
     }
 }

@@ -18,6 +18,8 @@
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         android:includeFontPadding="false"/>
 
+
+
     <TextView
         android:id="@+id/info_reg_subtitle"
         android:layout_width="wrap_content"
