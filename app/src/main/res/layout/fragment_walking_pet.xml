@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".fragment.WalkingPetFragment">
 
-
     <com.kakao.vectormap.MapView
         android:id="@+id/walking_map_view"
         android:layout_width="match_parent"
@@ -139,6 +138,7 @@
         app:layout_constraintStart_toStartOf="@+id/time_value"
         app:layout_constraintTop_toBottomOf="@id/time_value" />
 
+
     <TextView
         android:id="@+id/distance_value"
         android:layout_width="0dp"
@@ -166,6 +166,5 @@
         app:layout_constraintEnd_toEndOf="@id/distance_value"
         app:layout_constraintStart_toStartOf="@+id/distance_value"
         app:layout_constraintTop_toBottomOf="@id/distance_value" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

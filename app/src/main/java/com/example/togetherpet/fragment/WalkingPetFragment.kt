@@ -59,11 +59,8 @@ class WalkingPetFragment : Fragment() {
     lateinit var locationCallback : LocationCallback
     private val locArray = ArrayList<LatLng>()
 
-
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentWalkingPetBinding.inflate(inflater, container, false)
         return binding.root
@@ -233,10 +230,10 @@ class WalkingPetFragment : Fragment() {
     }
 
     fun isMoveNow(latLng: LatLng) : Boolean{
-        return (locArray.last().latitude + 0.0003 < latLng.latitude ||
-                locArray.last().latitude - 0.0003 > latLng.latitude ||
-                locArray.last().longitude + 0.0003 < latLng.longitude ||
-                locArray.last().longitude + 0.0003 < latLng.longitude)
+        return (locArray.last().latitude + 0.00003 < latLng.latitude ||
+                locArray.last().latitude - 0.00003 > latLng.latitude ||
+                locArray.last().longitude + 0.00003 < latLng.longitude ||
+                locArray.last().longitude + 0.00003 < latLng.longitude)
     }
 
     override fun onPause() {

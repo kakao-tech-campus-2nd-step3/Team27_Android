@@ -47,4 +47,6 @@ class RegistrationImageFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
+
 }
