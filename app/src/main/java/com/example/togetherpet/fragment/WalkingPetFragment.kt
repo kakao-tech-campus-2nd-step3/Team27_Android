@@ -21,6 +21,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -39,12 +44,15 @@ import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.Arrays
 
 
 class WalkingPetFragment : Fragment() {
     private var _binding: FragmentWalkingPetBinding? = null
     private val binding get() = _binding!!
+    private val viewModel : WalkingPetViewModel by viewModels()
     var kakaoMap : KakaoMap? = null
     lateinit var locationPermissionRequest : ActivityResultLauncher<Array<String>>
     lateinit var fusedLocationClient : FusedLocationProviderClient
@@ -66,12 +74,12 @@ class WalkingPetFragment : Fragment() {
         Log.d("testt", "시작")
         initVar()
         checkPermission()
-
     }
 
 
 
     fun drawLine(latLng: LatLng){
+        // todo : 함수분리
         val layer = kakaoMap?.routeLineManager?.layer
         val lineStyle = RouteLineStyle.from(16f, Color.RED)
         lineStyle.strokeColor = Color.BLACK
@@ -116,6 +124,7 @@ class WalkingPetFragment : Fragment() {
             initBoard()
             binding.walkingStartButton.visibility = View.GONE
             startWalkingTracker()
+            binding.timeValue.start()
         }
         binding.walkingDisplayBoard.setOnClickListener{
             // 지도의 스와이프을 막기 위해서 생성. 실제로 하는 역할 X
@@ -173,10 +182,12 @@ class WalkingPetFragment : Fragment() {
                     val longitude = location.longitude
                     Log.d("testt", "Latitude: $latitude, Longitude: $longitude")
                     val latLng = LatLng.from(latitude, longitude)
-                    kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(latLng))
-                    Toast.makeText(requireContext(), latLng.toString(), Toast.LENGTH_SHORT).show()
-                    drawLine(latLng)
-                    locArray.add(latLng)
+                    if(isMoveNow(latLng)){
+                        kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(latLng))
+                        Toast.makeText(requireContext(), latLng.toString(), Toast.LENGTH_SHORT).show()
+                        drawLine(latLng)
+                        locArray.add(latLng)
+                    }
                 }
             }
         }
@@ -218,8 +229,14 @@ class WalkingPetFragment : Fragment() {
 
     fun initBoard(){
         binding.calorieValue.text = "0"
-        binding.timeValue.text = "00:00:00"
         binding.distanceValue.text = "0"
+    }
+
+    fun isMoveNow(latLng: LatLng) : Boolean{
+        return (locArray.last().latitude + 0.0003 < latLng.latitude ||
+                locArray.last().latitude - 0.0003 > latLng.latitude ||
+                locArray.last().longitude + 0.0003 < latLng.longitude ||
+                locArray.last().longitude + 0.0003 < latLng.longitude)
     }
 
     override fun onPause() {
