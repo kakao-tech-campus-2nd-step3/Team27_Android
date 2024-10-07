@@ -7,14 +7,19 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.graphics.drawable.ShapeDrawable
+import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import android.location.Location
 import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Looper
+import android.os.SystemClock
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Chronometer
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,6 +45,7 @@ import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import java.util.Arrays
+import java.util.Locale
 
 
 class WalkingPetFragment : Fragment() {
@@ -66,7 +72,6 @@ class WalkingPetFragment : Fragment() {
         Log.d("testt", "시작")
         initVar()
         checkPermission()
-
     }
 
 
@@ -116,6 +121,14 @@ class WalkingPetFragment : Fragment() {
             initBoard()
             binding.walkingStartButton.visibility = View.GONE
             startWalkingTracker()
+            binding.timeValue.start()
+            binding.timeValue.onChronometerTickListener = Chronometer.OnChronometerTickListener {
+                val time = SystemClock.elapsedRealtime() - binding.timeValue.base
+                Log.d("testt", "${time}, ${SystemClock.elapsedRealtime()}, ${binding.timeValue.base}")
+                val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
+                format.timeZone = TimeZone.getTimeZone("UTC")
+                binding.timeValue.text = format.format(time)
+            }
         }
         binding.walkingDisplayBoard.setOnClickListener{
             // 지도의 스와이프을 막기 위해서 생성. 실제로 하는 역할 X
