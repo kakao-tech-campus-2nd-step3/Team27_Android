@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.WalkingPetFragment">
+
+    <com.kakao.vectormap.MapView
+        android:id="@+id/walking_map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    
+    <TextView
+        android:id="@+id/walking_start_button"
+        android:layout_width="105dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="24dp"
+        android:text="산책 시작!"
+        android:gravity="center"
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        android:background="@drawable/walk_start_button"/>
+
+    <TextView
+        android:id="@+id/walking_stop_button"
+        android:layout_width="105dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="24dp"
+        android:text="산책 중지"
+        android:gravity="center"
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        android:background="@drawable/walk_stop_button"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/walking_display_board"
+        android:layout_width="match_parent"
+        android:layout_height="138dp"
+        android:background="@drawable/walking_display_board"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/walking_goal_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="목표까지 2000m 남았습니다!"
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toStartOf="@id/walking_display_board"
+        app:layout_constraintTop_toTopOf="@id/walking_display_board"
+        android:layout_marginStart="23dp"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/calorie_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="120"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="@+id/walking_display_board"
+        app:layout_constraintEnd_toStartOf="@+id/time_value"
+        app:layout_constraintTop_toBottomOf="@+id/walking_goal_text"
+        android:layout_marginTop="20dp"
+        android:textAppearance="@style/TogetherPetWalkingDisplayLarge"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/calorie_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="소모 열량(kcal)"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@id/calorie_value"
+        app:layout_constraintEnd_toEndOf="@id/calorie_value"
+        app:layout_constraintTop_toBottomOf="@id/calorie_value"
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        />
+
+
+    <TextView
+        android:id="@+id/time_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="12:00:00"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@+id/calorie_value"
+        app:layout_constraintEnd_toStartOf="@+id/distance_value"
+        app:layout_constraintTop_toBottomOf="@+id/walking_goal_text"
+        android:layout_marginTop="20dp"
+        android:textAppearance="@style/TogetherPetWalkingDisplayLarge"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="산책 시간"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@+id/time_value"
+        app:layout_constraintEnd_toEndOf="@id/time_value"
+        app:layout_constraintTop_toBottomOf="@id/time_value"
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/distance_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="70"
+        android:gravity="center"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintStart_toEndOf="@+id/time_value"
+        app:layout_constraintEnd_toEndOf="@id/walking_display_board"
+        app:layout_constraintTop_toBottomOf="@+id/walking_goal_text"
+        android:layout_marginTop="20dp"
+        android:textAppearance="@style/TogetherPetWalkingDisplayLarge"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/distance_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="산책 거리(m)"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@+id/distance_value"
+        app:layout_constraintEnd_toEndOf="@id/distance_value"
+        app:layout_constraintTop_toBottomOf="@id/distance_value"
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

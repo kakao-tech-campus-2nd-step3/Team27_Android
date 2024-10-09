@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/reg_navigation_graph"
+    app:startDestination="@id/registrationStartFragment">
+
+    <fragment
+        android:id="@+id/registrationImageFragment"
+        android:name="com.example.togetherpet.Registration.RegistrationImageFragment"
+        android:label="RegistrationImageFragment" >
+        <action
+            android:id="@+id/action_registrationImageFragment_to_registrationNicknameFragment"
+            app:destination="@id/registrationNicknameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationPetFragment"
+        android:name="com.example.togetherpet.Registration.RegistrationPetFragment"
+        android:label="RegistrationPetFragment" >
+        <action
+            android:id="@+id/action_registrationPetFragment_to_registrationResidenceFragment"
+            app:destination="@id/registrationResidenceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationResidenceFragment"
+        android:name="com.example.togetherpet.Registration.RegistrationResidenceFragment"
+        android:label="RegistrationResidenceFragment" >
+        <action
+            android:id="@+id/action_registrationResidenceFragment_to_registrationImageFragment"
+            app:destination="@id/registrationImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationStartFragment"
+        android:name="com.example.togetherpet.Registration.RegistrationStartFragment"
+        android:label="RegistrationStartFragment" >
+        <action
+            android:id="@+id/action_registrationStartFragment_to_registrationPetFragment"
+            app:destination="@id/registrationPetFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationNicknameFragment"
+        android:name="com.example.togetherpet.Registration.RegistrationNicknameFragment"
+        android:label="RegistrationNicknameFragment" />
+</navigation>
