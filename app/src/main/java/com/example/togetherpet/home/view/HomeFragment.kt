@@ -17,6 +17,7 @@ import com.example.togetherpet.testData.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -50,10 +51,10 @@ class HomeFragment : Fragment() {
 
             homeViewModel.loadData()
 
-            homeViewModel.isDataLoaded.collect { isLoaded ->
+            homeViewModel.isDataLoaded.collectLatest { isLoaded ->
                 if (isLoaded) {
                     // 데이터 로드가 완료된 후에만 관찰을 시작
-                    homeViewModel.missingPets.collect { missingInfo ->
+                    homeViewModel.missingPets.collectLatest { missingInfo ->
                         Log.d("yeong", "Missing data: $missingInfo")
 
                         if (missingInfo.isNotEmpty()) {

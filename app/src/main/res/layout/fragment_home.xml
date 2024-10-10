@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:background="@color/KTC_red_pink"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/home_sos_text"
