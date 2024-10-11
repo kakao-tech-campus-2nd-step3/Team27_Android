@@ -10,4 +10,14 @@
     <string name="sos">SOS</string>
     <string name="sos_context">지금 도움이 필요해요!</string>
     <string name="sos_missing_date">D+%dH</string>
+    <string name="home_popular_post_title">우리 동네 인기 게시물</string>
+    <string name="notice_ready">현재 준비 중인 서비스 입니다</string>
+    <string name="home_walking_title">오늘 %s의 산책 현황</string>
+    <string name="home_total_count_title">총 횟수</string>
+    <string name="home_total_distance_title">총 거리</string>
+    <string name="home_total_time_title">총 시간</string>
+    <string name="home_avg_count">/평균 %s회</string>
+    <string name="home_avg_distance">/평균 %skm</string>
+    <string name="home_avg_time">/평균 %s</string>
+    <string name="searching_myPet_missing_btn">내 반려동물 실종등록</string>
 </resources>
