@@ -7,6 +7,8 @@ import com.example.togetherpet.testData.entity.User
 import com.example.togetherpet.testData.repository.MissingRepository
 import com.example.togetherpet.testData.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,28 +28,28 @@ class HomeViewModel @Inject constructor(
     private val _user = MutableStateFlow<User?>(null)
     val user: StateFlow<User?> get() = _user.asStateFlow()
 
+    //Data Load 여부
     private val _isDataLoaded = MutableStateFlow(false)
     val isDataLoaded: StateFlow<Boolean> get() = _isDataLoaded
 
-    fun loadData(){
+    fun loadData() {
         viewModelScope.launch {
-            loadMissingPetData()
-            loadUserData()
+            val missingJob = async { loadMissingPetData() }
+            val userJob = async { loadUserData() }
+
+            // 데이터를 불러오는 작업이 모두 끝난 뒤 flag 값 true로 설정
+            awaitAll(missingJob, userJob)
             _isDataLoaded.value = true
         }
     }
 
-    private fun loadMissingPetData() {
-        viewModelScope.launch {
-            val pets = missingRepository.getAllMissingPets()
-            _missingPets.emit(pets)
-        }
+    private suspend fun loadMissingPetData() {
+        val pets = missingRepository.getAllMissingPets()
+        _missingPets.emit(pets)
     }
 
-    private fun loadUserData() {
-        viewModelScope.launch {
-            val user = userRepository.getUserById(0)
-            _user.emit(user)
-        }
+    private suspend fun loadUserData() {
+        val user = userRepository.getUserById(1)
+        _user.emit(user)
     }
 }

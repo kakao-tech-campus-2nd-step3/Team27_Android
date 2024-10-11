@@ -2,32 +2,33 @@ package com.example.togetherpet.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.togetherpet.R
+import com.example.togetherpet.databinding.ListMissingPetBinding
 import com.example.togetherpet.testData.entity.Missing
 import de.hdodenhof.circleimageview.CircleImageView
 
 class PetListAdapter(
     private val context: Context,
-    private val missingPetList: List<Missing>) :
+    private val missingPetList: List<Missing>
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.list_missingPet_name)
-        val date: TextView = view.findViewById(R.id.list_missingPet_date)
-        val place: TextView = view.findViewById(R.id.list_missingPet_address)
-        val img: CircleImageView = view.findViewById(R.id.list_missingPet_img)
+    class ViewHolder(val binding: ListMissingPetBinding) : RecyclerView.ViewHolder(binding.root) {
+        val name: TextView = binding.listMissingPetName
+        val date: TextView = binding.listMissingPetDate
+        val place: TextView = binding.listMissingPetAddress
+        val img: CircleImageView = binding.listMissingPetImg
     }
 
     //Create new views
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.list_missing_pet, viewGroup, false)
-        return ViewHolder(view)
+        val binding =
+            ListMissingPetBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        return ViewHolder(binding)
     }
 
     //Replace the contents of a view

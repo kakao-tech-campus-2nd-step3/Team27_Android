@@ -18,7 +18,7 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
     suspend fun addDummyUser() {
         val dummyUser = User(
             userNickname = "전대용봉탕", petName = "꾸릉이",
-            petImgUrl = "https://ibb.co/cF78XxW",
+            petImgUrl = "https://us.123rf.com/450wm/alexeitm/alexeitm1607/alexeitm160700009/59730361-active-dog-playing-and-running-with-a-colorful-ball.jpg?ver=6",
             todayWalkCount = 2,
             todayWalkDistance = 5.5,
             todayWalkTime = "0:40",
@@ -32,7 +32,7 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
             if (existingUser == null){
                 userRepository.insertUser(dummyUser)
             }
-            _user.value = userRepository.getUserById(0)
+            _user.value = userRepository.getUserById(1)
         }
     }
 }

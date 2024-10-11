@@ -13,6 +13,12 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        ndk {
+            abiFilters.add("arm64-v8a")
+            abiFilters.add("armeabi-v7a")
+            abiFilters.add("x86")
+            abiFilters.add("x86_64")
+        }
         applicationId = "com.example.togetherpet"
         minSdk = 26
         targetSdk = 34
@@ -46,6 +52,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        dataBinding = true
     }
 
 }
