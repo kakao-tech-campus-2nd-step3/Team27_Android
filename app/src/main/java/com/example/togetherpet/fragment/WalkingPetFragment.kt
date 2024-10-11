@@ -1,6 +1,7 @@
 package com.example.togetherpet.fragment
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.ColorMatrix
@@ -11,6 +12,7 @@ import android.icu.text.SimpleDateFormat
 import android.icu.util.TimeZone
 import android.location.Location
 import android.opengl.Visibility
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.os.SystemClock
@@ -26,6 +28,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -44,19 +50,19 @@ import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Arrays
 import java.util.Locale
 
-
+@AndroidEntryPoint
 class WalkingPetFragment : Fragment() {
     private var _binding: FragmentWalkingPetBinding? = null
     private val binding get() = _binding!!
+    private val viewModel : WalkingPetViewModel by viewModels()
     var kakaoMap : KakaoMap? = null
     lateinit var locationPermissionRequest : ActivityResultLauncher<Array<String>>
     lateinit var fusedLocationClient : FusedLocationProviderClient
-    lateinit var locationCallback : LocationCallback
-    private val locArray = ArrayList<LatLng>()
-
 
 
     override fun onCreateView(
@@ -76,7 +82,7 @@ class WalkingPetFragment : Fragment() {
 
 
 
-    fun drawLine(latLng: LatLng){
+    fun drawLine(arrayList: ArrayList<LatLng>){
         val layer = kakaoMap?.routeLineManager?.layer
         val lineStyle = RouteLineStyle.from(16f, Color.RED)
         lineStyle.strokeColor = Color.BLACK
@@ -84,7 +90,7 @@ class WalkingPetFragment : Fragment() {
             RouteLineStyles.from(lineStyle)
         )
         val segment = RouteLineSegment.from(
-            arrayOf(locArray.last(), latLng)
+            arrayList
         ).setStyles(stylesSet.getStyles(0))
 
         val options = RouteLineOptions.from(segment)
@@ -95,9 +101,9 @@ class WalkingPetFragment : Fragment() {
 
     fun initVar(){
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        initResultLauncher()
         initMap()
         initListener()
-        initResultLauncher()
     }
 
     fun initResultLauncher(){
@@ -121,7 +127,9 @@ class WalkingPetFragment : Fragment() {
             initBoard()
             binding.walkingStartButton.visibility = View.GONE
             startWalkingTracker()
+            binding.timeValue.base = SystemClock.elapsedRealtime()
             binding.timeValue.start()
+            binding.timeValue.text = "00:00:00"
             binding.timeValue.onChronometerTickListener = Chronometer.OnChronometerTickListener {
                 val time = SystemClock.elapsedRealtime() - binding.timeValue.base
                 Log.d("testt", "${time}, ${SystemClock.elapsedRealtime()}, ${binding.timeValue.base}")
@@ -136,6 +144,18 @@ class WalkingPetFragment : Fragment() {
         binding.walkingStopButton.setOnClickListener{
 
         }
+        viewLifecycleOwner.lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    viewModel.arrayLastTwoLoc.collect{
+                        drawLine(it)
+                    }
+                    viewModel.distance.collect{
+                        binding.distanceValue.text = it.toString()
+                    }
+                }
+            }
+        }
     }
 
     fun initMap(){
@@ -144,7 +164,6 @@ class WalkingPetFragment : Fragment() {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 loc = LatLng.from(location?.latitude ?: 0.0, location?.longitude ?: 0.0)
-                locArray.add(loc)
             }
 
 
@@ -171,35 +190,9 @@ class WalkingPetFragment : Fragment() {
     fun startWalkingTracker(){
 
         checkPermission()
-
-        val locationRequest = LocationRequest.Builder(5000L).apply {
-            setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            setMinUpdateIntervalMillis(5000L)
-        }.build()
-
-
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                for (location in locationResult.locations) {
-                    val latitude = location.latitude
-                    val longitude = location.longitude
-                    Log.d("testt", "Latitude: $latitude, Longitude: $longitude")
-                    val latLng = LatLng.from(latitude, longitude)
-                    kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(latLng))
-                    Toast.makeText(requireContext(), latLng.toString(), Toast.LENGTH_SHORT).show()
-                    drawLine(latLng)
-                    locArray.add(latLng)
-                }
-            }
-        }
-
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
+        viewModel.startLocationTracking()
     }
+
 
     fun checkPermission(){
         if (ActivityCompat.checkSelfPermission(
@@ -213,7 +206,14 @@ class WalkingPetFragment : Fragment() {
             locationPermissionRequest.launch(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION))
-            return
+        }
+        if (ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED) {
+            locationPermissionRequest.launch(arrayOf(
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            )
         }
     }
 
@@ -237,7 +237,6 @@ class WalkingPetFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onDestroyView() {
