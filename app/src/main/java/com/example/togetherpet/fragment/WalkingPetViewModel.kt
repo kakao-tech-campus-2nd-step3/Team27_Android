@@ -152,6 +152,5 @@ class WalkingPetViewModel @Inject constructor(
             locationCallback,
             Looper.getMainLooper()
         )
-//        locationService.startLocationUpdate(locationCallback)
     }
 }
