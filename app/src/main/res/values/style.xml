@@ -91,9 +91,17 @@
     </style>
 
     <style name="TogetherPetText6BoldWhite" parent="TextAppearance.AppCompat">
-        <!-- blod & 10px -->
+        <!-- blod & 6px -->
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">6sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText14BoldWhite" parent="TextAppearance.AppCompat">
+        <!-- blod & 14px -->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
         <item name="android:textStyle">bold</item>
     </style>
