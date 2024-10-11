@@ -127,35 +127,52 @@ class WalkingPetFragment : Fragment() {
             initBoard()
             binding.walkingStartButton.visibility = View.GONE
             startWalkingTracker()
-            binding.timeValue.base = SystemClock.elapsedRealtime()
             binding.timeValue.start()
             binding.timeValue.text = "00:00:00"
+            viewModel.setTimeBase()
             binding.timeValue.onChronometerTickListener = Chronometer.OnChronometerTickListener {
-                val time = SystemClock.elapsedRealtime() - binding.timeValue.base
-                Log.d("testt", "${time}, ${SystemClock.elapsedRealtime()}, ${binding.timeValue.base}")
-                val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
-                format.timeZone = TimeZone.getTimeZone("UTC")
-                binding.timeValue.text = format.format(time)
+                viewModel.timerStart()
             }
         }
         binding.walkingDisplayBoard.setOnClickListener{
             // 지도의 스와이프을 막기 위해서 생성. 실제로 하는 역할 X
         }
         binding.walkingStopButton.setOnClickListener{
-
+            viewModel.stopLocationTracking()
+            binding.timeValue.stop()
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                launch {
-                    viewModel.arrayLastTwoLoc.collect{
-                        drawLine(it)
-                    }
-                    viewModel.distance.collect{
-                        binding.distanceValue.text = it.toString()
-                    }
+                viewModel.arrayLastTwoLoc.collect {
+                    drawLine(it)
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.distance.collect {
+                    binding.distanceValue.text = it.toString()
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.time.collect {
+                    Log.d("testt", "time : ${it}")
+                    val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
+                    format.timeZone = TimeZone.getTimeZone("UTC")
+                    binding.timeValue.text = format.format(it)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.calories.collect {
+                    binding.calorieValue.text = it.toString()
+                }
+            }
+        }
+
     }
 
     fun initMap(){
