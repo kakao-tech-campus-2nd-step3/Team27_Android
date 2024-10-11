@@ -49,7 +49,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun loadUserData() {
-        val user = userRepository.getUserById(0)
+        val user = userRepository.getUserById(1)
         _user.emit(user)
     }
 }
