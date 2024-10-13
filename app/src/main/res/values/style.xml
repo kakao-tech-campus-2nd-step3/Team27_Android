@@ -106,4 +106,19 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TogetherPetText13Bold" parent="TextAppearance.AppCompat">
+        <!-- blod & 14px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText7Red" parent="TextAppearance.AppCompat">
+        <!-- thin & 7px -->
+        <item name="android:textColor">@color/KTC_red</item>
+        <item name="android:textSize">7sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
 </resources>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.kakao.vectormap.MapView
+        android:id="@+id/map_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="35dp"/>
+
+    <TextView
+        android:id="@+id/distance_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="산책 거리(m)"
+        app:layout_constraintStart_toStartOf="@+id/map_view"
+        app:layout_constraintTop_toBottomOf="@+id/map_view"
+        android:layout_marginTop="30dp"
+        android:textAppearance="@style/TogetherPetTextSmall"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/distance_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/distance_text"
+        app:layout_constraintStart_toStartOf="@id/distance_text"
+        android:text="총 2000m 산책했어요!"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="산책 시간"
+        app:layout_constraintStart_toStartOf="@+id/distance_result_text"
+        app:layout_constraintTop_toBottomOf="@+id/distance_result_text"
+        android:layout_marginTop="30dp"
+        android:textAppearance="@style/TogetherPetTextSmall"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/time_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/time_text"
+        app:layout_constraintStart_toStartOf="@id/time_text"
+        android:text="01:00:00"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:includeFontPadding="false"
+        />
+    <TextView
+        android:id="@+id/time_result_red_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/time_result_text"
+        app:layout_constraintStart_toStartOf="@id/time_result_text"
+        android:text="17:00:00~18:00:00"
+        android:textAppearance="@style/TogetherPetText7Red"
+        android:includeFontPadding="false"
+        android:layout_marginTop="4dp"
+        />
+
+    <TextView
+        android:id="@+id/calories_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="소모 열량(kcal)"
+        app:layout_constraintStart_toStartOf="@+id/time_result_red_text"
+        app:layout_constraintTop_toBottomOf="@+id/time_result_red_text"
+        android:layout_marginTop="30dp"
+        android:textAppearance="@style/TogetherPetTextSmall"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/calories_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/calories_text"
+        app:layout_constraintStart_toStartOf="@id/calories_text"
+        android:text="꾸릉이가 총 120kcal만큼 소모했어요!"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:includeFontPadding="false"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
