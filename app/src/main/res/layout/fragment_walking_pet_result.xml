@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.WalkingPetResultFragment">
 
     <com.kakao.vectormap.MapView
-        android:id="@+id/map_view"
+        android:id="@+id/walking_map_view"
         android:layout_width="300dp"
         android:layout_height="300dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="산책 거리(m)"
-        app:layout_constraintStart_toStartOf="@+id/map_view"
-        app:layout_constraintTop_toBottomOf="@+id/map_view"
+        app:layout_constraintStart_toStartOf="@+id/walking_map_view"
+        app:layout_constraintTop_toBottomOf="@+id/walking_map_view"
         android:layout_marginTop="30dp"
         android:textAppearance="@style/TogetherPetTextSmall"
         android:includeFontPadding="false"

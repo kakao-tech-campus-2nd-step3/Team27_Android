@@ -16,6 +16,5 @@ class InfoRegistrationActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_reg) as NavHostFragment
         val navController = navHostFragment.navController
 
-
     }
 }

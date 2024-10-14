@@ -1,22 +1,12 @@
 package com.example.togetherpet.fragment
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
-import android.graphics.Paint
-import android.graphics.drawable.ShapeDrawable
 import android.icu.text.SimpleDateFormat
 import android.icu.util.TimeZone
 import android.location.Location
-import android.opengl.Visibility
-import android.os.Build
 import android.os.Bundle
-import android.os.Looper
-import android.os.SystemClock
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,20 +16,16 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetBinding
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -52,7 +38,6 @@ import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Arrays
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -140,6 +125,8 @@ class WalkingPetFragment : Fragment() {
         binding.walkingStopButton.setOnClickListener{
             viewModel.stopLocationTracking()
             binding.timeValue.stop()
+            showStopDialog()
+            navigateToResultPage()
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -250,6 +237,18 @@ class WalkingPetFragment : Fragment() {
         binding.calorieValue.text = "0"
         binding.timeValue.text = "00:00:00"
         binding.distanceValue.text = "0"
+    }
+
+    fun showStopDialog(){
+        // TODO : 다이얼로그 띄워야함
+        Toast.makeText(requireContext(), "취소 버튼 클릭", Toast.LENGTH_SHORT).show()
+    }
+
+    fun navigateToResultPage(){
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.home_frameLayout, WalkingPetResultFragment())
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     override fun onPause() {
