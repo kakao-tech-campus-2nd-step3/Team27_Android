@@ -3,11 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.SearchingPetFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".searching.SearchingPetFragment">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Searching" />
+        android:layout_height="match_parent">
+
+        <com.kakao.vectormap.MapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/myPet_missingRegister_button"
+            android:layout_width="181dp"
+            android:layout_height="37dp"
+            android:text="@string/searching_myPet_missing_btn"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textAppearance="@style/TogetherPetText14BoldWhite"
+            android:background="@drawable/missing_btn"
+            android:elevation="8dp"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
