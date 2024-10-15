@@ -1,6 +1,8 @@
 package com.example.togetherpet.fragment
 
 import android.graphics.Color
+import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +27,8 @@ import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.Locale
+
 
 class WalkingPetResultFragment : Fragment() {
 
@@ -45,17 +49,10 @@ class WalkingPetResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMap()
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.arrayLoc.collect{
-                    drawLine(it)
-                }
-            }
-        }
     }
 
     fun initMap(){
-        var loc = LatLng.from(0.0, 0.0)
+        var loc = LatLng.from(35.180837, 126.904849)
         val map = binding.walkingMapView
         map.start(object : MapLifeCycleCallback() {
 
@@ -72,12 +69,13 @@ class WalkingPetResultFragment : Fragment() {
                 Log.d("testt", "MapReady")
                 kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
                 this@WalkingPetResultFragment.kakaoMap = kakaoMap
+                initListener()
             }
         })
     }
 
     fun drawLine(arrayList: ArrayList<LatLng>){
-        val layer = kakaoMap?.routeLineManager?.layer
+        val layer = kakaoMap.routeLineManager?.layer
         val lineStyle = RouteLineStyle.from(16f, Color.RED)
         lineStyle.strokeColor = Color.BLACK
         val stylesSet = RouteLineStylesSet.from(
@@ -91,6 +89,41 @@ class WalkingPetResultFragment : Fragment() {
             .setStylesSet(stylesSet)
 
         val routeLine = layer?.addRouteLine(options)
+    }
+
+    fun initListener(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                sharedViewModel.arrayLoc.collect{
+                    Log.d("testt", "listener")
+                    drawLine(it)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                sharedViewModel.distance.collect {
+                    binding.distanceResultText.text = "총 ${it}m 산책했어요"
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                sharedViewModel.time.collect {
+                    Log.d("testt", "time : ${it}")
+                    val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
+                    format.timeZone = TimeZone.getTimeZone("UTC")
+                    binding.timeResultText.text = format.format(it)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                sharedViewModel.calories.collect {
+                    binding.caloriesResultText.text = "꾸릉이가 총 ${it}kcal 만큼 소모했어요!"
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

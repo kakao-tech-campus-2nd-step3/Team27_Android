@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -44,7 +45,8 @@ import java.util.Locale
 class WalkingPetFragment : Fragment() {
     private var _binding: FragmentWalkingPetBinding? = null
     private val binding get() = _binding!!
-    private val viewModel : WalkingPetViewModel by viewModels()
+    private val viewModel : WalkingPetViewModel by activityViewModels()
+    private var lastLocationIndex : Int = 0 // 마지막으로 지도에 표시했던 위치의 인덱스
     var kakaoMap : KakaoMap? = null
     lateinit var locationPermissionRequest : ActivityResultLauncher<Array<String>>
     lateinit var fusedLocationClient : FusedLocationProviderClient
@@ -67,7 +69,7 @@ class WalkingPetFragment : Fragment() {
 
 
 
-    fun drawLine(arrayList: ArrayList<LatLng>){
+    fun drawLine(arrayList: List<LatLng>){
         val layer = kakaoMap?.routeLineManager?.layer
         val lineStyle = RouteLineStyle.from(16f, Color.RED)
         lineStyle.strokeColor = Color.BLACK
@@ -130,8 +132,11 @@ class WalkingPetFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.arrayLastTwoLoc.collect {
-                    drawLine(it)
+                viewModel.arrayLoc.collect {
+                    Log.d("testt", "lastLocationIndex : $lastLocationIndex, lastIndex : ${it.lastIndex}")
+                    drawLine(it.slice(lastLocationIndex..it.lastIndex))
+                    viewModel.calculateBetweenTwoLocation(lastLocationIndex, it.lastIndex)
+                    if(it.size != 0) lastLocationIndex = it.lastIndex
                 }
             }
         }
