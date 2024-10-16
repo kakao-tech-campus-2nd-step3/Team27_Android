@@ -14,12 +14,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetResultBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.route.RouteLineOptions
 import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
@@ -69,6 +73,7 @@ class WalkingPetResultFragment : Fragment() {
                 Log.d("testt", "MapReady")
                 kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
                 this@WalkingPetResultFragment.kakaoMap = kakaoMap
+
                 initListener()
             }
         })
@@ -91,12 +96,30 @@ class WalkingPetResultFragment : Fragment() {
         val routeLine = layer?.addRouteLine(options)
     }
 
+    fun displayStartPoint(arrayList: ArrayList<LatLng>) {
+        createLabel(arrayList.first())
+    }
+
+    fun displayEndPoint(arrayList: ArrayList<LatLng>){
+        createLabel(arrayList.last())
+    }
+
+    private fun createLabel(pos : LatLng){
+        val labelManager = kakaoMap.labelManager
+        val style = labelManager
+            ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.seraching_own_location).setAnchorPoint(0.5f, 1f)))
+        var label = kakaoMap.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style).setRank(1))
+    }
+
+
     fun initListener(){
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 sharedViewModel.arrayLoc.collect{
                     Log.d("testt", "listener")
+                    displayStartPoint(it)
                     drawLine(it)
+                    displayEndPoint(it)
                 }
             }
         }
