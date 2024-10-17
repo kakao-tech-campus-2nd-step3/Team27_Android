@@ -107,7 +107,7 @@ class WalkingPetResultFragment : Fragment() {
     private fun createLabel(pos : LatLng){
         val labelManager = kakaoMap.labelManager
         val style = labelManager
-            ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.seraching_own_location).setAnchorPoint(0.5f, 1f)))
+            ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.seraching_own_location).setAnchorPoint(0.5f, 1f))) // Todo : 변경 필요
         var label = kakaoMap.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style).setRank(1))
     }
 
@@ -116,7 +116,7 @@ class WalkingPetResultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 sharedViewModel.arrayLoc.collect{
-                    Log.d("testt", "listener")
+                    Log.d("testt", "listener, Array : ${it}")
                     displayStartPoint(it)
                     drawLine(it)
                     displayEndPoint(it)
@@ -133,8 +133,8 @@ class WalkingPetResultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 sharedViewModel.time.collect {
-                    Log.d("testt", "time : ${it}")
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
+                    binding.timeResultRedText.text = "${format.format(sharedViewModel.base)} ~ ${format.format(sharedViewModel.base + it)}"
                     format.timeZone = TimeZone.getTimeZone("UTC")
                     binding.timeResultText.text = format.format(it)
                 }

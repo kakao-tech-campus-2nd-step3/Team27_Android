@@ -41,8 +41,8 @@ class WalkingPetViewModel @Inject constructor(
     private val _calories = MutableStateFlow<Int>(0)
     private val _time = MutableStateFlow<Long>(0)
     private val _arrayLoc = MutableStateFlow<ArrayList<LatLng>>(ArrayList())
-    private val _lastLocationIndex = MutableStateFlow<Int>(0) // 백그라운드에서 포그라운드로 왔을 때 거리계산 및 라인 그리기에 필요
-    private var base: Long = 0
+
+    var base: Long = 0
 
     val distance: StateFlow<Int> get() = _distance.asStateFlow()
     val arrayLastTwoLoc: StateFlow<ArrayList<LatLng>> get() = _arrayLastTwoLoc.asStateFlow()
@@ -76,12 +76,19 @@ class WalkingPetViewModel @Inject constructor(
     }
 
     fun setTimeBase() {
-        base = SystemClock.elapsedRealtime()
+        base = System.currentTimeMillis()
     }
 
     fun timerStart() {
-        _time.value = SystemClock.elapsedRealtime() - base
+        _time.value = System.currentTimeMillis() - base
         Log.d("testt", "time = ${time.value}")
+    }
+
+    private fun initVar(){
+        _distance.value = 0
+        _calories.value = 0
+        _arrayLoc.value = ArrayList()
+
     }
 
     fun initLocationTracking() {
@@ -91,6 +98,7 @@ class WalkingPetViewModel @Inject constructor(
     }
 
     fun startLocationTracking() {
+        initVar()
         initLocationTracking()
         startLocationUpdate()
     }
