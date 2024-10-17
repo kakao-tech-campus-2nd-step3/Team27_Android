@@ -15,6 +15,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class RegistrationStartFragment : Fragment() {
     private var binding : FragmentInfoRegistrationStartBinding? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
 import com.example.togetherpet.dashboard.viewModel.DashboardViewModel
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.ActivityDashboardBinding
@@ -26,6 +27,7 @@ class DashboardActivity : AppCompatActivity() {
 
         handleItemClick()   //사용자가 클릭한 메뉴 정보를 viewModel에 전달
         setFragment(HomeFragment()) // 디폴트 Fragment 설정
+
 
         //viewModel이 선택한 Fragment 나타내기
         dashboardViewModel.selectedFragment.observe(this) { fragment ->

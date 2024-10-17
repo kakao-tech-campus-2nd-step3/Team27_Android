@@ -61,7 +61,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/home_title_layout"
-        app:layout_constraintVertical_weight="5" />
+        app:layout_constraintVertical_weight="5"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/reg_navigation_graph"
+        app:defaultNavHost="true"
+        />
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/home_bottomNavigationView"
