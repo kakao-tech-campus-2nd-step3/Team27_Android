@@ -6,7 +6,9 @@ import com.example.togetherpet.exception.APIException
 import com.example.togetherpet.exception.ErrorResponse
 import com.google.gson.Gson
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LoginSource @Inject constructor(
     private val loginService: LoginService,
     private val gson: Gson
