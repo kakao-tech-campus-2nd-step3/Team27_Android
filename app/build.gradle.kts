@@ -26,8 +26,20 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", gradleLocalProperties(rootDir, providers).getProperty("KAKAO_NATIVE_APP_KEY"))
-        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = gradleLocalProperties(rootDir, providers).getProperty("KAKAO_NATIVE_APP_KEY")
+        buildConfigField(
+            "String",
+            "KAKAO_NATIVE_APP_KEY",
+            gradleLocalProperties(rootDir, providers).getProperty("KAKAO_NATIVE_APP_KEY")
+        )
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] =
+            gradleLocalProperties(rootDir, providers).getProperty("KAKAO_NATIVE_APP_KEY")
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            gradleLocalProperties(rootDir, providers).getProperty("BASE_URL")
+        )
+
     }
 
 
@@ -44,8 +56,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlin{
-        compilerOptions{
+    kotlin {
+        compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
@@ -85,5 +97,5 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation("com.github.bumptech.glide:glide:4.16.0")    //Glide : url -> 이미지 로딩
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }
