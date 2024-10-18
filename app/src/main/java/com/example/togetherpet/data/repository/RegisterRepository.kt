@@ -11,10 +11,11 @@ class RegisterRepository @Inject constructor(
     private val registerSource: RegisterSource
 ) {
     suspend fun registerUserAndPet(
+        token: String,
         petRegisterDTO: PetRegisterDTO,
         petImage: File,
         userName: String
     ) {
-        registerSource.registerUserAndPet(petRegisterDTO, petImage, userName)
+        registerSource.registerUserAndPet(token, petRegisterDTO, petImage, userName)
     }
 }

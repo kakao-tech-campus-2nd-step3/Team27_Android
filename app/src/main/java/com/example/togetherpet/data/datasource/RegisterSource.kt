@@ -20,12 +20,14 @@ class RegisterSource @Inject constructor(
 ) {
 
     suspend fun registerUserAndPet(
+        token: String,
         petRegisterDTO: PetRegisterDTO,
         petImage: File,
         userName: String
     ) {
         val response = registerService.registerUserAndPet(
-            petRegisterDTO,
+            token,
+            gson.toJson(petRegisterDTO).toRequestBody("application/json".toMediaTypeOrNull()),
             MultipartBody.Part.createFormData(
                 "petImage",
                 petImage.name,
