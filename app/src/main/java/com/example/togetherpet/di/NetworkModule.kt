@@ -1,8 +1,9 @@
 package com.example.togetherpet.di
 
+import com.example.togetherpet.BuildConfig
 import com.example.togetherpet.PetService
 import com.example.togetherpet.data.service.LoginService
-import com.example.togetherpet.BuildConfig
+import com.example.togetherpet.data.service.RegisterService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,12 @@ class NetworkModule {
     @Singleton
     fun provideLoginService(retrofit: Retrofit): LoginService {
         return retrofit.create(LoginService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRegisterService(retrofit: Retrofit): RegisterService {
+        return retrofit.create(RegisterService::class.java)
     }
 
     @Provides
