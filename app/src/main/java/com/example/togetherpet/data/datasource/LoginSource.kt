@@ -17,14 +17,9 @@ class LoginSource @Inject constructor(
         val response = loginService.login(LoginRequestDTO(email))
 
         if (response.isSuccessful) {
-            return response.headers().get("Authorization").toString()
-        } else {
-            throw APIException(
-                gson.fromJson(
-                    response.errorBody()?.string(),
-                    ErrorResponse::class.java
-                )
-            )
+            return response.headers()["Authorization"].toString()
         }
+
+        throw APIException(gson.fromJson(response.errorBody()?.string(), ErrorResponse::class.java))
     }
 }
