@@ -20,4 +20,10 @@ class MissingRepository @Inject constructor(
     ) {
         missingService.getMissingNearBy(latitude, longitude)
     }
+
+    suspend fun getMissingByMissingId(
+        missingId: Number
+    ) {
+        missingService.getMissingById(missingId)
+    }
 }

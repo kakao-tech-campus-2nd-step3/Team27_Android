@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.service
 
+import com.example.togetherpet.data.dto.MissingDetailResponseDTO
 import com.example.togetherpet.data.dto.MissingRegisterRequestDTO
 import com.example.togetherpet.data.dto.MissingResponseDTO
 import retrofit2.Response
@@ -18,4 +19,9 @@ interface MissingService {
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double,
     ): Response<List<MissingResponseDTO>>
+
+    @GET("/api/v1/missing/{missing-id}")
+    suspend fun getMissingById(
+        @Path("missing-id") missingId: Number
+    ): Response<MissingDetailResponseDTO>
 }

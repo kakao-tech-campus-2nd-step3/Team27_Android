@@ -46,4 +46,21 @@ class MissingSource @Inject constructor(
             )
         )
     }
+
+    suspend fun getMissingDetail(
+        missingId: Number
+    ) {
+        val response = missingService.getMissingById(missingId)
+
+        if (response.isSuccessful) {
+            // TODO 정상 응답 로직
+        }
+
+        throw APIException(
+            gson.fromJson(
+                response.errorBody()?.string(),
+                ErrorResponse::class.java
+            )
+        )
+    }
 }
