@@ -5,6 +5,7 @@ import com.example.togetherpet.PetService
 import com.example.togetherpet.data.service.LoginService
 import com.example.togetherpet.data.service.MissingService
 import com.example.togetherpet.data.service.RegisterService
+import com.example.togetherpet.data.service.ReportService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,6 +43,12 @@ class NetworkModule {
     @Singleton
     fun provideMissingService(retrofit: Retrofit): MissingService {
         return retrofit.create(MissingService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReportService(retrofit: Retrofit): ReportService {
+        return retrofit.create(ReportService::class.java)
     }
 
     @Provides
