@@ -1,10 +1,9 @@
 package com.example.togetherpet.data.service
 
 import com.example.togetherpet.data.dto.MissingRegisterRequestDTO
+import com.example.togetherpet.data.dto.MissingResponseDTO
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface MissingService {
 
@@ -13,4 +12,10 @@ interface MissingService {
         @Header("Authorization") token: String,
         @Body missingRegisterRequestDTO: MissingRegisterRequestDTO
     ): Response<Unit>
+
+    @GET("/api/v1/missing")
+    suspend fun getMissingNearBy(
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
+    ): Response<List<MissingResponseDTO>>
 }

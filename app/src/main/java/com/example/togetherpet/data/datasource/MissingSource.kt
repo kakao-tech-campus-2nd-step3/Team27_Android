@@ -28,4 +28,22 @@ class MissingSource @Inject constructor(
             )
         }
     }
+
+    suspend fun getMissingNearBy(
+        latitude: Double,
+        longitude: Double
+    ) {
+        val response = missingService.getMissingNearBy(latitude, longitude)
+
+        if (response.isSuccessful) {
+            // TODO 정상 응답 로직
+        }
+
+        throw APIException(
+            gson.fromJson(
+                response.errorBody()?.string(),
+                ErrorResponse::class.java
+            )
+        )
+    }
 }

@@ -13,4 +13,11 @@ class MissingRepository @Inject constructor(
     ) {
         missingService.registerMissing(token, missingRegisterRequestDTO)
     }
+
+    suspend fun getMissingNearBy(
+        latitude: Double,
+        longitude: Double
+    ) {
+        missingService.getMissingNearBy(latitude, longitude)
+    }
 }
