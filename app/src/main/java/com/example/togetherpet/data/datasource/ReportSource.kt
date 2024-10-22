@@ -19,7 +19,7 @@ class ReportSource @Inject constructor(
     private val reportService: ReportService,
     private val gson: Gson
 ) {
-    suspend fun registerReportByMissing(
+    suspend fun registerReport(
         token: String,
         reportCreateRequestDTO: ReportCreateRequestDTO,
         files: List<File>
