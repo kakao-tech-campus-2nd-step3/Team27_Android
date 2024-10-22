@@ -1,6 +1,6 @@
 package com.example.togetherpet.data.service
 
-import com.example.togetherpet.data.dto.RegisterResponseDTO
+import com.example.togetherpet.data.dto.ReportResponseDTO
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -18,7 +18,13 @@ interface ReportService {
     ): Response<Unit>
 
     @GET("/api/v1/report/user")
-    suspend fun getRegisterOwnByUser(
+    suspend fun getReportOwnByUser(
         @Header("Authorization") token: String
-    ): Response<List<RegisterResponseDTO>>
+    ): Response<List<ReportResponseDTO>>
+
+    @GET("/api/v1/report/location")
+    suspend fun getReportByLocation(
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double
+    ): Response<List<ReportResponseDTO>>
 }

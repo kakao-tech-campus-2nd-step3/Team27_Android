@@ -52,7 +52,25 @@ class ReportSource @Inject constructor(
     suspend fun getRegisterOwnByUser(
         token: String
     ) {
-        val response = reportService.getRegisterOwnByUser(token)
+        val response = reportService.getReportOwnByUser(token)
+
+        if (response.isSuccessful) {
+            // TODO 저장 로직
+        }
+
+        throw APIException(
+            gson.fromJson(
+                response.errorBody()?.string(),
+                ErrorResponse::class.java
+            )
+        )
+    }
+
+    suspend fun getReportByLocation(
+        latitude: Double,
+        longitude: Double
+    ) {
+        val response = reportService.getReportByLocation(latitude, longitude)
 
         if (response.isSuccessful) {
             // TODO 저장 로직
