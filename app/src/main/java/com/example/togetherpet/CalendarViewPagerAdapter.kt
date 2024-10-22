@@ -16,7 +16,7 @@ class CalendarViewPagerAdapter(
 
     override fun getItemCount(): Int {
         Log.d("testt", "getItemCount")
-        return 30
+        return Int.MAX_VALUE
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -25,7 +25,7 @@ class CalendarViewPagerAdapter(
     }
 
     companion object {
-        const val START_POSITION = 30 / 2
+        const val START_POSITION = Int.MAX_VALUE / 2
     }
 }
 

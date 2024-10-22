@@ -132,16 +132,16 @@
         android:includeFontPadding="false"
         />
 
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/week_viewpager"
-        android:layout_width="0dp"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/calender_week_sun"
-        app:layout_constraintStart_toStartOf="@id/calender_week_sun"
-        app:layout_constraintEnd_toEndOf="@id/calender_week_sat"
         android:layout_marginTop="3dp"
-        />
-
+        app:layout_constraintEnd_toEndOf="@id/calender_week_sat"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/calender_week_sun"
+        app:layout_constraintTop_toBottomOf="@id/calender_week_sun" />
 
     <TextView
         android:id="@+id/distance_sum_text"

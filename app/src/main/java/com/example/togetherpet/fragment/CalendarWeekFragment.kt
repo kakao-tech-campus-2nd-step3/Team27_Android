@@ -1,10 +1,7 @@
 package com.example.togetherpet.fragment
 
-import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,11 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentCalendarWeekBinding
-import com.example.togetherpet.databinding.FragmentWalkingPetRecordBinding
 import java.time.LocalDate
 
 class CalendarWeekFragment : Fragment() {
@@ -29,7 +22,7 @@ class CalendarWeekFragment : Fragment() {
     private var position: Int = 0
     private lateinit var onClickListener: DateClickListener
 
-    private val todayPosition = 30 / 2
+    private val todayPosition = Int.MAX_VALUE / 2
 
     override fun onCreateView(
         inflater: LayoutInflater,

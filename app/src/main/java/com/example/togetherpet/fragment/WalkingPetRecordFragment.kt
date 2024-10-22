@@ -57,6 +57,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
 
     private fun setOneWeekViewPager() {
         val calendarAdapter = CalendarViewPagerAdapter(requireActivity(), this)
+        binding.weekViewpager
         binding.weekViewpager.adapter = calendarAdapter
         binding.weekViewpager.setCurrentItem(CalendarViewPagerAdapter.START_POSITION, false)
         sharedViewModel.getRecord(selectedDate)
