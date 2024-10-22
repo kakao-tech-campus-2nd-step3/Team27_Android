@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.service
 
+import com.example.togetherpet.data.dto.ReportDetailResponseDTO
 import com.example.togetherpet.data.dto.ReportResponseDTO
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -27,4 +28,9 @@ interface ReportService {
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double
     ): Response<List<ReportResponseDTO>>
+
+    @GET("/api/v1/report/{report-id}")
+    suspend fun getReportDetail(
+        @Path("report-id") reportId: Number
+    ): Response<ReportDetailResponseDTO>
 }

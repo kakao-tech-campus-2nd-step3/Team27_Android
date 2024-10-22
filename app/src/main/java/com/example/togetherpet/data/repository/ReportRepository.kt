@@ -71,4 +71,10 @@ class ReportRepository @Inject constructor(
     ) {
         reportSource.getRegisterOwnByUser(token)
     }
+
+    suspend fun getReportDetail(
+        reportId: Number
+    ) {
+        reportSource.getReportDetail(reportId)
+    }
 }

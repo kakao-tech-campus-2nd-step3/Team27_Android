@@ -83,4 +83,21 @@ class ReportSource @Inject constructor(
             )
         )
     }
+
+    suspend fun getReportDetail(
+        reportId: Number
+    ) {
+        val response = reportService.getReportDetail(reportId)
+
+        if (response.isSuccessful) {
+            // TODO 저장 로직
+        }
+
+        throw APIException(
+            gson.fromJson(
+                response.errorBody()?.string(),
+                ErrorResponse::class.java
+            )
+        )
+    }
 }
