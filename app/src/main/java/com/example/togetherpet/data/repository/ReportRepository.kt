@@ -65,4 +65,10 @@ class ReportRepository @Inject constructor(
             files
         )
     }
+
+    suspend fun getReportOwnByUser(
+        token: String
+    ) {
+        reportSource.getRegisterOwnByUser(token)
+    }
 }

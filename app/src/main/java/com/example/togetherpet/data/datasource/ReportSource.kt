@@ -48,4 +48,21 @@ class ReportSource @Inject constructor(
             )
         }
     }
+
+    suspend fun getRegisterOwnByUser(
+        token: String
+    ) {
+        val response = reportService.getRegisterOwnByUser(token)
+
+        if (response.isSuccessful) {
+            // TODO 저장 로직
+        }
+
+        throw APIException(
+            gson.fromJson(
+                response.errorBody()?.string(),
+                ErrorResponse::class.java
+            )
+        )
+    }
 }
