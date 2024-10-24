@@ -9,10 +9,10 @@ import javax.inject.Singleton
 
 @Singleton
 class ReportRepository @Inject constructor(
-    private val reportSource: ReportSource
+    private val reportSource: ReportSource,
+    private val tokenRepository: TokenRepository
 ) {
     suspend fun registerReportByMissing(
-        token: String,
         color: String,
         foundLatitude: Double,
         foundLongitude: Double,
@@ -24,7 +24,7 @@ class ReportRepository @Inject constructor(
         files: List<File>
     ) {
         reportSource.registerReport(
-            token,
+            tokenRepository.getTokenOrThrow(),
             ReportCreateRequestDTO(
                 color,
                 foundLatitude,
@@ -40,7 +40,6 @@ class ReportRepository @Inject constructor(
     }
 
     suspend fun registerReportWithoutMissing(
-        token: String,
         color: String,
         foundLatitude: Double,
         foundLongitude: Double,
@@ -51,7 +50,7 @@ class ReportRepository @Inject constructor(
         files: List<File>
     ) {
         reportSource.registerReport(
-            token,
+            tokenRepository.getTokenOrThrow(),
             ReportCreateRequestDTO(
                 color,
                 foundLatitude,
@@ -66,10 +65,8 @@ class ReportRepository @Inject constructor(
         )
     }
 
-    suspend fun getReportOwnByUser(
-        token: String
-    ) {
-        reportSource.getRegisterOwnByUser(token)
+    suspend fun getReportOwnByUser() {
+        reportSource.getRegisterOwnByUser(tokenRepository.getTokenOrThrow())
     }
 
     suspend fun getReportDetail(

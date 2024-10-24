@@ -8,14 +8,19 @@ import javax.inject.Singleton
 
 @Singleton
 class RegisterRepository @Inject constructor(
-    private val registerSource: RegisterSource
+    private val registerSource: RegisterSource,
+    private val tokenRepository: TokenRepository
 ) {
     suspend fun registerUserAndPet(
-        token: String,
         petRegisterDTO: PetRegisterDTO,
         petImage: File,
         userName: String
     ) {
-        registerSource.registerUserAndPet(token, petRegisterDTO, petImage, userName)
+        registerSource.registerUserAndPet(
+            tokenRepository.getTokenOrThrow(),
+            petRegisterDTO,
+            petImage,
+            userName
+        )
     }
 }

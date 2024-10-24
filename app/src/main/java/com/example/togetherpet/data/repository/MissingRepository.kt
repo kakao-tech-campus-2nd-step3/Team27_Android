@@ -5,13 +5,16 @@ import com.example.togetherpet.data.service.MissingService
 import javax.inject.Inject
 
 class MissingRepository @Inject constructor(
-    private val missingService: MissingService
+    private val missingService: MissingService,
+    private val tokenRepository: TokenRepository
 ) {
     suspend fun registerMissing(
-        token: String,
         missingRegisterRequestDTO: MissingRegisterRequestDTO
     ) {
-        missingService.registerMissing(token, missingRegisterRequestDTO)
+        missingService.registerMissing(
+            tokenRepository.getTokenOrThrow(),
+            missingRegisterRequestDTO
+        )
     }
 
     suspend fun getMissingNearBy(
