@@ -1,6 +1,8 @@
 package com.example.togetherpet.data.datasource
 
+import com.example.togetherpet.data.dto.MissingDetailResponseDTO
 import com.example.togetherpet.data.dto.MissingRegisterRequestDTO
+import com.example.togetherpet.data.dto.MissingResponseDTO
 import com.example.togetherpet.data.service.MissingService
 import com.example.togetherpet.exception.APIException
 import com.example.togetherpet.exception.ErrorResponse
@@ -32,11 +34,11 @@ class MissingSource @Inject constructor(
     suspend fun getMissingNearBy(
         latitude: Double,
         longitude: Double
-    ) {
+    ): List<MissingResponseDTO> {
         val response = missingService.getMissingNearBy(latitude, longitude)
 
         if (response.isSuccessful) {
-            // TODO 정상 응답 로직
+            return response.body()!!
         }
 
         throw APIException(
@@ -49,11 +51,11 @@ class MissingSource @Inject constructor(
 
     suspend fun getMissingDetail(
         missingId: Number
-    ) {
+    ): MissingDetailResponseDTO {
         val response = missingService.getMissingById(missingId)
 
         if (response.isSuccessful) {
-            // TODO 정상 응답 로직
+            return response.body()!!
         }
 
         throw APIException(

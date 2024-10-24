@@ -1,6 +1,8 @@
 package com.example.togetherpet.data.datasource
 
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
+import com.example.togetherpet.data.dto.ReportDetailResponseDTO
+import com.example.togetherpet.data.dto.ReportResponseDTO
 import com.example.togetherpet.data.service.ReportService
 import com.example.togetherpet.exception.APIException
 import com.example.togetherpet.exception.ErrorResponse
@@ -51,11 +53,11 @@ class ReportSource @Inject constructor(
 
     suspend fun getRegisterOwnByUser(
         token: String
-    ) {
+    ): List<ReportResponseDTO> {
         val response = reportService.getReportOwnByUser(token)
 
         if (response.isSuccessful) {
-            // TODO 저장 로직
+            return response.body()!!
         }
 
         throw APIException(
@@ -69,11 +71,11 @@ class ReportSource @Inject constructor(
     suspend fun getReportByLocation(
         latitude: Double,
         longitude: Double
-    ) {
+    ): List<ReportResponseDTO> {
         val response = reportService.getReportByLocation(latitude, longitude)
 
         if (response.isSuccessful) {
-            // TODO 저장 로직
+            return response.body()!!
         }
 
         throw APIException(
@@ -86,11 +88,11 @@ class ReportSource @Inject constructor(
 
     suspend fun getReportDetail(
         reportId: Number
-    ) {
+    ): ReportDetailResponseDTO {
         val response = reportService.getReportDetail(reportId)
 
         if (response.isSuccessful) {
-            // TODO 저장 로직
+            return response.body()!!
         }
 
         throw APIException(
