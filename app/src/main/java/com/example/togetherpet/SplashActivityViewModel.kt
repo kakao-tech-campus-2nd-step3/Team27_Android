@@ -14,7 +14,7 @@ class SplashActivityViewModel @Inject constructor() : ViewModel() {
 
     fun isLoggedIn(){
         //Todo : 수정
-        _userLoginState.value = false
+        _userLoginState.value = true
     }
 
 }

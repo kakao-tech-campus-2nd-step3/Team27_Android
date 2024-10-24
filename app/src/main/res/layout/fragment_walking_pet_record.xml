@@ -33,7 +33,7 @@
 
     <TextView
         android:id="@+id/calendar_date_text"
-        android:layout_width="360dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/walking_page_button"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,7 +135,7 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/week_viewpager"
-        android:layout_width="360dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         app:layout_constraintEnd_toEndOf="@id/calender_week_sat"

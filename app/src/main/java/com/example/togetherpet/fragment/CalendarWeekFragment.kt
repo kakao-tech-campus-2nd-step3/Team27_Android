@@ -82,7 +82,7 @@ class CalendarWeekFragment : Fragment() {
     private fun setDay(textView: TextView, date: LocalDate) {
         Log.d("testt", "${date.toString()}")
         textView.text = date.toString().substring(8..9)
-        if (textView.text == LocalDate.now().toString().substring(8..9)) setSelectedDate(textView)
+        if (LocalDate.now() == date) setSelectedDate(textView)
         textView.setOnClickListener{
             resetUi()
             onClickListener.onClickDate(date)

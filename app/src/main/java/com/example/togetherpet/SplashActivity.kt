@@ -17,6 +17,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.togetherpet.Login.LoginActivity
 import com.example.togetherpet.dashboard.view.DashboardActivity
 import com.example.togetherpet.fragment.WalkingPetViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
@@ -33,6 +34,7 @@ class SplashActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle((Lifecycle.State.STARTED)){
                 viewModel.userLoginState.collect{
+                    delay(3000)
                     if (it) navigateToHome()
                     else navigateToLogin()
                 }

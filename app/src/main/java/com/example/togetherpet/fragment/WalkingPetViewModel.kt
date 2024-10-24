@@ -40,6 +40,7 @@ class WalkingPetViewModel @Inject constructor(
     private val _calories = MutableStateFlow<Int>(0)
     private val _time = MutableStateFlow<Long>(0)
     private val _arrayLoc = MutableStateFlow<ArrayList<LatLng>>(ArrayList())
+    private val _isWalking = MutableStateFlow<Boolean>(false)
 
     var base: Long = 0
 
@@ -47,6 +48,7 @@ class WalkingPetViewModel @Inject constructor(
     val calories: StateFlow<Int> get() = _calories.asStateFlow()
     val time: StateFlow<Long> get() = _time.asStateFlow()
     val arrayLoc: StateFlow<ArrayList<LatLng>> get() = _arrayLoc.asStateFlow()
+    val isWalking: StateFlow<Boolean> get() = _isWalking.asStateFlow()
     private lateinit var locationCallback: LocationCallback
 
 
@@ -99,6 +101,7 @@ class WalkingPetViewModel @Inject constructor(
         initVar()
         initLocationTracking()
         startLocationUpdate()
+        _isWalking.value = true
     }
 
     fun stopLocationTracking() {
@@ -106,6 +109,7 @@ class WalkingPetViewModel @Inject constructor(
         fusedLocationProviderClient.removeLocationUpdates(
             locationCallback
         )
+        _isWalking.value = false
 
     }
 

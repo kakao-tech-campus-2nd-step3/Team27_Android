@@ -130,6 +130,11 @@ class WalkingPetFragment : Fragment() {
             showStopDialog()
             navigateToResultPage()
         }
+
+        binding.timeValue.onChronometerTickListener = Chronometer.OnChronometerTickListener {
+            viewModel.timerStart()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.arrayLoc.collect {
@@ -161,6 +166,19 @@ class WalkingPetFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.calories.collect {
                     binding.calorieValue.text = it.toString()
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.isWalking.collect{
+                    if(it){
+                        showBoard()
+                        binding.walkingStartButton.visibility = View.GONE
+                        binding.timeValue.start()
+                        drawLine(viewModel.arrayLoc.value)
+                    }
                 }
             }
         }
@@ -202,7 +220,6 @@ class WalkingPetFragment : Fragment() {
     }
 
     fun startWalkingTracker(){
-
         checkPermission()
         viewModel.startLocationTracking()
     }
