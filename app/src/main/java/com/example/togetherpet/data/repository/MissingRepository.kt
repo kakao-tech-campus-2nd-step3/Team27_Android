@@ -1,17 +1,17 @@
 package com.example.togetherpet.data.repository
 
+import com.example.togetherpet.data.datasource.MissingSource
 import com.example.togetherpet.data.dto.MissingRegisterRequestDTO
-import com.example.togetherpet.data.service.MissingService
 import javax.inject.Inject
 
 class MissingRepository @Inject constructor(
-    private val missingService: MissingService,
+    private val missingSource: MissingSource,
     private val tokenRepository: TokenRepository
 ) {
     suspend fun registerMissing(
         missingRegisterRequestDTO: MissingRegisterRequestDTO
     ) {
-        missingService.registerMissing(
+        missingSource.registerMissing(
             tokenRepository.getTokenOrThrow(),
             missingRegisterRequestDTO
         )
@@ -21,12 +21,12 @@ class MissingRepository @Inject constructor(
         latitude: Double,
         longitude: Double
     ) {
-        missingService.getMissingNearBy(latitude, longitude)
+        missingSource.getMissingNearBy(latitude, longitude)
     }
 
     suspend fun getMissingByMissingId(
         missingId: Number
     ) {
-        missingService.getMissingById(missingId)
+        missingSource.getMissingByMissingId(missingId)
     }
 }

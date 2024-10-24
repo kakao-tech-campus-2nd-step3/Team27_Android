@@ -49,10 +49,10 @@ class MissingSource @Inject constructor(
         )
     }
 
-    suspend fun getMissingDetail(
+    suspend fun getMissingByMissingId(
         missingId: Number
     ): MissingDetailResponseDTO {
-        val response = missingService.getMissingById(missingId)
+        val response = missingService.getMissingByMissingId(missingId)
 
         if (response.isSuccessful) {
             return response.body()!!

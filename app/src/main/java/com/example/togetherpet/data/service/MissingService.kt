@@ -21,7 +21,7 @@ interface MissingService {
     ): Response<List<MissingResponseDTO>>
 
     @GET("/api/v1/missing/{missing-id}")
-    suspend fun getMissingById(
+    suspend fun getMissingByMissingId(
         @Path("missing-id") missingId: Number
     ): Response<MissingDetailResponseDTO>
 }
