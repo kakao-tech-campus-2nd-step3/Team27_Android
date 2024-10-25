@@ -23,15 +23,15 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegistrationNicknameFragment : Fragment() {
-    private var _binding : FragmentInfoRegistrationNicknameBinding? = null
+    private var _binding: FragmentInfoRegistrationNicknameBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel : RegistrationViewModel by activityViewModels()
+    private val sharedViewModel: RegistrationViewModel by activityViewModels()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentInfoRegistrationNicknameBinding.inflate(inflater)
         return binding.root
@@ -40,21 +40,24 @@ class RegistrationNicknameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
-            finishButton.setOnClickListener { goToHomeActivitiy() }
+        binding.apply {
+            finishButton.setOnClickListener {
+                setUserName()
+                goToHomeActivitiy()
+            }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch{
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.petName.collect{ petName ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.petName.collect { petName ->
                     binding.nicknameMainText.text = "안녕하세요, ${petName} 보호자님\n닉네임을 입력해 주세요"
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.petImage.collect{ petImage ->
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.petImage.collect { petImage ->
                     Glide.with(requireContext())
                         .load(petImage)
                         .apply(
@@ -67,9 +70,13 @@ class RegistrationNicknameFragment : Fragment() {
 
     }
 
-    private fun goToHomeActivitiy(){
-        sharedViewModel.sendPetInfoToServer()
-        navigateToHomeActivity()
+    private fun setUserName() {
+        sharedViewModel.setUserName(_binding?.nicknameInputField?.text.toString())
+    }
+
+    private fun goToHomeActivitiy() {
+        sharedViewModel.registerUserAndPet()
+        //navigateToHomeActivity()
     }
 
     override fun onDestroyView() {
