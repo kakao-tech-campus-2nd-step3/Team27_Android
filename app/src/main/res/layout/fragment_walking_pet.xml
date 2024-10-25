@@ -12,7 +12,32 @@
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-    
+
+    <TextView
+        android:id="@+id/walking_page_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/walking_save_page_button"
+        android:text="산책"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        />
+    <TextView
+        android:id="@+id/walking_save_page_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toEndOf="@id/walking_page_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="산책 기록"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        />
+
     <TextView
         android:id="@+id/walking_start_button"
         android:layout_width="105dp"
@@ -155,6 +180,5 @@
         android:includeFontPadding="false"
         android:visibility="gone"
         />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

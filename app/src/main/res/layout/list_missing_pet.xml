@@ -34,7 +34,7 @@
         android:layout_width="28dp"
         android:layout_height="15dp"
         android:layout_marginStart="2dp"
-        android:background="@drawable/list_missing_peet_date"
+        android:background="@drawable/list_missing_pet_date"
         android:gravity="center"
         android:includeFontPadding="false"
         android:text="D+7H"
