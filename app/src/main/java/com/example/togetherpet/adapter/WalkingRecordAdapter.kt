@@ -1,4 +1,4 @@
-package com.example.togetherpet
+package com.example.togetherpet.adapter
 
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
@@ -14,7 +14,6 @@ import com.example.togetherpet.testData.entity.WalkingRecord
 import com.kakao.vectormap.GestureType
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.route.RouteLineOptions

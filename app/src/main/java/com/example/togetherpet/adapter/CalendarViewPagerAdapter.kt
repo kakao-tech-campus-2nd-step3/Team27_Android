@@ -1,4 +1,4 @@
-package com.example.togetherpet
+package com.example.togetherpet.adapter
 
 import android.util.Log
 import androidx.fragment.app.Fragment
