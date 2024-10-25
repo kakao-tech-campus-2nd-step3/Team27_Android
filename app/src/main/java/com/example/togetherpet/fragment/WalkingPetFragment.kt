@@ -68,7 +68,6 @@ class WalkingPetFragment : Fragment() {
     }
 
 
-
     fun drawLine(arrayList: List<LatLng>){
         val layer = kakaoMap?.routeLineManager?.layer
         val lineStyle = RouteLineStyle.from(16f, Color.RED)
@@ -217,9 +216,9 @@ class WalkingPetFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION))
         }
         if (ActivityCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED) {
+                requireContext(),
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED) {
             locationPermissionRequest.launch(arrayOf(
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             )
