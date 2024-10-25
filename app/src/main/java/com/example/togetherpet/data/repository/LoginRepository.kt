@@ -6,9 +6,10 @@ import javax.inject.Singleton
 
 @Singleton
 class LoginRepository @Inject constructor(
-    private val loginSource: LoginSource
+    private val loginSource: LoginSource,
+    private val tokenRepository: TokenRepository
 ) {
     suspend fun login(email: String) {
-        loginSource.login(email)
+        tokenRepository.saveToken(loginSource.login(email))
     }
 }

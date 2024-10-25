@@ -18,6 +18,8 @@ class MyApplication : Application() {
             if (exception is APIException) {
                 Log.e("API Exception", "Error code : " + exception.errorResponse.code)
                 Log.e("API Exception", "Error Message : " + exception.errorResponse.message)
+            } else{
+                exception.printStackTrace()
             }
         }
     }
