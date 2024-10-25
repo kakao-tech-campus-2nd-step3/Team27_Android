@@ -1,6 +1,7 @@
 package com.example.togetherpet
 
 import com.google.gson.annotations.SerializedName
+import okhttp3.MultipartBody
 
 // todo : 수정 필요
 data class PetPostRequestDto(
@@ -9,5 +10,5 @@ data class PetPostRequestDto(
     @SerializedName("pet_type") val petType : String,
     @SerializedName("is_neutering") val isNeutering : Boolean,
     @SerializedName("pet_feature") val petFeature : String,
-    @SerializedName("pet_image") val petImage : String
+    @SerializedName("pet_image") val petImage : MultipartBody.Part
 )

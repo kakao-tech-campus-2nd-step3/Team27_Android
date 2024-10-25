@@ -1,5 +1,6 @@
 package com.example.togetherpet.Registration
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.togetherpet.PetRepository
@@ -8,6 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,14 +27,14 @@ class RegistrationViewModel @Inject constructor(private val petRepository: PetRe
     private val _petFeature = MutableStateFlow<String>(" ")
 
     // todo : 이미지 타입 미정
-    private val _petImage = MutableStateFlow<String>(" ")
+    private val _petImage = MutableStateFlow<Uri>(Uri.EMPTY)
     val petName: StateFlow<String> get() = _petName.asStateFlow()
     val petAge: StateFlow<Int> get() = _petAge.asStateFlow()
     val petSpecies: StateFlow<String> get() = _petSpecies.asStateFlow()
     val neutering: StateFlow<Boolean> get() = _neutering.asStateFlow()
     val residence: StateFlow<String> get() = _residence.asStateFlow()
     val petFeature: StateFlow<String> get() = _petFeature.asStateFlow()
-    val petImage: StateFlow<String> get() = _petImage.asStateFlow()
+    val petImage: StateFlow<Uri> get() = _petImage.asStateFlow()
 
 
     fun setPetName(name: String) {
@@ -53,7 +57,7 @@ class RegistrationViewModel @Inject constructor(private val petRepository: PetRe
         _petFeature.value = petFeature
     }
 
-    fun setPetImage(petImage: String) {
+    fun setPetImage(petImage: Uri) {
         _petImage.value = petImage
     }
 
@@ -66,7 +70,7 @@ class RegistrationViewModel @Inject constructor(private val petRepository: PetRe
                 _petSpecies.value,
                 _neutering.value,
                 _petFeature.value,
-                _petImage.value
+                MultipartBody.Part.createFormData("image", _petImage.value.toString())
             ).code
         }
     }
