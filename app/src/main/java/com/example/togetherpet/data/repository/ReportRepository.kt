@@ -34,7 +34,7 @@ class ReportRepository @Inject constructor(
         description: String,
         breed: String,
         gender: String,
-        missingId: Number,
+        missingId: Long,
         files: List<File>
     ) {
         reportSource.registerReport(
@@ -117,9 +117,9 @@ class ReportRepository @Inject constructor(
     }
 
     suspend fun getReportDetail(
-        reportId: Number
+        reportId: Long
     ) {
-        val findReport = reportDao.getReportById(reportId.toInt())
+        val findReport = reportDao.getReportById(reportId)
 
         if (findReport != null) {
             val detailReport = reportSource.getReportDetail(reportId)

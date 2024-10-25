@@ -9,7 +9,7 @@ interface ReportDao {
     suspend fun insertReports(reportEntities: List<ReportEntity>)
 
     @Query("SELECT * FROM report WHERE id = :reportId")
-    suspend fun getReportById(reportId: Number): ReportEntity?
+    suspend fun getReportById(reportId: Long): ReportEntity?
 
     @Update
     suspend fun updateReport(reportEntity: ReportEntity)

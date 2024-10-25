@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "report")
 data class ReportEntity(
-    @PrimaryKey val id: Number,
+    @PrimaryKey val id: Long,
     val latitude: Double,
     val longitude: Double,
     val imageUrl: MutableList<String>,

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class MissingRegisterRequestDTO(
     @SerializedName("pet_name") val petName: String,
     @SerializedName("pet_gender") val petGender: String,
-    @SerializedName("birth_month") val birthMonth: Number,
+    @SerializedName("birth_month") val birthMonth: Long,
     @SerializedName("pet_breed") val breed: String,
     @SerializedName("lost_time") val lostTime: String,
     @SerializedName("latitude") val latitude: Double,

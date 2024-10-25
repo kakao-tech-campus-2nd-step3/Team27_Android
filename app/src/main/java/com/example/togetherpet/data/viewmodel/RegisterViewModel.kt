@@ -14,14 +14,12 @@ class RegisterViewModel @Inject constructor(
     private val registerRepository: RegisterRepository
 ) : ViewModel() {
     fun registerUserAndPet(
-        token: String,
         petRegisterDTO: PetRegisterDTO,
         petImage: File,
         userName: String
     ) {
         viewModelScope.launch {
             registerRepository.registerUserAndPet(
-                token,
                 petRegisterDTO,
                 petImage,
                 userName

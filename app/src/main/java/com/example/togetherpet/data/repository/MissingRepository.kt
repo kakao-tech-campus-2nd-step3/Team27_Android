@@ -55,7 +55,7 @@ class MissingRepository @Inject constructor(
     }
 
     suspend fun getMissingByMissingId(
-        missingId: Number
+        missingId: Long
     ) {
         val findMissing = missingDao.getMissing(missingId)
 
