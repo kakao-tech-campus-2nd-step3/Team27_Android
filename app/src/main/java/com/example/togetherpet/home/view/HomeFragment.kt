@@ -21,7 +21,6 @@ import com.example.togetherpet.home.viewModel.HomeViewModel
 import com.example.togetherpet.adapter.PetListAdapter
 import com.example.togetherpet.testData.viewModel.MissingViewModel
 import com.example.togetherpet.testData.viewModel.UserViewModel
-import com.example.togetherpet.utils.DpUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -96,14 +95,7 @@ class HomeFragment : Fragment() {
                                 .load(petImgUrl)
                                 .apply(
                                     RequestOptions().centerCrop()
-                                        .transform(
-                                            RoundedCorners(
-                                                DpUtils.dpToPx(
-                                                    requireContext(),
-                                                    10
-                                                )
-                                            )
-                                        )
+                                        .transform(RoundedCorners(dpToPx(requireContext(), 10)))
                                 )
                                 .into(binding.homeProfileImg)
 
@@ -125,5 +117,13 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun dpToPx(context: Context, dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            context.resources.displayMetrics
+        ).toInt()
     }
 }

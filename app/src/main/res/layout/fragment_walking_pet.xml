@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-    
+
     <TextView
         android:id="@+id/walking_start_button"
         android:layout_width="105dp"
@@ -98,8 +98,7 @@
         android:visibility="gone"
         />
 
-
-    <TextView
+    <Chronometer
         android:id="@+id/time_value"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -111,8 +110,7 @@
         android:layout_marginTop="20dp"
         android:textAppearance="@style/TogetherPetWalkingDisplayLarge"
         android:includeFontPadding="false"
-        android:visibility="gone"
-        />
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/time_text"

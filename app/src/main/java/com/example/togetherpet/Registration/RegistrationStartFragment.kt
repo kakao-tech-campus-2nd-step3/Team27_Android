@@ -12,8 +12,13 @@ import com.example.togetherpet.databinding.FragmentInfoRegistrationStartBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RegistrationStartFragment : Fragment() {
+class RegistrationStartFragment : Fragment() {MyApplication
     private var binding : FragmentInfoRegistrationStartBinding? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

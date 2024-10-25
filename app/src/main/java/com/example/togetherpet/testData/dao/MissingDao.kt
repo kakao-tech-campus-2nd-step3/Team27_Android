@@ -20,5 +20,4 @@ interface MissingDao {
 
     @Query("SELECT * FROM missing WHERE missingId = :id LIMIT 1")
     suspend fun getMissingPetById(id: Int): Missing?
-
 }

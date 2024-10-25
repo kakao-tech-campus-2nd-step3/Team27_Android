@@ -33,6 +33,12 @@ android {
         )
         manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] =
             gradleLocalProperties(rootDir, providers).getProperty("KAKAO_NATIVE_APP_KEY")
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            gradleLocalProperties(rootDir, providers).getProperty("BASE_URL")
+        )
     }
 
 
@@ -62,8 +68,8 @@ android {
 
 }
 dependencies {
-    val roomVersion = "2.6.1"
-
+    val roomVersion = "2.6.1"mansearchingPet
+            loginAcisearchingPet
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
