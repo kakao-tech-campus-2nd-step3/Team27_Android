@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-@Module
+@ModuleDashboardActivity
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
     @Binds
