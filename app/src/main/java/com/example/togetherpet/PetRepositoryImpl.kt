@@ -1,6 +1,7 @@
 package com.example.togetherpet
 
 import android.util.Log
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class PetRepositoryImpl @Inject constructor(private val petDataSource: PetDataSource) : PetRepository {
@@ -10,7 +11,7 @@ class PetRepositoryImpl @Inject constructor(private val petDataSource: PetDataSo
         petSpecies: String,
         neutering: Boolean,
         petFeature: String,
-        petImage: String
+        petImage: MultipartBody.Part
     ): PetResponseDto {
         val petPostRequestDto =
             PetPostRequestDto(name, petAge, petSpecies, neutering, petFeature, petImage)

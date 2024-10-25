@@ -129,6 +129,11 @@ class WalkingPetFragment : Fragment() {
             showStopDialog()
             navigateToResultPage()
         }
+
+        binding.timeValue.onChronometerTickListener = Chronometer.OnChronometerTickListener {
+            viewModel.timerStart()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.arrayLoc.collect {
@@ -164,6 +169,24 @@ class WalkingPetFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.isWalking.collect{
+                    if(it){
+                        showBoard()
+                        binding.walkingStartButton.visibility = View.GONE
+                        binding.timeValue.start()
+                        drawLine(viewModel.arrayLoc.value)
+                    }
+                }
+            }
+        }
+
+
+        binding.walkingSavePageButton.setOnClickListener{
+            navigateToRecordPage()
+        }
+
     }
 
     fun initMap(){
@@ -196,7 +219,6 @@ class WalkingPetFragment : Fragment() {
     }
 
     fun startWalkingTracker(){
-
         checkPermission()
         viewModel.startLocationTracking()
     }
@@ -251,6 +273,13 @@ class WalkingPetFragment : Fragment() {
     fun navigateToResultPage(){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.home_frameLayout, WalkingPetResultFragment())
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    fun navigateToRecordPage(){
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.home_frameLayout, WalkingPetRecordFragment())
         transaction.addToBackStack(null)
         transaction.commit()
     }

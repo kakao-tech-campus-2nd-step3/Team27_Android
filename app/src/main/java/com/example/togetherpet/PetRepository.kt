@@ -1,7 +1,9 @@
 package com.example.togetherpet
 
+import android.net.Uri
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import okhttp3.MultipartBody
 
 interface PetRepository {
     suspend fun postPetInfo(
@@ -10,6 +12,6 @@ interface PetRepository {
         petSpecies: String,
         neutering: Boolean,
         petFeature: String,
-        petImage: String
+        petImage: MultipartBody.Part
     ) : PetResponseDto
 }
