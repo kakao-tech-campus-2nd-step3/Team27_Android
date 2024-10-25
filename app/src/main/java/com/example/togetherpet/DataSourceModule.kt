@@ -5,12 +5,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-@Module
+@ModuleDashboardActivity
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
     @Binds
-    abstract fun bindTokenDataSource(tokenDataSourceImpl: TokenDataSourceImpl) : TokenDataSource
-    @Binds
-    abstract fun bindPetDataSource(petDataSourceImpl: PetDataSourceImpl) : PetDataSource
-
+    abstract fun bindPetDataSource(petDataSourceImpl: PetDataSourceImpl): PetDataSource
 }

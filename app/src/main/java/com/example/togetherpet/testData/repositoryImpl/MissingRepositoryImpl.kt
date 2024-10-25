@@ -16,4 +16,8 @@ class MissingRepositoryImpl(private val missingDao: MissingDao) : MissingReposit
     override suspend fun getMissingPetByName(name: String): Missing? {
         return missingDao.getMissingPetByName(name)
     }
+
+    override suspend fun getMissingPetById(id: Int): Missing? {
+        return missingDao.getMissingPetById(id)
+    }
 }

@@ -37,17 +37,19 @@ class WalkingPetViewModel @Inject constructor(
     ViewModel() {
 
     private val _distance = MutableStateFlow<Int>(0)
-    private val _arrayLastTwoLoc = MutableStateFlow<ArrayList<LatLng>>(ArrayList())
     private val _calories = MutableStateFlow<Int>(0)
     private val _time = MutableStateFlow<Long>(0)
-    private var base: Long = 0
+    private val _arrayLoc = MutableStateFlow<ArrayList<LatLng>>(ArrayList())
+    private val _isWalking = MutableStateFlow<Boolean>(false)
+
+    var base: Long = 0
+
     val distance: StateFlow<Int> get() = _distance.asStateFlow()
-    val arrayLastTwoLoc: StateFlow<ArrayList<LatLng>> get() = _arrayLastTwoLoc.asStateFlow()
     val calories: StateFlow<Int> get() = _calories.asStateFlow()
     val time: StateFlow<Long> get() = _time.asStateFlow()
-
-    private val arrayLoc: ArrayList<LatLng> = ArrayList<LatLng>()
-    private lateinit var locationCallback : LocationCallback
+    val arrayLoc: StateFlow<ArrayList<LatLng>> get() = _arrayLoc.asStateFlow()
+    val isWalking: StateFlow<Boolean> get() = _isWalking.asStateFlow()
+    private lateinit var locationCallback: LocationCallback
 
 
     fun calculateDistance(latLng1: LatLng, latLng2: LatLng) {
@@ -74,12 +76,19 @@ class WalkingPetViewModel @Inject constructor(
     }
 
     fun setTimeBase() {
-        base = SystemClock.elapsedRealtime()
+        base = System.currentTimeMillis()
     }
 
     fun timerStart() {
-        _time.value = SystemClock.elapsedRealtime() - base
-        Log.d("testt", "$time = {time}")
+        _time.value = System.currentTimeMillis() - base
+        Log.d("testt", "time = ${time.value}")
+    }
+
+    private fun initVar(){
+        _distance.value = 0
+        _calories.value = 0
+        _arrayLoc.value = ArrayList()
+
     }
 
     fun initLocationTracking() {
@@ -89,8 +98,10 @@ class WalkingPetViewModel @Inject constructor(
     }
 
     fun startLocationTracking() {
+        initVar()
         initLocationTracking()
         startLocationUpdate()
+        _isWalking.value = true
     }
 
     fun stopLocationTracking() {
@@ -98,6 +109,7 @@ class WalkingPetViewModel @Inject constructor(
         fusedLocationProviderClient.removeLocationUpdates(
             locationCallback
         )
+        _isWalking.value = false
 
     }
 
@@ -109,35 +121,20 @@ class WalkingPetViewModel @Inject constructor(
                     val longitude = location.longitude
                     Log.d("testt", "Latitude: $latitude, Longitude: $longitude")
                     val latLng = LatLng.from(latitude, longitude)
-                    arrayLoc.add(latLng)
-                    Log.d("testt", arrayLoc.toString())
-                    updateLastTwoLocation(latLng)
-                    calculateBetweenLastTwoLocation()
+                    val newArrayLoc = ArrayList(_arrayLoc.value).apply{add(latLng)}
+                    _arrayLoc.value = newArrayLoc
+                    Log.d("testt", "array : ${arrayLoc.value}")
                     calculateCalories()
-                    Log.d("testt", arrayLastTwoLoc.value.toString())
                 }
             }
         }
         return locationCallback
     }
 
-    fun updateLastTwoLocation(latLng: LatLng) {
-        if (_arrayLastTwoLoc.value.size >= 2) {
-            val newArrayList = ArrayList(_arrayLastTwoLoc.value).apply {
-                add(latLng)
-                removeAt(0)
-            }
-            _arrayLastTwoLoc.value = newArrayList
-        } else {
-            val newArrayList = ArrayList(_arrayLastTwoLoc.value).apply {
-                add(latLng)
-            }
-            _arrayLastTwoLoc.value = newArrayList
+    suspend fun calculateBetweenTwoLocation(indexOne : Int, indexTwo : Int) {
+        for(i : Int in indexOne..<indexTwo){
+            calculateDistance(arrayLoc.value[i], arrayLoc.value[i + 1])
         }
-    }
-
-    fun calculateBetweenLastTwoLocation() {
-        calculateDistance(_arrayLastTwoLoc.value.first(), _arrayLastTwoLoc.value.last())
     }
 
     @SuppressLint("MissingPermission")

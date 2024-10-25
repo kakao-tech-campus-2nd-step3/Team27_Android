@@ -11,6 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.togetherpet.dashboard.view.DashboardActivity
 import com.example.togetherpet.databinding.FragmentInfoRegistrationImageBinding
 import com.example.togetherpet.databinding.FragmentInfoRegistrationNicknameBinding
@@ -20,44 +23,65 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegistrationNicknameFragment : Fragment() {
-    private var binding : FragmentInfoRegistrationNicknameBinding? = null
-    private val sharedViewModel : RegistrationViewModel by activityViewModels()
+    private var _binding: FragmentInfoRegistrationNicknameBinding? = null
+    private val binding get() = _binding!!
+    private val sharedViewModel: RegistrationViewModel by activityViewModels()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        binding = FragmentInfoRegistrationNicknameBinding.inflate(inflater)
-        return binding?.root
+        _binding = FragmentInfoRegistrationNicknameBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
-            finishButton.setOnClickListener { goToHomeActivitiy() }
+        binding.apply {
+            finishButton.setOnClickListener {
+                setUserName()
+                goToHomeActivitiy()
+            }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch{
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.petName.collect{ petName ->
-                    binding?.nicknameMainText?.text = "안녕하세요, ${petName} 보호자님\n닉네임을 입력해 주세요"
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.petName.collect { petName ->
+                    binding.nicknameMainText.text = "안녕하세요, ${petName} 보호자님\n닉네임을 입력해 주세요"
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.petImage.collect { petImage ->
+                    Glide.with(requireContext())
+                        .load(petImage)
+                        .apply(
+                            RequestOptions().centerCrop()
+                        )
+                        .into(binding.animalImage)
                 }
             }
         }
 
     }
 
-    private fun goToHomeActivitiy(){
-        sharedViewModel.sendPetInfoToServer()
-        navigateToHomeActivity()
+    private fun setUserName() {
+        sharedViewModel.setUserName(_binding?.nicknameInputField?.text.toString())
+    }
+
+    private fun goToHomeActivitiy() {
+        sharedViewModel.registerUserAndPet()
+        //navigateToHomeActivity()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     private fun navigateToHomeActivity() {
