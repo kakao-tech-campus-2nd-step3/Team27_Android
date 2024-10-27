@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/report_missing_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="34dp"
+            android:drawablePadding="20dp"
+            android:includeFontPadding="false"
+            android:text="@string/report_suspected_title"
+            android:textAppearance="@style/TogetherPetTextHeadingLarge"
+            app:drawableEndCompat="@drawable/sos_icon_resize_30"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/report_missing_img"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/report_info_detail"
+            app:layout_constraintStart_toStartOf="@id/report_missing_title"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_title" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="38dp"
+            android:background="@drawable/registering_image_btn"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/registering_image"
+            android:textAppearance="@style/TogetherPetText12White"
+            app:layout_constraintBottom_toBottomOf="@id/report_missing_img"
+            app:layout_constraintStart_toEndOf="@id/report_missing_img" />
+
+        <EditText
+            android:id="@+id/report_missing_color"
+            android:layout_width="296dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="38dp"
+            android:background="@drawable/report_edittext"
+            android:hint="@string/report_color"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textAppearance="@style/TogetherPetTextMediumRed"
+            android:textColorHint="@color/KTC_red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_img" />
+
+        <EditText
+            android:id="@+id/report_missing_gender"
+            android:layout_width="296dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/report_edittext"
+            android:hint="@string/report_gender"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textAppearance="@style/TogetherPetTextMediumRed"
+            android:textColorHint="@color/KTC_red"
+            app:layout_constraintStart_toStartOf="@id/report_missing_color"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_color" />
+
+        <EditText
+            android:id="@+id/report_missing_species"
+            android:layout_width="296dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/report_edittext"
+            android:hint="@string/report_species"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textAppearance="@style/TogetherPetTextMediumRed"
+            android:textColorHint="@color/KTC_red"
+            app:layout_constraintStart_toStartOf="@id/report_missing_gender"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_gender" />
+
+        <EditText
+            android:id="@+id/report_missing_time"
+            android:layout_width="296dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/report_edittext"
+            android:hint="@string/report_time"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textAppearance="@style/TogetherPetTextMediumRed"
+            android:textColorHint="@color/KTC_red"
+            app:layout_constraintStart_toStartOf="@id/report_missing_species"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_species" />
+
+        <EditText
+            android:id="@+id/report_missing_location"
+            android:layout_width="296dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/report_edittext"
+            android:hint="@string/report_time"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textAppearance="@style/TogetherPetTextMediumRed"
+            android:textColorHint="@color/KTC_red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_time" />
+
+        <TextView
+            android:id="@+id/report_missing_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:includeFontPadding="false"
+            android:text="@string/report_info"
+            android:textAppearance="@style/TogetherPetTextMedium"
+            app:layout_constraintStart_toStartOf="@id/report_missing_location"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_location" />
+
+        <TextView
+            android:id="@+id/report_missing_info_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="@string/report_info_detail"
+            android:textAppearance="@style/TogetherPetText12Red"
+            app:layout_constraintStart_toStartOf="@id/report_missing_info_title"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_info_title" />
+
+        <EditText
+            android:id="@+id/report_missing_reportBtn"
+            android:layout_width="296dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/report_info_detail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_info_detail" />
+
+        <TextView
+            android:id="@+id/myPet_missingRegister_button"
+            android:layout_width="296dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/report_btn"
+            android:drawableStart="@drawable/sos_icon_resize_30"
+            android:drawablePadding="-30dp"
+            android:elevation="8dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingStart="10dp"
+            android:text="@string/missing_bottom_report_btn"
+            android:textAppearance="@style/TogetherPetText20"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/report_missing_reportBtn"
+            app:layout_goneMarginBottom="30dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

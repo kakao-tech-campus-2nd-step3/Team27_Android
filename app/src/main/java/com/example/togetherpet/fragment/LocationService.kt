@@ -40,7 +40,7 @@ class LocationService() : Service() {
     @Inject
     lateinit var fusedLocationClient : FusedLocationProviderClient
 
-    val locationRequest = LocationRequest.Builder(5000L).apply {
+    private val locationRequest = LocationRequest.Builder(5000L).apply {
         setPriority(Priority.PRIORITY_HIGH_ACCURACY)
         setMinUpdateIntervalMillis(5000L)
     }.build()

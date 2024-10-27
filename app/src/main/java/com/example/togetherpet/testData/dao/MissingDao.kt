@@ -17,4 +17,7 @@ interface MissingDao {
 
     @Query("SELECT * FROM missing WHERE missingPetName = :name LIMIT 1")
     suspend fun getMissingPetByName(name: String): Missing?
+
+    @Query("SELECT * FROM missing WHERE missingId = :id LIMIT 1")
+    suspend fun getMissingPetById(id: Int): Missing?
 }

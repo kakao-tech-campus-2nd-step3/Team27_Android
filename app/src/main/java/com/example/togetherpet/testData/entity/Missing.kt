@@ -10,5 +10,7 @@ data class Missing(
     @ColumnInfo val missingPetName: String,
     @ColumnInfo val missingDate: Int,
     @ColumnInfo val missingPlace: String,
-    @ColumnInfo val missingPetImgUrl: String
+    @ColumnInfo val missingPetImgUrl: String,
+    @ColumnInfo val missingLatitude: Double,
+    @ColumnInfo val missingLongitude: Double
 )
