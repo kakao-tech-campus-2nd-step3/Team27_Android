@@ -82,8 +82,9 @@ class WalkingPetRecordDetailFragment : Fragment() {
 
     fun drawLine(arrayList: ArrayList<LatLng>){
         val layer = kakaoMap.routeLineManager?.layer
-        val lineStyle = RouteLineStyle.from(16f, Color.RED)
-        lineStyle.strokeColor = Color.BLACK
+        val lineStyle = RouteLineStyle.from(16f, -2134545261)
+        lineStyle.strokeColor = Color.WHITE
+        lineStyle.strokeWidth = 4f
         val stylesSet = RouteLineStylesSet.from(
             RouteLineStyles.from(lineStyle)
         )
