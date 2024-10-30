@@ -33,11 +33,14 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 
-class WalkingPetResultFragment : Fragment() {
+class WalkingPetRecordDetailFragment : Fragment() {
 
     private var _binding : FragmentWalkingPetResultBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel : WalkingPetViewModel by activityViewModels()
+    private val sharedViewModel : WalkingPetRecordViewModel by activityViewModels()
+    private var baseTime = 0L
+    private var startLoc = LatLng.from(35.180837, 126.904849)
+
 
     private lateinit var kakaoMap: KakaoMap
 
@@ -55,7 +58,6 @@ class WalkingPetResultFragment : Fragment() {
     }
 
     fun initMap(){
-        var loc = LatLng.from(35.180837, 126.904849)
         val map = binding.walkingMapView
         map.start(object : MapLifeCycleCallback() {
 
@@ -70,8 +72,8 @@ class WalkingPetResultFragment : Fragment() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("testt", "MapReady")
-                kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
-                this@WalkingPetResultFragment.kakaoMap = kakaoMap
+                kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(startLoc))
+                this@WalkingPetRecordDetailFragment.kakaoMap = kakaoMap
 
                 initListener()
             }
@@ -117,6 +119,7 @@ class WalkingPetResultFragment : Fragment() {
                     Log.d("testt", "listener, Array : ${arrayLoc}")
                     if(arrayLoc.isNotEmpty()){
                         displayStartPoint(arrayLoc)
+                        kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(arrayLoc.first()))
                         drawLine(arrayLoc)
                         displayEndPoint(arrayLoc)
                     }
@@ -132,9 +135,17 @@ class WalkingPetResultFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
+                sharedViewModel.base.collect {
+                    baseTime = it
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
                 sharedViewModel.time.collect {
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
-                    binding.timeResultRedText.text = "${format.format(sharedViewModel.base)} ~ ${format.format(sharedViewModel.base + it)}"
+                    val time : Long = it
+                    binding.timeResultRedText.text = "${format.format(baseTime)} ~ ${format.format(baseTime+ time)}"
                     format.timeZone = TimeZone.getTimeZone("UTC")
                     binding.timeResultText.text = format.format(it)
                 }

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.WalkingPetRecordFragment"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/walking_page_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="산책"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        app:layout_constraintEnd_toStartOf="@id/walking_save_page_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/walking_save_page_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toEndOf="@id/walking_page_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="산책 기록"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/calendar_date_text"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/walking_page_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="2024.10"
+        android:gravity="center"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:includeFontPadding="false"
+        android:layout_marginBottom="5dp"
+        />
+
+    <TextView
+        android:id="@+id/calender_week_sun"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="일"
+        app:layout_constraintTop_toBottomOf="@id/calendar_date_text"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        app:layout_constraintStart_toStartOf="@id/calendar_date_text"
+        app:layout_constraintEnd_toStartOf="@id/calender_week_mon"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/calender_week_mon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="월"
+        app:layout_constraintTop_toBottomOf="@id/calendar_date_text"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        app:layout_constraintStart_toEndOf="@id/calender_week_sun"
+        app:layout_constraintEnd_toStartOf="@id/calender_week_tue"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/calender_week_tue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="화"
+        app:layout_constraintTop_toBottomOf="@id/calendar_date_text"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        app:layout_constraintStart_toEndOf="@id/calender_week_mon"
+        app:layout_constraintEnd_toStartOf="@id/calender_week_wed"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        />
+    <TextView
+        android:id="@+id/calender_week_wed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="수"
+        app:layout_constraintTop_toBottomOf="@id/calendar_date_text"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        app:layout_constraintStart_toEndOf="@id/calender_week_tue"
+        app:layout_constraintEnd_toStartOf="@id/calender_week_thu"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        />
+    <TextView
+        android:id="@+id/calender_week_thu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="목"
+        app:layout_constraintTop_toBottomOf="@id/calendar_date_text"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        app:layout_constraintStart_toEndOf="@id/calender_week_wed"
+        app:layout_constraintEnd_toStartOf="@id/calender_week_fri"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        />
+    <TextView
+        android:id="@+id/calender_week_fri"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="금"
+        app:layout_constraintTop_toBottomOf="@id/calendar_date_text"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        app:layout_constraintStart_toEndOf="@id/calender_week_thu"
+        app:layout_constraintEnd_toStartOf="@id/calender_week_sat"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        />
+    <TextView
+        android:id="@+id/calender_week_sat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="토"
+        app:layout_constraintTop_toBottomOf="@id/calendar_date_text"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        app:layout_constraintStart_toEndOf="@id/calender_week_fri"
+        app:layout_constraintEnd_toEndOf="@id/calendar_date_text"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        />
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/week_viewpager"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        app:layout_constraintEnd_toEndOf="@id/calender_week_sat"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/calender_week_sun"
+        app:layout_constraintTop_toBottomOf="@id/calender_week_sun" />
+
+    <TextView
+        android:id="@+id/distance_sum_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        app:layout_constraintTop_toBottomOf="@id/week_viewpager"
+        app:layout_constraintStart_toStartOf="@id/calendar_date_text"
+        android:text="산책 거리"
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/distance_sum_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        app:layout_constraintTop_toBottomOf="@id/distance_sum_text"
+        app:layout_constraintStart_toStartOf="@id/distance_sum_text"
+        android:text="총 xxxxm 산책했어요!"
+        android:textAppearance="@style/TogetherPetTextHeadingLarge"
+        android:includeFontPadding="false"
+        app:layout_goneMarginTop="4dp"
+        />
+
+    <TextView
+        android:id="@+id/time_sum_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        app:layout_constraintTop_toBottomOf="@id/distance_sum_value"
+        app:layout_constraintStart_toStartOf="@id/distance_sum_value"
+        android:text="산책 시간"
+        android:textAppearance="@style/TogetherPetTextMedium"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/time_sum_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        app:layout_constraintTop_toBottomOf="@id/time_sum_text"
+        app:layout_constraintStart_toStartOf="@id/time_sum_text"
+        android:text="01:00:00"
+        android:textAppearance="@style/TogetherPetTextHeadingLarge"
+        android:includeFontPadding="false"
+        app:layout_goneMarginTop="4dp"
+        />
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/walking_recyclerview"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/time_sum_value"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="35dp"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

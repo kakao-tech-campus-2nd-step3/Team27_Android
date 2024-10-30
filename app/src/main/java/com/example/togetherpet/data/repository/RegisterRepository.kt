@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.repository
 
+import android.util.Log
 import com.example.togetherpet.data.datasource.RegisterSource
 import com.example.togetherpet.data.dto.PetRegisterDTO
 import java.io.File
@@ -16,6 +17,8 @@ class RegisterRepository @Inject constructor(
         petImage: File,
         userName: String
     ) {
+        Log.d("testt", " repo : ${petImage}, ${userName}")
+        Log.d("testt", "token : ${tokenRepository.getTokenOrThrow()}")
         registerSource.registerUserAndPet(
             tokenRepository.getTokenOrThrow(),
             petRegisterDTO,

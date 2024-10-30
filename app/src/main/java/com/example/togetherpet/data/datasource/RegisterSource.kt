@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.datasource
 
+import android.util.Log
 import com.example.togetherpet.data.dto.PetRegisterDTO
 import com.example.togetherpet.data.service.RegisterService
 import com.example.togetherpet.exception.APIException
@@ -18,7 +19,6 @@ class RegisterSource @Inject constructor(
     private val registerService: RegisterService,
     private val gson: Gson
 ) {
-
     suspend fun registerUserAndPet(
         token: String,
         petRegisterDTO: PetRegisterDTO,
@@ -35,7 +35,7 @@ class RegisterSource @Inject constructor(
             ),
             userName.toRequestBody("text/plain".toMediaTypeOrNull())
         )
-
+        Log.d("testt", "${response.body().toString()}, ${response.errorBody().toString()}")
         if (!response.isSuccessful) {
             throw APIException(
                 gson.fromJson(
