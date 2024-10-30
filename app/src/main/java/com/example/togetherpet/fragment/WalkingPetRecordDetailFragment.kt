@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetResultBinding
+import com.example.togetherpet.extensions.drawLine
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -80,22 +81,6 @@ class WalkingPetRecordDetailFragment : Fragment() {
         })
     }
 
-    fun drawLine(arrayList: ArrayList<LatLng>){
-        val layer = kakaoMap.routeLineManager?.layer
-        val lineStyle = RouteLineStyle.from(16f, Color.RED)
-        lineStyle.strokeColor = Color.BLACK
-        val stylesSet = RouteLineStylesSet.from(
-            RouteLineStyles.from(lineStyle)
-        )
-        val segment = RouteLineSegment.from(
-            arrayList
-        ).setStyles(stylesSet.getStyles(0))
-        val options = RouteLineOptions.from(segment)
-            .setStylesSet(stylesSet)
-
-        val routeLine = layer?.addRouteLine(options)
-    }
-
     fun displayStartPoint(arrayList: ArrayList<LatLng>) {
         createLabel(arrayList.first())
     }
@@ -120,7 +105,7 @@ class WalkingPetRecordDetailFragment : Fragment() {
                     if(arrayLoc.isNotEmpty()){
                         displayStartPoint(arrayLoc)
                         kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(arrayLoc.first()))
-                        drawLine(arrayLoc)
+                        kakaoMap.drawLine(arrayLoc)
                         displayEndPoint(arrayLoc)
                     }
                 }

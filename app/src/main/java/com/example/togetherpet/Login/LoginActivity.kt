@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
 
-                //viewModel.login(user.kakaoAccount?.email.toString())
+                viewModel.login(user.kakaoAccount?.email.toString())
                 val intent = Intent(this@LoginActivity, InfoRegistrationActivity::class.java)
                 startActivity(intent)
 
