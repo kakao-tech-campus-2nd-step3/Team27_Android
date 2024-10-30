@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetBinding
+import com.example.togetherpet.extensions.drawLine
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.kakao.vectormap.KakaoMap
@@ -67,23 +68,6 @@ class WalkingPetFragment : Fragment() {
         checkPermission()
     }
 
-
-    fun drawLine(arrayList: List<LatLng>){
-        val layer = kakaoMap?.routeLineManager?.layer
-        val lineStyle = RouteLineStyle.from(16f, Color.RED)
-        lineStyle.strokeColor = Color.BLACK
-        val stylesSet = RouteLineStylesSet.from(
-            RouteLineStyles.from(lineStyle)
-        )
-        val segment = RouteLineSegment.from(
-            arrayList
-        ).setStyles(stylesSet.getStyles(0))
-
-        val options = RouteLineOptions.from(segment)
-            .setStylesSet(stylesSet)
-
-        val routeLine = layer?.addRouteLine(options)
-    }
 
     fun initVar(){
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -138,7 +122,7 @@ class WalkingPetFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.arrayLoc.collect {
                     Log.d("testt", "lastLocationIndex : $lastLocationIndex, lastIndex : ${it.lastIndex}")
-                    drawLine(it.slice(lastLocationIndex..it.lastIndex))
+                    kakaoMap?.drawLine(ArrayList(it.slice(lastLocationIndex..it.lastIndex)))
                     viewModel.calculateBetweenTwoLocation(lastLocationIndex, it.lastIndex)
                     if(it.size != 0) lastLocationIndex = it.lastIndex
                 }
@@ -176,7 +160,7 @@ class WalkingPetFragment : Fragment() {
                         showBoard()
                         binding.walkingStartButton.visibility = View.GONE
                         binding.timeValue.start()
-                        drawLine(viewModel.arrayLoc.value)
+                        kakaoMap?.drawLine(viewModel.arrayLoc.value)
                     }
                 }
             }
