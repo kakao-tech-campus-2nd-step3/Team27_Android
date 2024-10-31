@@ -312,6 +312,16 @@ class SearchingPetFragment : Fragment() {
         binding.searchingMissingList.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
+        //목격 제보 버튼 클릭
+        binding.searchingReportBtn.setOnClickListener {
+            val reportSuspectedMissingPet = ReportSuspectedMissingPetFragment()
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_myPetMissing, reportSuspectedMissingPet)
+                .addToBackStack(null)
+                .commit()
+        }
+
         //btnList 사이의 간격 설정
         binding.researchingBtnList.addItemDecoration(ItemSpacing(20))
 
