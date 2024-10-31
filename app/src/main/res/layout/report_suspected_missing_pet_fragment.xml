@@ -111,7 +111,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/report_edittext"
-            android:hint="@string/report_time"
+            android:hint="@string/report_location"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:textAppearance="@style/TogetherPetTextMediumRed"
