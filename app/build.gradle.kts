@@ -39,6 +39,16 @@ android {
             "BASE_URL",
             gradleLocalProperties(rootDir, providers).getProperty("BASE_URL")
         )
+        buildConfigField(
+            "String",
+            "KAKAO_BASE_URL",
+            gradleLocalProperties(rootDir, providers).getProperty("KAKAO_BASE_URL")
+        )
+        buildConfigField(
+            "String",
+            "KAKAO_LOCAL_API_KEY",
+            gradleLocalProperties(rootDir, providers).getProperty("KAKAO_LOCAL_API_KEY")
+        )
     }
 
 

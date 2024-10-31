@@ -2,6 +2,7 @@ package com.example.togetherpet.di
 
 import com.example.togetherpet.BuildConfig
 import com.example.togetherpet.PetService
+import com.example.togetherpet.data.service.KakaoLocalService
 import com.example.togetherpet.data.service.LoginService
 import com.example.togetherpet.data.service.MissingService
 import com.example.togetherpet.data.service.RegisterService
@@ -13,6 +14,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -24,6 +26,16 @@ class NetworkModule {
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("kakaoLocalRetrofit")
+    fun provideKakaoLocalRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.KAKAO_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -62,5 +74,11 @@ class NetworkModule {
     @Singleton
     fun provideWalkingService(retrofit: Retrofit): WalkingService {
         return retrofit.create(WalkingService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideKakaoLocalService(@Named("kakaoLocalRetrofit") retrofit: Retrofit): KakaoLocalService {
+        return retrofit.create(KakaoLocalService::class.java)
     }
 }
