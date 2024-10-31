@@ -40,6 +40,7 @@ class WalkingPetViewModel @Inject constructor(
     private val _calories = MutableStateFlow<Int>(0)
     private val _time = MutableStateFlow<Long>(0)
     private val _arrayLoc = MutableStateFlow<ArrayList<LatLng>>(ArrayList())
+    private val _lastLoc = MutableStateFlow<LatLng>(LatLng.from(0.0, 0.0))
     private val _isWalking = MutableStateFlow<Boolean>(false)
 
     var base: Long = 0
@@ -48,6 +49,7 @@ class WalkingPetViewModel @Inject constructor(
     val calories: StateFlow<Int> get() = _calories.asStateFlow()
     val time: StateFlow<Long> get() = _time.asStateFlow()
     val arrayLoc: StateFlow<ArrayList<LatLng>> get() = _arrayLoc.asStateFlow()
+    val lastLoc: StateFlow<LatLng> get() = _lastLoc.asStateFlow()
     val isWalking: StateFlow<Boolean> get() = _isWalking.asStateFlow()
     private lateinit var locationCallback: LocationCallback
 
@@ -122,6 +124,7 @@ class WalkingPetViewModel @Inject constructor(
                     Log.d("testt", "Latitude: $latitude, Longitude: $longitude")
                     val latLng = LatLng.from(latitude, longitude)
                     val newArrayLoc = ArrayList(_arrayLoc.value).apply{add(latLng)}
+                    _lastLoc.value = newArrayLoc.last()
                     _arrayLoc.value = newArrayLoc
                     Log.d("testt", "array : ${arrayLoc.value}")
                     calculateCalories()

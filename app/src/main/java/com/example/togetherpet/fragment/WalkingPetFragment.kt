@@ -33,6 +33,9 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.route.RouteLineOptions
 import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
@@ -120,11 +123,13 @@ class WalkingPetFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.arrayLoc.collect {
-                    Log.d("testt", "lastLocationIndex : $lastLocationIndex, lastIndex : ${it.lastIndex}")
-                    kakaoMap?.drawLine(ArrayList(it.slice(lastLocationIndex..it.lastIndex)))
-                    viewModel.calculateBetweenTwoLocation(lastLocationIndex, it.lastIndex)
-                    if(it.size != 0) lastLocationIndex = it.lastIndex
+                viewModel.arrayLoc.collect { arrayList ->
+                    val array = arrayList.slice(lastLocationIndex..arrayList.lastIndex)
+                    Log.d("testt", "lastLocationIndex : $lastLocationIndex, lastIndex : ${arrayList.lastIndex}")
+                    kakaoMap?.drawLine(ArrayList(array))
+                    createLabel(viewModel.lastLoc.value)
+                    viewModel.calculateBetweenTwoLocation(lastLocationIndex, arrayList.lastIndex)
+                    if(arrayList.size != 0) lastLocationIndex = arrayList.lastIndex
                 }
             }
         }
@@ -160,6 +165,7 @@ class WalkingPetFragment : Fragment() {
                         showBoard()
                         binding.walkingStartButton.visibility = View.GONE
                         binding.timeValue.start()
+                        Log.d("testt", "loc : ${viewModel.arrayLoc.value.last()}")
                         kakaoMap?.drawLine(viewModel.arrayLoc.value)
                     }
                 }
@@ -198,6 +204,7 @@ class WalkingPetFragment : Fragment() {
                 Log.d("testt", "MapReady")
                 kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
                 this@WalkingPetFragment.kakaoMap = kakaoMap
+                createLabel(loc)
             }
         })
     }
@@ -207,6 +214,9 @@ class WalkingPetFragment : Fragment() {
         viewModel.startLocationTracking()
     }
 
+    fun setMyLocationPin(array: Array<LatLng>){
+        createLabel(array.last())
+    }
 
     fun checkPermission(){
         if (ActivityCompat.checkSelfPermission(
@@ -261,11 +271,24 @@ class WalkingPetFragment : Fragment() {
         transaction.commit()
     }
 
-    fun navigateToRecordPage(){
+    private fun navigateToRecordPage(){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.home_frameLayout, WalkingPetRecordFragment())
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun removeAllLabel(){
+        kakaoMap?.labelManager?.clearAll()
+    }
+
+    private fun createLabel(pos : LatLng){
+        Log.d("testt", "loc : $pos")
+        removeAllLabel()
+        val labelManager = kakaoMap?.labelManager
+        val style = labelManager
+            ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.walking_my_location_pin).setAnchorPoint(0.5f, 0.5f).setApplyDpScale(true)))
+        kakaoMap?.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style))
     }
 
     override fun onPause() {
