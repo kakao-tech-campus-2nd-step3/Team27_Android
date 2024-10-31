@@ -9,6 +9,8 @@ import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.togetherpet.data.repository.WalkingRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -17,6 +19,7 @@ import com.google.android.gms.location.Priority
 import com.kakao.vectormap.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,7 +35,8 @@ import kotlin.math.sqrt
 @HiltViewModel
 class WalkingPetViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val fusedLocationProviderClient: FusedLocationProviderClient
+    private val fusedLocationProviderClient: FusedLocationProviderClient,
+    private val walkingRepository: WalkingRepository
 ) :
     ViewModel() {
 
@@ -112,7 +116,7 @@ class WalkingPetViewModel @Inject constructor(
             locationCallback
         )
         _isWalking.value = false
-
+        sendWalkingData()
     }
 
     fun setLocationCallback(): LocationCallback {
@@ -152,5 +156,11 @@ class WalkingPetViewModel @Inject constructor(
             locationCallback,
             Looper.getMainLooper()
         )
+    }
+
+    private fun sendWalkingData(){
+        viewModelScope.launch(Dispatchers.IO) {
+            walkingRepository.sendWalkingDataToServer(_distance.value, _time.value, arrayLoc.value)
+        }
     }
 }
