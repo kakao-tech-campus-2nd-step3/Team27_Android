@@ -26,7 +26,7 @@ import java.time.LocalDate
 import java.util.Locale
 
 @AndroidEntryPoint
-class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateClickListener {
+class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
 
     private var _binding: FragmentWalkingPetRecordBinding? = null
     private val binding get() = _binding!!
@@ -54,7 +54,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
     }
 
     private fun setOneWeekViewPager() {
-        val calendarAdapter = CalendarViewPagerAdapter(requireActivity(), this)
+        val calendarAdapter = CalendarViewPagerAdapter(requireActivity())
         binding.weekViewpager
         binding.weekViewpager.adapter = calendarAdapter
         binding.weekViewpager.setCurrentItem(CalendarViewPagerAdapter.START_POSITION, false)
@@ -137,8 +137,4 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
         _binding = null
     }
 
-    override fun onClickDate(date: LocalDate) {
-        selectedDate = date
-        sharedViewModel.getRecord(selectedDate)
-    }
 }
