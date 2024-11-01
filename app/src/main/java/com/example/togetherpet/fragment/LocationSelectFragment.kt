@@ -36,15 +36,15 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class LocationSelectFragment : Fragment() {
 
+    // 일단 홈화면에서 이미지 클릭하면 넘어오도록 설정했습니다.... 추가로 변경해주시면 될 것 같습니다.
     @Inject
+    // 나중에 viewmodel과 연결해서 사용하시면 될거같습니다.
     lateinit var kakaoLocalRepository: KakaoLocalRepository
 
     private var _binding: FragmentLocationSelectBinding? = null
     private val binding get() = _binding!!
     var kakaoMap: KakaoMap? = null
     lateinit var fusedLocationClient: FusedLocationProviderClient
-    lateinit var locationLabel: Label
-    var trackingManager: TrackingManager? = null
 
 
     override fun onCreateView(
@@ -85,26 +85,28 @@ class LocationSelectFragment : Fragment() {
                 Log.d("testt", "MapReady")
                 kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
                 this@LocationSelectFragment.kakaoMap = kakaoMap
-                trackingManager = kakaoMap.trackingManager
 
+
+                // 카메라 움직임이 시작할 때 리스너입니다.
                 kakaoMap.setOnCameraMoveStartListener { kakaoMap, gestureType ->
-                    // 카메라 움직임 시작 시 이벤트 호출
-                    // 사용자 제스쳐가 아닌 코드에 의해 카메라가 움직이면 GestureType 은 Unknown
-                    kakaoMap.getCameraPosition()?.position?.let {
-                        Log.d("testt", "camera : ${it}")
-                        binding.addressDisplay.text = "발견 위치로 이동시켜 주세요."
-                    }
+                    binding.addressDisplay.text = "발견 위치로 이동시켜 주세요."
                 }
 
+                // 카메라 움직임이 끝날 때 리스너입니다.
                 kakaoMap.setOnCameraMoveEndListener { kakaoMap, cameraPosition, gestureType ->
-                    // 카메라 움직임 종료 시 이벤트 호출
-                    // 사용자 제스쳐가 아닌 코드에 의해 카메라가 움직이면 GestureType 은 Unknown
                     Log.d("testt", "카메라 이동 종료")
+                    // cameraPosition -> 맵 가운데 위치
+                    // 항상 맵 가운데에 핀이 위치해 있으므로(xml에 있습니다) 핀의 위치를 반환.
                     lifecycleScope.launch {
                         val address = withContext(Dispatchers.IO) {
+                            // 나중에 viewmodel에서 호출하면 될듯합니다.
+                            // LatLng 클래스를 AddressDTO로 반환합니다.
+                            // Kakao Local API 사용하였습니다.
+                            // DTO 관련은 KakaoLocalResponseDTO 확인하면 됩니다.
                             kakaoLocalRepository.latLngToAddress(cameraPosition.position)
                         }
                         Log.d("testt", address.toString())
+                        // 필요한 정보를 DTO에서 뽑아서 사용하시면 됩니다.
                         binding.addressDisplay.text = address.address?.addressName
                     }
 
@@ -112,27 +114,5 @@ class LocationSelectFragment : Fragment() {
             }
         })
 
-    }
-
-    private fun removeAllLabel() {
-        kakaoMap?.labelManager?.clearAll()
-    }
-
-    private fun createLabel(pos: LatLng) {
-        removeAllLabel()
-        val labelManager = kakaoMap?.labelManager
-        val style = labelManager
-            ?.addLabelStyles(
-                LabelStyles.from(
-                    LabelStyle.from(R.drawable.sos_icon).setAnchorPoint(0.5f, 0.5f)
-                        .setApplyDpScale(true)
-                )
-            )
-        kakaoMap?.getLabelManager()?.getLayer()
-            ?.addLabel(LabelOptions.from("center", pos).setStyles(style)).also {
-                if (it != null) {
-                    locationLabel = it
-                }
-            }
     }
 }
