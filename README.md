@@ -1,5 +1,5 @@
 # Team27_Android
-## Team27_Android 8주차 과제 제출
+## Team27_Android 9주차 과제 제출
 
 ### 구현한 내용
 - 로그인 및 정보 등록 api 통신 구현
