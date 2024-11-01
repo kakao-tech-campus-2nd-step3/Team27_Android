@@ -31,7 +31,6 @@ class WalkingRecordAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = WalkingRecordItemBinding.inflate(inflater, parent, false)
         return WalkingRecordViewHolder(binding, listener)
-
     }
 
     override fun onBindViewHolder(holder: WalkingRecordViewHolder, position: Int) {
