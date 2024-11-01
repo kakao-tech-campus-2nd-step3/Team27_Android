@@ -30,6 +30,7 @@ import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -98,7 +99,7 @@ class WalkingPetResultFragment : Fragment() {
     fun initListener(){
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.arrayLoc.collect{ arrayLoc ->
+                sharedViewModel.arrayLoc.collectLatest{ arrayLoc ->
                     Log.d("testt", "listener, Array : ${arrayLoc}")
                     if(arrayLoc.isNotEmpty()){
                         displayStartPoint(arrayLoc)
@@ -110,14 +111,14 @@ class WalkingPetResultFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.distance.collect {
+                sharedViewModel.distance.collectLatest {
                     binding.distanceResultText.text = "총 ${it}m 산책했어요"
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.time.collect {
+                sharedViewModel.time.collectLatest {
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
                     binding.timeResultRedText.text = "${format.format(sharedViewModel.base)} ~ ${format.format(sharedViewModel.base + it)}"
                     format.timeZone = TimeZone.getTimeZone("UTC")
@@ -127,7 +128,7 @@ class WalkingPetResultFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.calories.collect {
+                sharedViewModel.calories.collectLatest {
                     binding.caloriesResultText.text = "꾸릉이가 총 ${it}kcal 만큼 소모했어요!"
                 }
             }

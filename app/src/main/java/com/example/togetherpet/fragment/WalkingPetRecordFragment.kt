@@ -19,6 +19,7 @@ import com.example.togetherpet.R
 import com.example.togetherpet.adapter.WalkingRecordAdapter
 import com.example.togetherpet.databinding.FragmentWalkingPetRecordBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Locale
@@ -67,7 +68,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.arrayRecord.collect {
+                sharedViewModel.arrayRecord.collectLatest {
                     walkingRecyclerViewAdapter.submitList(it)
                 }
             }
@@ -75,7 +76,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.allDistance.collect {
+                sharedViewModel.allDistance.collectLatest {
                     binding.distanceSumValue.text = "총 ${it.toString()}m 산책했어요!"
                 }
             }
@@ -83,7 +84,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.allTime.collect {
+                sharedViewModel.allTime.collectLatest {
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
                     format.timeZone = TimeZone.getTimeZone("UTC")
                     binding.timeSumValue.text = format.format(it)
@@ -93,7 +94,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.selectDay.collect {
+                sharedViewModel.selectDay.collectLatest {
                     sharedViewModel.getRecord(selectedDate)
                 }
             }

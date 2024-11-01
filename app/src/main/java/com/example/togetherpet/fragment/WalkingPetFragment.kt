@@ -42,6 +42,7 @@ import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -135,14 +136,14 @@ class WalkingPetFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.distance.collect {
+                viewModel.distance.collectLatest {
                     binding.distanceValue.text = it.toString()
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.time.collect {
+                viewModel.time.collectLatest {
                     Log.d("testt", "time : ${it}")
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
                     format.timeZone = TimeZone.getTimeZone("UTC")
@@ -152,7 +153,7 @@ class WalkingPetFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.calories.collect {
+                viewModel.calories.collectLatest {
                     binding.calorieValue.text = it.toString()
                 }
             }
