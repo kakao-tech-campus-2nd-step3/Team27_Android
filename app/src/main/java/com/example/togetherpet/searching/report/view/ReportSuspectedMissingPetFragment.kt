@@ -1,4 +1,4 @@
-package com.example.togetherpet.searching
+package com.example.togetherpet.searching.report.view
 
 import android.app.Activity
 import android.content.Intent
@@ -10,27 +10,28 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.togetherpet.data.dto.ReportCreateRequestDTO
 import com.example.togetherpet.databinding.ReportSuspectedMissingPetFragmentBinding
+import com.example.togetherpet.searching.report.viewModel.ReportSuspectedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class ReportSuspectedMissingPetFragment : Fragment() {
     private var _binding: ReportSuspectedMissingPetFragmentBinding? = null
     private val binding get() = _binding!!
 
+    private val reportSuspectedViewModel : ReportSuspectedViewModel by viewModels()
+
     private lateinit var resultLauncher : ActivityResultLauncher<Intent>
 
-    //로직 분리 필요
-    private var img_uri : Uri? = null
+    private var imgUri : Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = ReportSuspectedMissingPetFragmentBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -47,15 +48,17 @@ class ReportSuspectedMissingPetFragment : Fragment() {
                     Glide.with(this)
                         .load(uri)
                         .into(binding.reportMissingImg)
-                    img_uri = uri
+                    imgUri = uri
                 }
             }
         }
 
+        //이미지 업로드
         binding.imgUploadBtn.setOnClickListener {
             setImage()
         }
 
+        //'제보 하기' 클릭
         binding.reportMissingReportBtn.setOnClickListener {
             sendReport()
         }
@@ -70,7 +73,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
     }
 
     private fun sendReport() {
-
+        setData()
     }
 
     private fun setData(){
@@ -83,16 +86,9 @@ class ReportSuspectedMissingPetFragment : Fragment() {
         //val location = binding.reportMissingLocation.text
         val info = binding.reportMissingInfoDetail.text.toString()
 
-        val reportRequest = ReportCreateRequestDTO(
-            color = color,
-            description = info,
-            gender = gender,
-            breed = species,
-            missingId = null,
-            foundDate = LocalDateTime.now(),
-            foundLatitude = 0.0,
-            foundLongitude = 0.0
-        )
+        /*reportSuspectedViewModel.reportSuspected(
+            color = color, gender = gender, breed = species, description = info, foundLongitude = 0.0, foundLatitude = 0.0, foundDate =2024-11-01 14:30:45.123
+        )*/
     }
 
     override fun onDestroyView() {

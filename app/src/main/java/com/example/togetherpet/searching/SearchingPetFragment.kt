@@ -24,12 +24,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.togetherpet.DataStoreRepository
 import com.example.togetherpet.R
 import com.example.togetherpet.adapter.PetListAdapter
 import com.example.togetherpet.adapter.SearchingBtnListAdapter
 import com.example.togetherpet.databinding.FragmentSearchingPetBinding
+import com.example.togetherpet.searching.report.view.ReportSuspectedMissingPetFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.kakao.vectormap.KakaoMap
@@ -44,7 +44,6 @@ import com.kakao.vectormap.label.LabelStyles
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
