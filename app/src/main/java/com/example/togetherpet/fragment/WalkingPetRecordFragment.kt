@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,12 +20,13 @@ import com.example.togetherpet.R
 import com.example.togetherpet.adapter.WalkingRecordAdapter
 import com.example.togetherpet.databinding.FragmentWalkingPetRecordBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Locale
 
 @AndroidEntryPoint
-class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateClickListener {
+class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
 
     private var _binding: FragmentWalkingPetRecordBinding? = null
     private val binding get() = _binding!!
@@ -52,7 +54,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
     }
 
     private fun setOneWeekViewPager() {
-        val calendarAdapter = CalendarViewPagerAdapter(requireActivity(), this)
+        val calendarAdapter = CalendarViewPagerAdapter(requireActivity())
         binding.weekViewpager
         binding.weekViewpager.adapter = calendarAdapter
         binding.weekViewpager.setCurrentItem(CalendarViewPagerAdapter.START_POSITION, false)
@@ -65,9 +67,16 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
             navigateToWalkingPage()
         }
 
+        setFragmentResultListener("dateClick"){ key, bundle ->
+            val date = bundle.getLong("date")
+            selectedDate = LocalDate.ofEpochDay(date)
+            Log.d("testt", "fragmentResultListener : $selectedDate")
+            sharedViewModel.getRecord(selectedDate)
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.arrayRecord.collect {
+                sharedViewModel.arrayRecord.collectLatest {
                     walkingRecyclerViewAdapter.submitList(it)
                 }
             }
@@ -75,7 +84,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.allDistance.collect {
+                sharedViewModel.allDistance.collectLatest {
                     binding.distanceSumValue.text = "총 ${it.toString()}m 산책했어요!"
                 }
             }
@@ -83,7 +92,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.allTime.collect {
+                sharedViewModel.allTime.collectLatest {
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
                     format.timeZone = TimeZone.getTimeZone("UTC")
                     binding.timeSumValue.text = format.format(it)
@@ -93,7 +102,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.selectDay.collect {
+                sharedViewModel.selectDay.collectLatest {
                     sharedViewModel.getRecord(selectedDate)
                 }
             }
@@ -128,8 +137,4 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
         _binding = null
     }
 
-    override fun onClickDate(date: LocalDate) {
-        selectedDate = date
-        sharedViewModel.getRecord(selectedDate)
-    }
 }

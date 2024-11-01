@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetBinding
+import com.example.togetherpet.extensions.drawLine
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.kakao.vectormap.KakaoMap
@@ -32,12 +33,16 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.route.RouteLineOptions
 import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -67,23 +72,6 @@ class WalkingPetFragment : Fragment() {
         checkPermission()
     }
 
-
-    fun drawLine(arrayList: List<LatLng>){
-        val layer = kakaoMap?.routeLineManager?.layer
-        val lineStyle = RouteLineStyle.from(16f, Color.RED)
-        lineStyle.strokeColor = Color.BLACK
-        val stylesSet = RouteLineStylesSet.from(
-            RouteLineStyles.from(lineStyle)
-        )
-        val segment = RouteLineSegment.from(
-            arrayList
-        ).setStyles(stylesSet.getStyles(0))
-
-        val options = RouteLineOptions.from(segment)
-            .setStylesSet(stylesSet)
-
-        val routeLine = layer?.addRouteLine(options)
-    }
 
     fun initVar(){
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -136,24 +124,26 @@ class WalkingPetFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.arrayLoc.collect {
-                    Log.d("testt", "lastLocationIndex : $lastLocationIndex, lastIndex : ${it.lastIndex}")
-                    drawLine(it.slice(lastLocationIndex..it.lastIndex))
-                    viewModel.calculateBetweenTwoLocation(lastLocationIndex, it.lastIndex)
-                    if(it.size != 0) lastLocationIndex = it.lastIndex
+                viewModel.arrayLoc.collect { arrayList ->
+                    val array = arrayList.slice(lastLocationIndex..arrayList.lastIndex)
+                    Log.d("testt", "lastLocationIndex : $lastLocationIndex, lastIndex : ${arrayList.lastIndex}")
+                    kakaoMap?.drawLine(ArrayList(array))
+                    createLabel(viewModel.lastLoc.value)
+                    viewModel.calculateBetweenTwoLocation(lastLocationIndex, arrayList.lastIndex)
+                    if(arrayList.size != 0) lastLocationIndex = arrayList.lastIndex
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.distance.collect {
+                viewModel.distance.collectLatest {
                     binding.distanceValue.text = it.toString()
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.time.collect {
+                viewModel.time.collectLatest {
                     Log.d("testt", "time : ${it}")
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
                     format.timeZone = TimeZone.getTimeZone("UTC")
@@ -163,7 +153,7 @@ class WalkingPetFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.calories.collect {
+                viewModel.calories.collectLatest {
                     binding.calorieValue.text = it.toString()
                 }
             }
@@ -176,7 +166,8 @@ class WalkingPetFragment : Fragment() {
                         showBoard()
                         binding.walkingStartButton.visibility = View.GONE
                         binding.timeValue.start()
-                        drawLine(viewModel.arrayLoc.value)
+                        Log.d("testt", "loc : ${viewModel.arrayLoc.value.last()}")
+                        kakaoMap?.drawLine(viewModel.arrayLoc.value)
                     }
                 }
             }
@@ -214,6 +205,7 @@ class WalkingPetFragment : Fragment() {
                 Log.d("testt", "MapReady")
                 kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
                 this@WalkingPetFragment.kakaoMap = kakaoMap
+                createLabel(loc)
             }
         })
     }
@@ -223,6 +215,9 @@ class WalkingPetFragment : Fragment() {
         viewModel.startLocationTracking()
     }
 
+    fun setMyLocationPin(array: Array<LatLng>){
+        createLabel(array.last())
+    }
 
     fun checkPermission(){
         if (ActivityCompat.checkSelfPermission(
@@ -277,11 +272,24 @@ class WalkingPetFragment : Fragment() {
         transaction.commit()
     }
 
-    fun navigateToRecordPage(){
+    private fun navigateToRecordPage(){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.home_frameLayout, WalkingPetRecordFragment())
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun removeAllLabel(){
+        kakaoMap?.labelManager?.clearAll()
+    }
+
+    private fun createLabel(pos : LatLng){
+        Log.d("testt", "loc : $pos")
+        removeAllLabel()
+        val labelManager = kakaoMap?.labelManager
+        val style = labelManager
+            ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.walking_my_location_pin).setAnchorPoint(0.5f, 0.5f).setApplyDpScale(true)))
+        kakaoMap?.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style))
     }
 
     override fun onPause() {

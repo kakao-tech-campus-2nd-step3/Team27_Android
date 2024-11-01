@@ -10,4 +10,5 @@
     <color name="dark_gray">#979797</color>
     <color name="light_gray">#F8F8F8</color>
     <color name="researching_btn">#33DEDCDC</color>
+    <color name="walking_pin_color">#4D3478F5</color>
 </resources>

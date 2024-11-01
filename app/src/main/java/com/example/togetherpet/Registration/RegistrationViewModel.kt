@@ -69,12 +69,12 @@ class RegistrationViewModel @Inject constructor(private val registerRepository: 
         _userName.value = userName
     }
 
-    fun registerUserAndPet() {
+    fun registerUserAndPet(file : File) {
         viewModelScope.launch {
             Log.d("testt", mapToRegisterDTO().toString())
             registerRepository.registerUserAndPet(
                 mapToRegisterDTO(),
-                File(petImage.value.path),
+                file,
                 _userName.value
             )
         }
