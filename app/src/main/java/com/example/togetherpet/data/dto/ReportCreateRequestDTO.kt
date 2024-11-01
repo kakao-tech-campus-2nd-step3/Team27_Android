@@ -11,5 +11,5 @@ data class ReportCreateRequestDTO(
     @SerializedName("description") val description: String,
     @SerializedName("breed") val breed: String,
     @SerializedName("gender") val gender: String,
-    @SerializedName("missing_id") val missingId: Long?,
+    @SerializedName("missing_id") val missingId: Long?
 )

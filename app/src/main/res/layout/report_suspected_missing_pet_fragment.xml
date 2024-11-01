@@ -33,6 +33,7 @@
             app:layout_constraintTop_toBottomOf="@id/report_missing_title" />
 
         <TextView
+            android:id="@+id/img_upload_btn"
             android:layout_width="100dp"
             android:layout_height="20dp"
             android:layout_marginStart="38dp"
