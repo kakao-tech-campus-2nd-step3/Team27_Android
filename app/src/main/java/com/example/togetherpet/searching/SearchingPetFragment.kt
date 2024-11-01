@@ -113,6 +113,75 @@ class SearchingPetFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //목격 제보 버튼 클릭
+        binding.searchingReportBtn.setOnClickListener {
+            val reportSuspectedMissingPet = ReportSuspectedMissingPetFragment()
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_myPetMissing, reportSuspectedMissingPet)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        //btnList 사이의 간격 설정
+        binding.researchingBtnList.addItemDecoration(ItemSpacing(20))
+
+        //RecyclerView 초기화 시 실종 정보를 보여줌
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchingViewModel.missingPets.collectLatest { missingInfo ->
+                binding.searchingMissingList.visibility = View.VISIBLE
+                binding.myPetMissingRegisterButton.visibility = View.VISIBLE
+                binding.searchingReportBtn.visibility = View.GONE
+                binding.searchingMissingList.adapter =
+                    PetListAdapter(requireContext(), missingInfo)
+                searchingViewModel.pushBtn("실종 정보")
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchingViewModel.loadData()
+            dataStoreRepository.missingStatus.collect { isMissing ->
+                searchingViewModel.petName.collect { petName ->
+                    searchingBtnListAdapter =
+                        SearchingBtnListAdapter(isMissing, petName) { clickedItem ->
+                            when (clickedItem) {
+                                "실종 정보" -> {
+                                    searchingViewModel.pushBtn("실종 정보")
+                                    binding.searchingMissingList.visibility = View.VISIBLE
+                                    binding.myPetMissingRegisterButton.visibility = View.VISIBLE
+                                    binding.searchingReportBtn.visibility = View.GONE
+                                    viewLifecycleOwner.lifecycleScope.launch {
+                                        searchingViewModel.missingPets.collectLatest { missingInfo ->
+                                            binding.searchingMissingList.adapter =
+                                                PetListAdapter(requireContext(), missingInfo)
+                                        }
+                                    }
+                                }
+                                //<추후> 제보 정보 데이터 적용
+                                "제보 정보" -> {
+                                    searchingViewModel.pushBtn("제보 정보")
+                                    binding.myPetMissingRegisterButton.visibility = View.GONE
+                                    binding.searchingMissingList.visibility = View.GONE
+                                    binding.searchingReportBtn.visibility = View.VISIBLE
+                                }
+
+                                petName -> {
+                                    searchingViewModel.pushBtn(petName)
+                                    binding.myPetMissingRegisterButton.visibility = View.GONE
+                                    binding.searchingMissingList.visibility = View.GONE
+                                    binding.searchingReportBtn.visibility = View.GONE
+                                }
+                            }
+                        }
+                    binding.researchingBtnList.adapter = searchingBtnListAdapter
+                }
+            }
+        }
+    }
+
     private fun setMarker() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val labelManager: LabelManager? = kakaoMap?.labelManager
@@ -301,91 +370,6 @@ class SearchingPetFragment : Fragment() {
         val input = connection.inputStream
 
         return BitmapFactory.decodeStream(input)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.researchingBtnList.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-        binding.searchingMissingList.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-        //목격 제보 버튼 클릭
-        binding.searchingReportBtn.setOnClickListener {
-            val reportSuspectedMissingPet = ReportSuspectedMissingPetFragment()
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_myPetMissing, reportSuspectedMissingPet)
-                .addToBackStack(null)
-                .commit()
-        }
-
-        //btnList 사이의 간격 설정
-        binding.researchingBtnList.addItemDecoration(ItemSpacing(20))
-
-        //RecyclerView 초기화 시 실종 정보를 보여줌
-        viewLifecycleOwner.lifecycleScope.launch {
-            searchingViewModel.missingPets.collectLatest { missingInfo ->
-                binding.searchingMissing.visibility = View.VISIBLE
-                binding.myPetMissingRegisterButton.visibility = View.VISIBLE
-                binding.searchingReportBtn.visibility = View.GONE
-                binding.searchingMissingList.adapter =
-                    PetListAdapter(requireContext(), missingInfo)
-                searchingViewModel.pushBtn("실종 정보")
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            searchingViewModel.loadData()
-            dataStoreRepository.missingStatus.collect { isMissing ->
-                searchingViewModel.petName.collect { petName ->
-                    searchingBtnListAdapter =
-                        SearchingBtnListAdapter(isMissing, petName) { clickedItem ->
-                            when (clickedItem) {
-                                "실종 정보" -> {
-                                    searchingViewModel.pushBtn("실종 정보")
-                                    binding.searchingMissing.visibility = View.VISIBLE
-                                    binding.myPetMissingRegisterButton.visibility = View.VISIBLE
-                                    binding.searchingReportBtn.visibility = View.GONE
-                                    viewLifecycleOwner.lifecycleScope.launch {
-                                        searchingViewModel.missingPets.collectLatest { missingInfo ->
-                                            binding.searchingMissingList.adapter =
-                                                PetListAdapter(requireContext(), missingInfo)
-                                        }
-                                    }
-                                }
-                                //<추후> 제보 정보 데이터 적용
-                                "제보 정보" -> {
-                                    searchingViewModel.pushBtn("제보 정보")
-                                    binding.myPetMissingRegisterButton.visibility = View.GONE
-                                    binding.searchingMissing.visibility = View.GONE
-                                    binding.searchingReportBtn.visibility = View.VISIBLE
-                                }
-
-                                petName -> {
-                                    searchingViewModel.pushBtn(petName)
-                                    binding.myPetMissingRegisterButton.visibility = View.GONE
-                                    binding.searchingMissing.visibility = View.GONE
-                                    binding.searchingReportBtn.visibility = View.GONE
-                                }
-                            }
-                        }
-                    binding.researchingBtnList.adapter = searchingBtnListAdapter
-                }
-            }
-        }
-        /*//scroll 효과
-        binding.searchingMissing.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            if (scrollY > oldScrollY) {
-                // RecyclerView 숨기기
-                binding.searchingMissingList.visibility = View.GONE
-            } else if (scrollY < oldScrollY) {
-                // RecyclerView 다시 보이기
-                binding.searchingMissingList.visibility = View.VISIBLE
-            }
-        }*/
     }
 
     @SuppressLint("MissingPermission")
