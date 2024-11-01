@@ -22,6 +22,7 @@ import com.example.togetherpet.dashboard.view.DashboardActivity
 import com.example.togetherpet.databinding.FragmentInfoRegistrationImageBinding
 import com.example.togetherpet.databinding.FragmentInfoRegistrationNicknameBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -55,7 +56,7 @@ class RegistrationNicknameFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.petName.collect { petName ->
+                sharedViewModel.petName.collectLatest { petName ->
                     binding.nicknameMainText.text = "안녕하세요, ${petName} 보호자님\n닉네임을 입력해 주세요"
                 }
             }
@@ -63,7 +64,7 @@ class RegistrationNicknameFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.petImage.collect { petImage ->
+                sharedViewModel.petImage.collectLatest { petImage ->
                     Glide.with(requireContext())
                         .load(petImage)
                         .apply(
