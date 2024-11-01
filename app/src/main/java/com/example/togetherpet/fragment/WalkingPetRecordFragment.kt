@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -64,6 +65,13 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener, DateC
     fun initListener() {
         binding.walkingPageButton.setOnClickListener {
             navigateToWalkingPage()
+        }
+
+        setFragmentResultListener("dateClick"){ key, bundle ->
+            val date = bundle.getLong("date")
+            selectedDate = LocalDate.ofEpochDay(date)
+            Log.d("testt", "fragmentResultListener : $selectedDate")
+            sharedViewModel.getRecord(selectedDate)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

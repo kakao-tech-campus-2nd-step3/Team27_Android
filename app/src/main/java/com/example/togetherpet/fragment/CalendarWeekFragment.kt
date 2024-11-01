@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import com.example.togetherpet.databinding.FragmentCalendarWeekBinding
 import java.time.LocalDate
 
@@ -85,7 +88,7 @@ class CalendarWeekFragment : Fragment() {
         if (LocalDate.now() == date) setSelectedDate(textView)
         textView.setOnClickListener{
             resetUi()
-            onClickListener.onClickDate(date)
+            setFragmentResult("dateClick", bundleOf("date" to date.toEpochDay()))
             setSelectedDate(textView)
         }
     }
