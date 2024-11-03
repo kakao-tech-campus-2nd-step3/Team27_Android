@@ -41,6 +41,5 @@
     <string name="report_info_detail">(자세히 적어주시면 큰 도움이 됩니다)</string>
     <string name="report_suspected_title">실종 의심 동물 제보</string>
     <string name="report_myPetMissing_title">반려동물 실종 정보 등록</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_confirm">확인</string>
 </resources>

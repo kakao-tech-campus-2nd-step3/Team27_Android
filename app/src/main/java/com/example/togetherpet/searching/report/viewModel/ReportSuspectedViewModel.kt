@@ -19,11 +19,12 @@ class ReportSuspectedViewModel @Inject constructor(
         gender: String,
         breed: String,
         description: String,
-        foundDate: LocalDateTime,
+        foundDate: String,
         foundLatitude: Double,
         foundLongitude: Double,
         uri: String
     ){
+        //found Date string -> LocalDateTime 로직 작성할 곳
         // uri -> 절대 경로 로직 작성할 곳
 
         //HTTP 통신

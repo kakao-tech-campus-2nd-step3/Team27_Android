@@ -1,9 +1,13 @@
 package com.example.togetherpet.searching.report.view
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,28 +16,90 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.example.togetherpet.databinding.DateTimePickerBinding
 import com.example.togetherpet.databinding.ReportSuspectedMissingPetFragmentBinding
 import com.example.togetherpet.searching.report.viewModel.ReportSuspectedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class ReportSuspectedMissingPetFragment : Fragment() {
     private var _binding: ReportSuspectedMissingPetFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val reportSuspectedViewModel : ReportSuspectedViewModel by viewModels()
+    private val reportSuspectedViewModel: ReportSuspectedViewModel by viewModels()
 
-    private lateinit var resultLauncher : ActivityResultLauncher<Intent>
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
-    private var imgUri : Uri? = null
+    private var selectedDateTime: String = ""
+    private var imgUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = ReportSuspectedMissingPetFragmentBinding.inflate(inflater,container,false)
+        _binding = ReportSuspectedMissingPetFragmentBinding.inflate(inflater, container, false)
+
+        binding.reportMissingTime.setOnClickListener {
+            setPicker()
+        }
+
         return binding.root
+    }
+
+    private fun setPicker() {
+        val pickerBinding = DateTimePickerBinding.inflate(layoutInflater)
+
+        //오늘 날짜 표기
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy년 M월 d일", Locale.getDefault())
+        pickerBinding.pickerNowDate.text = dateFormat.format(calendar.time)
+
+        //time picker 설정
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(pickerBinding.root)
+        val dialog = builder.create()
+        dialog.show()
+
+        //date picker 설정
+        pickerBinding.datePickerBtn.setOnClickListener {
+
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    calendar.set(selectedYear,selectedMonth,selectedDay)
+                    pickerBinding.pickerNowDate.text = dateFormat.format(calendar.time)
+                },
+                year, month, day
+            )
+            datePickerDialog.show()
+        }
+
+        pickerBinding.confirmButton.setOnClickListener{
+            val hour =
+                pickerBinding.timePicker.hour
+            val minute =
+                pickerBinding.timePicker.minute
+
+            Log.d("TimePicker", "Selected Hour: $hour")
+            Log.d("TimePicker", "Selected Minute: $minute")
+
+            val selectedDate = pickerBinding.pickerNowDate.text.toString()
+            val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
+
+            selectedDateTime = "$selectedDate $selectedTime"
+
+            binding.reportMissingTime.text = selectedDateTime
+
+            dialog.dismiss()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,7 +131,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
 
     }
 
-    private fun setImage(){
+    private fun setImage() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             type = "image/*"
         }
@@ -76,18 +142,17 @@ class ReportSuspectedMissingPetFragment : Fragment() {
         setData()
     }
 
-    private fun setData(){
+    private fun setData() {
         //로직 분리 필요
         val color = binding.reportMissingColor.text.toString()
         val gender = binding.reportMissingGender.text.toString()
         val species = binding.reportMissingSpecies.text.toString()
-        // 날짜, 위치 선택 팝업이 필요함
-        //val date = binding.reportMissingTime.text
+        // 위치 선택 팝업이 필요함
         //val location = binding.reportMissingLocation.text
         val info = binding.reportMissingInfoDetail.text.toString()
 
         /*reportSuspectedViewModel.reportSuspected(
-            color = color, gender = gender, breed = species, description = info, foundLongitude = 0.0, foundLatitude = 0.0, foundDate =2024-11-01 14:30:45.123
+            color = color, gender = gender, breed = species, description = info, foundLongitude = 0.0, foundLatitude = 0.0, foundDate = selectedDateTime
         )*/
     }
 
