@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/date_item_one"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/date_item_two"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        android:includeFontPadding="false"/>
+
+    <TextView
+        android:id="@+id/date_item_two"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2"
+        app:layout_constraintStart_toEndOf="@id/date_item_one"
+        app:layout_constraintEnd_toStartOf="@id/date_item_three"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        android:includeFontPadding="false"/>
+
+    <TextView
+        android:id="@+id/date_item_three"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="3"
+        app:layout_constraintStart_toEndOf="@id/date_item_two"
+        app:layout_constraintEnd_toStartOf="@id/date_item_four"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        android:includeFontPadding="false"/>
+
+    <TextView
+        android:id="@+id/date_item_four"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="4"
+        app:layout_constraintStart_toEndOf="@id/date_item_three"
+        app:layout_constraintEnd_toStartOf="@id/date_item_five"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        android:includeFontPadding="false"/>
+
+    <TextView
+        android:id="@+id/date_item_five"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="5"
+        app:layout_constraintStart_toEndOf="@id/date_item_four"
+        app:layout_constraintEnd_toStartOf="@+id/date_item_six"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        android:includeFontPadding="false"/>
+
+    <TextView
+        android:id="@+id/date_item_six"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="6"
+        app:layout_constraintStart_toEndOf="@id/date_item_five"
+        app:layout_constraintEnd_toStartOf="@id/date_item_seven"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:gravity="center"
+        android:includeFontPadding="false"/>
+
+    <TextView
+        android:id="@+id/date_item_seven"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="7"
+        app:layout_constraintStart_toEndOf="@id/date_item_six"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="@style/TogetherPetText13Bold"
+        android:includeFontPadding="false"
+        android:gravity="center"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

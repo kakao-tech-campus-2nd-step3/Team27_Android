@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TogetherPetTextHeadingLarge" parent="TextAppearance.AppCompat">
+        <!-- bold & 20px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetWalkingDisplayLarge" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/KTC_red_pink</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+    <style name="TogetherPetTextMedium" parent="TextAppearance.AppCompat">
+        <!-- thin & 15px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetTextMediumBold" parent="TextAppearance.AppCompat">
+        <!-- bold & 15px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+    </style>
+
+    <style name="TogetherPetTextMediumRed" parent="TextAppearance.AppCompat">
+        <!-- thin & 15px & 빨간 글씨 -->
+        <item name="android:textColor">@color/KTC_red</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetTextSmall" parent="TextAppearance.AppCompat">
+        <!-- thin & 13px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetText12" parent="TextAppearance.AppCompat">
+        <!-- thin & 12px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetText12Red" parent="TextAppearance.AppCompat">
+        <!-- thin & 12px & white-->
+        <item name="android:textColor">@color/KTC_red</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetText12White" parent="TextAppearance.AppCompat">
+        <!-- thin & 12px & white-->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetText7Gray" parent="TextAppearance.AppCompat">
+        <!-- thin & 7px -->
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">7sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetTextSmallRed" parent="TextAppearance.AppCompat">
+        <!-- thin & 13px & 빨간 글씨 -->
+        <item name="android:textColor">@color/KTC_red</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetText10Bold" parent="TextAppearance.AppCompat">
+        <!-- blod & 10px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText20" parent="TextAppearance.AppCompat">
+        <!-- 20px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText10" parent="TextAppearance.AppCompat">
+        <!-- blod & 10px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText8Bold" parent="TextAppearance.AppCompat">
+        <!-- blod & 8px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">8sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText8" parent="TextAppearance.AppCompat">
+        <!-- blod & 10px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">8sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetText6BoldWhite" parent="TextAppearance.AppCompat">
+        <!-- blod & 6px -->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">6sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText14BoldWhite" parent="TextAppearance.AppCompat">
+        <!-- blod & 14px -->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText13Bold" parent="TextAppearance.AppCompat">
+        <!-- blod & 14px -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TogetherPetText7Red" parent="TextAppearance.AppCompat">
+        <!-- thin & 7px -->
+        <item name="android:textColor">@color/KTC_red</item>
+        <item name="android:textSize">7sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="TogetherPetText35Bold" parent="TextAppearance.AppCompat">
+        <!-- bold & 35sp -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>
