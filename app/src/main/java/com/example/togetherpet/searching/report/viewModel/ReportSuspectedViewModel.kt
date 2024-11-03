@@ -1,10 +1,16 @@
 package com.example.togetherpet.searching.report.viewModel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
+import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.data.repository.ReportRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -13,7 +19,6 @@ import javax.inject.Inject
 class ReportSuspectedViewModel @Inject constructor(
     private val reportRepository : ReportRepository
 ) : ViewModel() {
-
     fun reportSuspected(
         color: String,
         gender: String,

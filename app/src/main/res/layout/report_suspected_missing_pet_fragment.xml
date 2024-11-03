@@ -107,7 +107,7 @@
             app:layout_constraintStart_toStartOf="@id/report_missing_species"
             app:layout_constraintTop_toBottomOf="@id/report_missing_species" />
 
-        <EditText
+        <TextView
             android:id="@+id/report_missing_location"
             android:layout_width="296dp"
             android:layout_height="47dp"
@@ -115,6 +115,7 @@
             android:layout_marginBottom="15dp"
             android:background="@drawable/report_edittext"
             android:hint="@string/report_location"
+            android:gravity="center|start"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:textAppearance="@style/TogetherPetTextMediumRed"

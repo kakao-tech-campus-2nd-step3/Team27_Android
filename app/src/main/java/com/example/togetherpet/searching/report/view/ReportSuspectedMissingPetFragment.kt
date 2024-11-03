@@ -3,7 +3,6 @@ package com.example.togetherpet.searching.report.view
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
@@ -47,7 +47,20 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             setPicker()
         }
 
+        binding.reportMissingLocation.setOnClickListener {
+            goToSelectLocationFragment()
+        }
+
         return binding.root
+    }
+
+    private fun goToSelectLocationFragment() {
+        //dialog 형식
+        val locationSelectFragment = LocationSelectFragment()
+        locationSelectFragment.show(
+            requireActivity().supportFragmentManager,
+            "LocationSelectFragment"
+        )
     }
 
     private fun setPicker() {
@@ -74,7 +87,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, selectedYear, selectedMonth, selectedDay ->
-                    calendar.set(selectedYear,selectedMonth,selectedDay)
+                    calendar.set(selectedYear, selectedMonth, selectedDay)
                     pickerBinding.pickerNowDate.text = dateFormat.format(calendar.time)
                 },
                 year, month, day
@@ -82,7 +95,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             datePickerDialog.show()
         }
 
-        pickerBinding.confirmButton.setOnClickListener{
+        pickerBinding.confirmButton.setOnClickListener {
             val hour =
                 pickerBinding.timePicker.hour
             val minute =
@@ -96,7 +109,10 @@ class ReportSuspectedMissingPetFragment : Fragment() {
 
             selectedDateTime = "$selectedDate $selectedTime"
 
-            binding.reportMissingTime.text = selectedDateTime
+            binding.reportMissingTime.apply {
+                text = selectedDateTime
+                setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
+            }
 
             dialog.dismiss()
         }
@@ -129,6 +145,18 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             sendReport()
         }
 
+        parentFragmentManager.setFragmentResultListener("locationRequestKey", this) { _, bundle ->
+            val latitude = bundle.getString("latitude")
+            val longitude = bundle.getString("longitude")
+            val address = bundle.getString("address")
+            Log.d("LocationResult", "Received Latitude: $latitude, Longitude: $longitude")
+
+            binding.reportMissingLocation.apply {
+                text = address
+                setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
+            }
+        }
+
     }
 
     private fun setImage() {
@@ -139,10 +167,6 @@ class ReportSuspectedMissingPetFragment : Fragment() {
     }
 
     private fun sendReport() {
-        setData()
-    }
-
-    private fun setData() {
         //로직 분리 필요
         val color = binding.reportMissingColor.text.toString()
         val gender = binding.reportMissingGender.text.toString()

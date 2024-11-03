@@ -3,10 +3,7 @@ package com.example.togetherpet.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
-import android.icu.util.TimeZone
 import android.os.Looper
-import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,7 +21,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.asin
 import kotlin.math.cos
