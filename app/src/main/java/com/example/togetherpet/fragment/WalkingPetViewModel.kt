@@ -155,8 +155,14 @@ class WalkingPetViewModel @Inject constructor(
     }
 
     private fun sendWalkingData(){
-        viewModelScope.launch(Dispatchers.IO) {
-            walkingRepository.sendWalkingDataToServer(_distance.value, _time.value, arrayLoc.value)
+        if(_time.value > 60000) {
+            viewModelScope.launch(Dispatchers.IO) {
+                walkingRepository.sendWalkingDataToServer(
+                    _distance.value,
+                    _time.value,
+                    arrayLoc.value
+                )
+            }
         }
     }
 }
