@@ -215,10 +215,6 @@ class WalkingPetFragment : Fragment() {
         viewModel.startLocationTracking()
     }
 
-    fun setMyLocationPin(array: Array<LatLng>){
-        createLabel(array.last())
-    }
-
     fun checkPermission(){
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -304,10 +300,6 @@ class WalkingPetFragment : Fragment() {
         val style = labelManager
             ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.walking_my_location_pin).setAnchorPoint(0.5f, 0.5f).setApplyDpScale(true)))
         kakaoMap?.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style))
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onDestroyView() {
