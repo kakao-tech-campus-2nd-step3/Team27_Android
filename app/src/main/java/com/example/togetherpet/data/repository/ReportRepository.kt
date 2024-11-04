@@ -1,12 +1,16 @@
 package com.example.togetherpet.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.example.togetherpet.data.database.ReportDataBase
 import com.example.togetherpet.data.datasource.ReportSource
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
 import com.example.togetherpet.data.entity.ReportEntity
+import com.example.togetherpet.di.TypeConverterModule
+import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
+import retrofit2.Retrofit
 import java.io.File
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -22,7 +26,8 @@ class ReportRepository @Inject constructor(
         context.applicationContext,
         ReportDataBase::class.java,
         "report_database"
-    ).build()
+    ).addTypeConverter(TypeConverterModule(Gson()))
+        .build()
 
     private val reportDao = db.reportDao()
 
@@ -63,6 +68,7 @@ class ReportRepository @Inject constructor(
         gender: String,
         files: List<File>
     ) {
+        Log.d("yeong", "repo")
         reportSource.registerReport(
             tokenRepository.getTokenOrThrow(),
             ReportCreateRequestDTO(

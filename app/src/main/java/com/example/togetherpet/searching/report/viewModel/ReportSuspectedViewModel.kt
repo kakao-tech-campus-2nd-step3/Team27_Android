@@ -1,5 +1,6 @@
 package com.example.togetherpet.searching.report.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
@@ -27,9 +28,12 @@ class ReportSuspectedViewModel @Inject constructor(
         foundLongitude: Double,
         file: List<File>
     ){
+        Log.d("yeong","report 진입")
         //foundDate type : string -> LocalDateTime
-        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm", Locale.getDefault())
-        val parsedDate = LocalDateTime.parse(foundDate, formatter)
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm:ss", Locale.getDefault())
+        var parsedDate = LocalDateTime.parse(foundDate, formatter)
+
+        Log.d("yeong","${parsedDate},${foundLatitude}")
 
         //HTTP 통신
         viewModelScope.launch {

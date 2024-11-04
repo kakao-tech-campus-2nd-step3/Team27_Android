@@ -28,7 +28,6 @@ class RegistrationViewModel @Inject constructor(private val registerRepository: 
     private val _residence = MutableStateFlow<String>(" ")
     private val _petFeature = MutableStateFlow<String>(" ")
     private val _userName = MutableStateFlow<String>(" ")
-
     // todo : 이미지 타입 미정
     private val _petImage = MutableStateFlow<Uri>(Uri.EMPTY)
     val petName: StateFlow<String> get() = _petName.asStateFlow()
@@ -40,9 +39,13 @@ class RegistrationViewModel @Inject constructor(private val registerRepository: 
     val petImage: StateFlow<Uri> get() = _petImage.asStateFlow()
     val userName: StateFlow<String> get() = _userName.asStateFlow()
 
+    private val _petUserInfo = MutableStateFlow(PetUserInfo(_petName.value, _userName.value, _petImage.value))
+    val petUserInfo: StateFlow<PetUserInfo> get() = _petUserInfo.asStateFlow()
+
 
     fun setPetName(name: String) {
         _petName.value = name
+        updatePetUserInfo()
     }
 
     fun setPetAge(petAge: Long) {
@@ -82,4 +85,15 @@ class RegistrationViewModel @Inject constructor(private val registerRepository: 
 
     fun mapToRegisterDTO() = PetRegisterDTO(_petName.value, _petAge.value, _petSpecies.value, _neutering.value, _petFeature.value)
 
+    //홈 UI에 나타낼 Info -> StateFlow 묶음
+    private fun updatePetUserInfo() {
+        _petUserInfo.value = PetUserInfo(_petName.value, _userName.value, _petImage.value)
+    }
+
 }
+
+data class PetUserInfo(
+    val petName: String,
+    val userName: String,
+    val img: Uri
+)

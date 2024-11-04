@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.datasource
 
+import android.util.Log
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
 import com.example.togetherpet.data.dto.ReportDetailResponseDTO
 import com.example.togetherpet.data.dto.ReportResponseDTO
@@ -26,30 +27,40 @@ class ReportSource @Inject constructor(
         reportCreateRequestDTO: ReportCreateRequestDTO,
         files: List<File>
     ) {
-        val response = reportService.registerReportByMissing(
-            token,
-            gson.toJson(reportCreateRequestDTO)
-                .toRequestBody("application/json".toMediaTypeOrNull()),
-            files.stream()
-                .map { file ->
-                    MultipartBody.Part.createFormData(
-                        "reportImage",
-                        file.name,
-                        file.asRequestBody("image/*".toMediaTypeOrNull())
-                    )
-                }
-                .collect(Collectors.toList())
-        )
+        Log.d("yeong", "${files.last()}")
 
-        if (!response.isSuccessful) {
-            throw APIException(
-                gson.fromJson(
-                    response.errorBody()?.string(),
-                    ErrorResponse::class.java
-                )
+        try {
+            val response = reportService.registerReportByMissing(
+                token,
+                gson.toJson(reportCreateRequestDTO)
+                    .toRequestBody("application/json".toMediaTypeOrNull()),
+                files.stream()
+                    .map { file ->
+                        MultipartBody.Part.createFormData(
+                            "reportImage",
+                            file.name,
+                            file.asRequestBody("image/*".toMediaTypeOrNull())
+                        )
+                    }
+                    .collect(Collectors.toList())
             )
+
+            Log.d("yeong", "Response Success: ${response.isSuccessful}")
+            Log.d("yeong", "${response.body()}, ${response.errorBody()}")
+
+            if (!response.isSuccessful) {
+                throw APIException(
+                    gson.fromJson(
+                        response.errorBody()?.string(),
+                        ErrorResponse::class.java
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("yeong", "Exception occurred: ${e.message}")
         }
     }
+
 
     suspend fun getRegisterOwnByUser(
         token: String

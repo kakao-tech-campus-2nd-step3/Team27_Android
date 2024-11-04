@@ -111,10 +111,11 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             val selectedDate = pickerBinding.pickerNowDate.text.toString()
             val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
 
-            selectedDateTime = "$selectedDate $selectedTime"
+            selectedDateTime = "$selectedDate $selectedTime:00"
+            Log.d("yeong", selectedDateTime)
 
             binding.reportMissingTime.apply {
-                text = selectedDateTime
+                text = "$selectedDateTime" + ":00"
                 setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
             }
 
@@ -163,7 +164,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
         binding.suspectedPetMissingRegisterButton.setOnClickListener {
             Log.d("yeong", "제보 하기 클릭 됨")
             sendReport()
-            parentFragmentManager.popBackStack()
+            //parentFragmentManager.popBackStack()
         }
 
     }
@@ -194,7 +195,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
                 description = info,
                 foundLongitude = longitude,
                 foundLatitude = latitude,
-                foundDate = selectedDateTime,
+                foundDate = "$selectedDateTime",
                 file = fileList
             )
         }

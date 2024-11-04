@@ -9,7 +9,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,12 +32,15 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRecordRep
     val time: StateFlow<Long> get() = _time.asStateFlow()
     val base : StateFlow<Long> get() = _base.asStateFlow()
     val arrayLoc: StateFlow<ArrayList<LatLng>> get() = _arrayLoc.asStateFlow()
-
-
     val allDistance: StateFlow<Long> get() = _allDistance.asStateFlow()
     val allTime: StateFlow<Long> get() = _allTime.asStateFlow()
     val arrayRecord: StateFlow<ArrayList<WalkingRecord>> get() = _arrayRecord.asStateFlow()
     val selectDay: StateFlow<LocalDate> get() = _selectDay.asStateFlow()
+
+    private var walkCount: Int = 0
+
+    private val _walkingData = MutableStateFlow(WalkingData(0, 0, 0))
+    val walkingData: StateFlow<WalkingData> get() = _walkingData.asStateFlow()
 
     fun getRecord(date: LocalDate) {
         _selectDay.value = date
@@ -69,4 +74,29 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRecordRep
         _base.value = selectedDetail.baseTime
     }
 
+    fun getWalkingData(){
+        updateTodayWalkCount()
+        _walkingData.value = WalkingData(
+            distance = _allDistance.value,
+            time = _allTime.value,
+            todayWalkCount = walkCount
+        )
+    }
+
+    //오늘 산책 횟수
+    private fun updateTodayWalkCount() {
+        val today = LocalDate.now()
+        val count = _arrayRecord.value.count {
+            val recordDate = Instant.ofEpochMilli(it.date).atZone(ZoneId.systemDefault()).toLocalDate()
+            recordDate == today
+        }
+        walkCount = count
+    }
+
 }
+
+data class WalkingData(
+    val distance: Long,
+    val time: Long,
+    val todayWalkCount: Int
+)

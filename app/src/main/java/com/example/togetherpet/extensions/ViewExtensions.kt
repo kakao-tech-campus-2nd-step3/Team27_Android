@@ -1,11 +1,13 @@
 package com.example.togetherpet.extensions
 
 import android.content.ContentResolver
+import android.content.Context
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.TypedValue
 import android.view.View
 import java.io.File
 
@@ -32,4 +34,12 @@ fun getAbsolutePathFromUri(contentResolver: ContentResolver, uri: Uri): String? 
         }
     }
     return absolutePath
+}
+
+fun dpToPx(context: Context, dp: Int): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp.toFloat(),
+        context.resources.displayMetrics
+    ).toInt()
 }
