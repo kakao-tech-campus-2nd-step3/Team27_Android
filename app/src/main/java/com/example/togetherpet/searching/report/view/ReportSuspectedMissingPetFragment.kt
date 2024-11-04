@@ -18,8 +18,10 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.togetherpet.databinding.DateTimePickerBinding
 import com.example.togetherpet.databinding.ReportSuspectedMissingPetFragmentBinding
+import com.example.togetherpet.extensions.getAbsolutePathFromUri
 import com.example.togetherpet.searching.report.viewModel.ReportSuspectedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -34,6 +36,8 @@ class ReportSuspectedMissingPetFragment : Fragment() {
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     private var selectedDateTime: String = ""
+    private var latitude: Double = 37.0
+    private var longitude: Double = 131.0
     private var imgUri: Uri? = null
 
     override fun onCreateView(
@@ -140,21 +144,26 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             setImage()
         }
 
-        //'제보 하기' 클릭
-        binding.reportMissingReportBtn.setOnClickListener {
-            sendReport()
-        }
-
         parentFragmentManager.setFragmentResultListener("locationRequestKey", this) { _, bundle ->
-            val latitude = bundle.getString("latitude")
-            val longitude = bundle.getString("longitude")
-            val address = bundle.getString("address")
-            Log.d("LocationResult", "Received Latitude: $latitude, Longitude: $longitude")
+            Log.d("BundleCheck", "Bundle Content: $bundle")
+
+            latitude = bundle.getDouble("latitude", 37.0)
+            longitude = bundle.getDouble("longitude", 131.0)
+            val address = bundle.getString("address") ?: "Unknown Address"
+
+            Log.d("yeong", "Received Latitude: $latitude, Longitude: $longitude, 주소: $address")
 
             binding.reportMissingLocation.apply {
                 text = address
                 setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
             }
+        }
+
+        //'제보 하기' 클릭
+        binding.suspectedPetMissingRegisterButton.setOnClickListener {
+            Log.d("yeong", "제보 하기 클릭 됨")
+            sendReport()
+            parentFragmentManager.popBackStack()
         }
 
     }
@@ -167,17 +176,28 @@ class ReportSuspectedMissingPetFragment : Fragment() {
     }
 
     private fun sendReport() {
-        //로직 분리 필요
         val color = binding.reportMissingColor.text.toString()
         val gender = binding.reportMissingGender.text.toString()
         val species = binding.reportMissingSpecies.text.toString()
-        // 위치 선택 팝업이 필요함
-        //val location = binding.reportMissingLocation.text
         val info = binding.reportMissingInfoDetail.text.toString()
+        val absolutePath =
+            imgUri?.let { getAbsolutePathFromUri(requireContext().contentResolver, it) }
 
-        /*reportSuspectedViewModel.reportSuspected(
-            color = color, gender = gender, breed = species, description = info, foundLongitude = 0.0, foundLatitude = 0.0, foundDate = selectedDateTime
-        )*/
+        if (absolutePath != null) {
+            val file = File(absolutePath)
+            val fileList = listOf(file)
+
+            reportSuspectedViewModel.reportSuspected(
+                color = color,
+                gender = gender,
+                breed = species,
+                description = info,
+                foundLongitude = longitude,
+                foundLatitude = latitude,
+                foundDate = selectedDateTime,
+                file = fileList
+            )
+        }
     }
 
     override fun onDestroyView() {

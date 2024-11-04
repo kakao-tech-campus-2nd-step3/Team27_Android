@@ -11,6 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.databinding.FragmentLocationSelectBinding
+import com.example.togetherpet.searching.report.LocationProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.kakao.vectormap.KakaoMap
@@ -36,6 +37,9 @@ class LocationSelectFragment : DialogFragment() {
     var kakaoMap: KakaoMap? = null
     lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private lateinit var locationProvider: LocationProvider
+    private var currentLocation: LatLng = LatLng.from(37.0, 131.0)
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -51,6 +55,13 @@ class LocationSelectFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        // LocationProvider 초기화 및 콜백 설정
+        locationProvider = LocationProvider(requireContext()) { latitude, longitude ->
+            currentLocation = LatLng.from(latitude, longitude)
+            kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(currentLocation))
+        }
+
         initMap()
     }
 
@@ -107,6 +118,10 @@ class LocationSelectFragment : DialogFragment() {
                             putDouble("longitude", cameraPosition.position.longitude)
                             putString("address", address.address?.addressName)
                         }
+                        Log.d(
+                            "BundleCheck",
+                            "Latitude: ${cameraPosition.position.latitude}, Longitude: ${cameraPosition.position.longitude}, Address: ${address.address?.addressName}"
+                        )
                         parentFragmentManager.setFragmentResult("locationRequestKey", result)
                     }
                 }

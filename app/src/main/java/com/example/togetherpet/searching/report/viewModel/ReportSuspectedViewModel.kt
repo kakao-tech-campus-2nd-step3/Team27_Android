@@ -1,19 +1,17 @@
 package com.example.togetherpet.searching.report.viewModel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
-import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.data.repository.ReportRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
+
 
 @HiltViewModel
 class ReportSuspectedViewModel @Inject constructor(
@@ -27,16 +25,17 @@ class ReportSuspectedViewModel @Inject constructor(
         foundDate: String,
         foundLatitude: Double,
         foundLongitude: Double,
-        uri: String
+        file: List<File>
     ){
-        //found Date string -> LocalDateTime 로직 작성할 곳
-        // uri -> 절대 경로 로직 작성할 곳
+        //foundDate type : string -> LocalDateTime
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm", Locale.getDefault())
+        val parsedDate = LocalDateTime.parse(foundDate, formatter)
 
         //HTTP 통신
         viewModelScope.launch {
-            /*reportRepository.registerReportWithoutMissing(
-
-            )*/
+            reportRepository.registerReportWithoutMissing(
+                color, foundLatitude, foundLongitude, parsedDate, description, breed, gender, file
+            )
         }
     }
 }
