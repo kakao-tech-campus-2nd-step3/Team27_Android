@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import com.example.togetherpet.databinding.FragmentCalendarWeekBinding
 import java.time.LocalDate
 
@@ -20,7 +23,6 @@ class CalendarWeekFragment : Fragment() {
     private lateinit var dates: List<LocalDate>
 
     private var position: Int = 0
-    private lateinit var onClickListener: DateClickListener
 
     private val todayPosition = Int.MAX_VALUE / 2
 
@@ -36,7 +38,6 @@ class CalendarWeekFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstance: Bundle?){
         super.onViewCreated(view, savedInstance)
-
         val newDate = calculateNewDate()
         Log.d("testt", "newDate = $newDate")
         calculateDatesOfWeek(newDate)
@@ -57,6 +58,10 @@ class CalendarWeekFragment : Fragment() {
             textViewList = listOf(
                 dateItemOne, dateItemTwo, dateItemThree, dateItemFour, dateItemFive, dateItemSix, dateItemSeven
             )
+        }
+
+        arguments?.let{
+            position = it.getInt("position")
         }
     }
 
@@ -85,7 +90,7 @@ class CalendarWeekFragment : Fragment() {
         if (LocalDate.now() == date) setSelectedDate(textView)
         textView.setOnClickListener{
             resetUi()
-            onClickListener.onClickDate(date)
+            setFragmentResult("dateClick", bundleOf("date" to date.toEpochDay()))
             setSelectedDate(textView)
         }
     }
@@ -125,10 +130,10 @@ class CalendarWeekFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(position: Int, onClickListener: DateClickListener): CalendarWeekFragment {
-            val fragment = CalendarWeekFragment()
-            fragment.position = position
-            fragment.onClickListener = onClickListener
+        fun newInstance(position: Int): CalendarWeekFragment {
+            val fragment = CalendarWeekFragment().apply{
+                arguments = bundleOf("position" to position)
+            }
             return fragment
         }
         const val MONDAY = 1

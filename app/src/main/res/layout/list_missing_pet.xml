@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="15dp"
-    android:layout_marginEnd="15dp">
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/list_missingPet_img"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/main_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +22,6 @@
         android:layout_marginTop="2dp"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="꼬맹이"
         android:textAlignment="center"
         android:textAppearance="@style/TogetherPetText10Bold"
         app:layout_constraintEnd_toStartOf="@id/list_missingPet_date"
@@ -37,7 +36,6 @@
         android:background="@drawable/list_missing_pet_date"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="D+7H"
         android:textAlignment="center"
         android:textAppearance="@style/TogetherPetText6BoldWhite"
         app:layout_constraintBottom_toTopOf="@id/list_missingPet_address"
@@ -49,7 +47,6 @@
         android:id="@+id/list_missingPet_address"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="전남대학교 대운동장"
         android:includeFontPadding="false"
         android:textAppearance="@style/TogetherPetText8"
         app:layout_constraintEnd_toEndOf="parent"

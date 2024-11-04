@@ -19,6 +19,8 @@ import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentHomeBinding
 import com.example.togetherpet.home.viewModel.HomeViewModel
 import com.example.togetherpet.adapter.PetListAdapter
+import com.example.togetherpet.fragment.LocationSelectFragment
+import com.example.togetherpet.fragment.WalkingPetRecordFragment
 import com.example.togetherpet.testData.viewModel.MissingViewModel
 import com.example.togetherpet.testData.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +48,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.homeProfileImg.setOnClickListener {
+            navigateToLocationPage()
+        }
 
         binding.homeMissingPetList.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -125,5 +130,12 @@ class HomeFragment : Fragment() {
             dp.toFloat(),
             context.resources.displayMetrics
         ).toInt()
+    }
+
+    private fun navigateToLocationPage(){
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.home_frameLayout, LocationSelectFragment())
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }

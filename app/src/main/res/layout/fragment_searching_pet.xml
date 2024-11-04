@@ -2,9 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_myPetMissing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_myPetMissing"
     tools:context=".searching.SearchingPetFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,23 +33,21 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="@id/researching_top_sheet"
                 app:layout_constraintTop_toTopOf="@id/researching_top_sheet" />
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/searching_missing"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searching_missing_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/researching_btn_list">
+                app:layout_constraintTop_toBottomOf="@id/researching_btn_list" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/searching_missing_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp" />
-            </androidx.core.widget.NestedScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -70,7 +68,6 @@
             android:textAppearance="@style/TogetherPetText14BoldWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/researching_top_sheet" />
-
 
         <TextView
             android:id="@+id/myPet_missingRegister_button"

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.togetherpet.databinding.WalkingRecordItemBinding
+import com.example.togetherpet.extensions.drawLine
 import com.example.togetherpet.testData.entity.WalkingRecord
 import com.kakao.vectormap.GestureType
 import com.kakao.vectormap.KakaoMap
@@ -30,7 +31,6 @@ class WalkingRecordAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = WalkingRecordItemBinding.inflate(inflater, parent, false)
         return WalkingRecordViewHolder(binding, listener)
-
     }
 
     override fun onBindViewHolder(holder: WalkingRecordViewHolder, position: Int) {
@@ -52,7 +52,7 @@ class WalkingRecordDiffCallBack : DiffUtil.ItemCallback<WalkingRecord>() {
 
 class WalkingRecordViewHolder(
     private val binding: WalkingRecordItemBinding,
-    listener: OnClickWalkingRecordListener
+    private val listener: OnClickWalkingRecordListener
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener {
@@ -85,20 +85,7 @@ class WalkingRecordViewHolder(
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("testt", "MapReady")
                 kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(walkingRecord.route.first()))
-                val layer = kakaoMap.routeLineManager?.layer
-                val lineStyle = RouteLineStyle.from(16f, Color.RED)
-                lineStyle.strokeColor = Color.BLACK
-                val stylesSet = RouteLineStylesSet.from(
-                    RouteLineStyles.from(lineStyle)
-                )
-                val segment = RouteLineSegment.from(
-                    walkingRecord.route
-                ).setStyles(stylesSet.getStyles(0))
-
-                val options = RouteLineOptions.from(segment)
-                    .setStylesSet(stylesSet)
-
-                val routeLine = layer?.addRouteLine(options)
+                kakaoMap.drawLine(walkingRecord.route)
                 kakaoMap.setGestureEnable(GestureType.Zoom, false)
                 kakaoMap.setGestureEnable(GestureType.TwoFingerSingleTap, false)
                 kakaoMap.setGestureEnable(GestureType.OneFingerDoubleTap, false)
@@ -106,7 +93,9 @@ class WalkingRecordViewHolder(
                 kakaoMap.setGestureEnable(GestureType.Pan, false)
                 kakaoMap.setGestureEnable(GestureType.Tilt, false)
                 kakaoMap.setGestureEnable(GestureType.Rotate, false)
-
+                kakaoMap.setOnMapClickListener { _, _, _, _ ->
+                    listener.navigateToDetailRecordPage(bindingAdapterPosition)
+                }
             }
 
         })

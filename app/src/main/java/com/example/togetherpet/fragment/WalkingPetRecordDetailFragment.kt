@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetResultBinding
+import com.example.togetherpet.extensions.drawLine
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -29,6 +30,7 @@ import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -80,22 +82,6 @@ class WalkingPetRecordDetailFragment : Fragment() {
         })
     }
 
-    fun drawLine(arrayList: ArrayList<LatLng>){
-        val layer = kakaoMap.routeLineManager?.layer
-        val lineStyle = RouteLineStyle.from(16f, Color.RED)
-        lineStyle.strokeColor = Color.BLACK
-        val stylesSet = RouteLineStylesSet.from(
-            RouteLineStyles.from(lineStyle)
-        )
-        val segment = RouteLineSegment.from(
-            arrayList
-        ).setStyles(stylesSet.getStyles(0))
-        val options = RouteLineOptions.from(segment)
-            .setStylesSet(stylesSet)
-
-        val routeLine = layer?.addRouteLine(options)
-    }
-
     fun displayStartPoint(arrayList: ArrayList<LatLng>) {
         createLabel(arrayList.first())
     }
@@ -115,12 +101,12 @@ class WalkingPetRecordDetailFragment : Fragment() {
     fun initListener(){
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.arrayLoc.collect{ arrayLoc ->
+                sharedViewModel.arrayLoc.collectLatest{ arrayLoc ->
                     Log.d("testt", "listener, Array : ${arrayLoc}")
                     if(arrayLoc.isNotEmpty()){
                         displayStartPoint(arrayLoc)
                         kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(arrayLoc.first()))
-                        drawLine(arrayLoc)
+                        kakaoMap.drawLine(arrayLoc)
                         displayEndPoint(arrayLoc)
                     }
                 }
@@ -128,21 +114,21 @@ class WalkingPetRecordDetailFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.distance.collect {
+                sharedViewModel.distance.collectLatest {
                     binding.distanceResultText.text = "총 ${it}m 산책했어요"
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.base.collect {
+                sharedViewModel.base.collectLatest{
                     baseTime = it
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.time.collect {
+                sharedViewModel.time.collectLatest {
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
                     val time : Long = it
                     binding.timeResultRedText.text = "${format.format(baseTime)} ~ ${format.format(baseTime+ time)}"
@@ -153,7 +139,7 @@ class WalkingPetRecordDetailFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                sharedViewModel.calories.collect {
+                sharedViewModel.calories.collectLatest {
                     binding.caloriesResultText.text = "꾸릉이가 총 ${it}kcal 만큼 소모했어요!"
                 }
             }

@@ -12,7 +12,7 @@ import com.example.togetherpet.databinding.FragmentInfoRegistrationStartBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RegistrationStartFragment : Fragment() {MyApplication
+class RegistrationStartFragment : Fragment() {
     private var binding : FragmentInfoRegistrationStartBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
