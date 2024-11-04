@@ -199,6 +199,7 @@ class WalkingPetFragment : Fragment() {
                 Log.d("testt", error.message.toString())
                 //에러 처리
             }
+
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("testt", "MapReady")
@@ -260,7 +261,6 @@ class WalkingPetFragment : Fragment() {
     }
 
     fun showStopDialog(){
-        // TODO : 다이얼로그 띄워야함
         val dialogBinding = CustomDialogBinding.inflate(layoutInflater)
         val dialogBuilder = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)

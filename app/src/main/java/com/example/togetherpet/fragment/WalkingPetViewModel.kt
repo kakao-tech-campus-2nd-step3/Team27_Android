@@ -165,4 +165,9 @@ class WalkingPetViewModel @Inject constructor(
             }
         }
     }
+
+    fun isTimeUnderMinTime(): Boolean{
+        val minTime = 60000L
+        return _time.value <= minTime
+    }
 }
