@@ -73,7 +73,6 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRecordRep
         _arrayLoc.value = selectedDetail.route
         _base.value = selectedDetail.baseTime
     }
-
     fun getWalkingData(){
         updateTodayWalkCount()
         _walkingData.value = WalkingData(
