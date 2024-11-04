@@ -29,6 +29,7 @@ import com.example.togetherpet.R
 import com.example.togetherpet.adapter.PetListAdapter
 import com.example.togetherpet.adapter.SearchingBtnListAdapter
 import com.example.togetherpet.databinding.FragmentSearchingPetBinding
+import com.example.togetherpet.searching.report.extensions.ItemSpacing
 import com.example.togetherpet.searching.report.view.ReportSuspectedMissingPetFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices

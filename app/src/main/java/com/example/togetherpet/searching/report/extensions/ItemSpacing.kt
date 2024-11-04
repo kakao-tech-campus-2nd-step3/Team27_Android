@@ -1,4 +1,4 @@
-package com.example.togetherpet.searching
+package com.example.togetherpet.searching.report.extensions
 
 import android.graphics.Rect
 import android.view.View

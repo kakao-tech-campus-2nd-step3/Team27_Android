@@ -1,4 +1,4 @@
-package com.example.togetherpet.searching.report
+package com.example.togetherpet.searching.report.extensions
 
 import android.Manifest
 import android.annotation.SuppressLint
