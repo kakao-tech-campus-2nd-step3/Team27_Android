@@ -13,11 +13,11 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
-
 @HiltViewModel
 class ReportSuspectedViewModel @Inject constructor(
     private val reportRepository : ReportRepository
 ) : ViewModel() {
+
     fun reportSuspected(
         color: String,
         gender: String,

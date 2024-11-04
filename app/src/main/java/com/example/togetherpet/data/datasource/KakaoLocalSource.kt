@@ -15,13 +15,11 @@ class KakaoLocalSource @Inject constructor(
 ) {
     suspend fun latLngToAddress(longitude: String, latitude: String): List<AddressDTO> {
         val result = kakaoLocalService.changeLatLngToAddress(
-            header = "KakaoAK ${BuildConfig.KAKAO_LOCAL_API_KEY}",
-            longitude = longitude,
-            latitude = latitude
+            BuildConfig.KAKAO_LOCAL_API_KEY,
+            longitude,
+            latitude
         )
-
         Log.d("testt", "${result.body().toString()}, ${result.errorBody().toString()}")
         return result.body()?.documents ?: emptyList()
-
     }
 }

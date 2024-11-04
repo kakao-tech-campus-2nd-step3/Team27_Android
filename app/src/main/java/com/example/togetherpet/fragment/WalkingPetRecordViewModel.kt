@@ -41,7 +41,7 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRecordRep
 
     private val _walkingData = MutableStateFlow(WalkingData(0, 0, 0))
     val walkingData: StateFlow<WalkingData> get() = _walkingData.asStateFlow()
-
+    
     fun getRecord(date: LocalDate) {
         _selectDay.value = date
         _arrayRecord.value = walkingRecordRepository.getRecordOfDate(date)
