@@ -22,5 +22,4 @@ class KakaoLocalSource @Inject constructor(
         Log.d("testt", "${result.body().toString()}, ${result.errorBody().toString()}")
         return result.body()?.documents ?: emptyList()
     }
-
 }

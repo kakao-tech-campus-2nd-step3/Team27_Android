@@ -1,12 +1,16 @@
 package com.example.togetherpet.searching.report.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
 import com.example.togetherpet.data.repository.ReportRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,18 +23,23 @@ class ReportSuspectedViewModel @Inject constructor(
         gender: String,
         breed: String,
         description: String,
-        foundDate: LocalDateTime,
+        foundDate: String,
         foundLatitude: Double,
         foundLongitude: Double,
-        uri: String
+        file: List<File>
     ){
-        // uri -> 절대 경로 로직 작성할 곳
+        Log.d("yeong","report 진입")
+        //foundDate type : string -> LocalDateTime
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm:ss", Locale.getDefault())
+        var parsedDate = LocalDateTime.parse(foundDate, formatter)
+
+        Log.d("yeong","${parsedDate},${foundLatitude}")
 
         //HTTP 통신
         viewModelScope.launch {
-            /*reportRepository.registerReportWithoutMissing(
-
-            )*/
+            reportRepository.registerReportWithoutMissing(
+                color, foundLatitude, foundLongitude, parsedDate, description, breed, gender, file
+            )
         }
     }
 }
