@@ -58,6 +58,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         binding.weekViewpager
         binding.weekViewpager.adapter = calendarAdapter
         binding.weekViewpager.setCurrentItem(CalendarViewPagerAdapter.START_POSITION, false)
+        binding.calendarDateText.text = selectedDate.toString()
         sharedViewModel.getRecord(selectedDate)
 
     }
