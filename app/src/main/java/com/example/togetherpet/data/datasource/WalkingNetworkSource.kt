@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.datasource
 
+import android.util.Log
 import com.example.togetherpet.data.dto.WalkingRequestDTO
 import com.example.togetherpet.data.dto.WalkingResponseDTO
 import com.example.togetherpet.data.service.WalkingService
@@ -34,7 +35,7 @@ class WalkingNetworkSource @Inject constructor(
         val response = walkingService.getWalkingDataWithDate(
             token, date
         )
-
+        Log.d("testt", "${response.body()}, ${response.code()}, ${response.errorBody()}")
         if (response.isSuccessful) {
             return response.body()
         } else if (!response.isSuccessful) {

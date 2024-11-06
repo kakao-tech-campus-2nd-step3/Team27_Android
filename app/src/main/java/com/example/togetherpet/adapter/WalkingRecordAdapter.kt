@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.togetherpet.databinding.WalkingRecordItemBinding
 import com.example.togetherpet.extensions.drawLine
+import com.example.togetherpet.extensions.formattingLocalDateTimeToString
 import com.example.togetherpet.testData.entity.WalkingRecord
 import com.kakao.vectormap.GestureType
 import com.kakao.vectormap.KakaoMap
@@ -22,6 +23,8 @@ import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class WalkingRecordAdapter(
@@ -65,7 +68,7 @@ class WalkingRecordViewHolder(
         val time = formattingLongToTime(walkingRecord.time)
         binding.timeValueItem.text = time
         binding.timeResultRedText.text =
-            "${formattingLongToTime(walkingRecord.baseTime)} ~ ${formattingLongToTime(walkingRecord.baseTime + walkingRecord.time)}"
+            "${walkingRecord.startTime.formattingLocalDateTimeToString()} ~ ${walkingRecord.endTime.formattingLocalDateTimeToString()}"
         initMap(walkingRecord)
     }
 

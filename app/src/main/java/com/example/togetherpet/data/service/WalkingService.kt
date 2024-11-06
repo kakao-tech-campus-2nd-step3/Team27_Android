@@ -17,7 +17,7 @@ interface WalkingService {
         @Body walkingRequestDTO : WalkingRequestDTO
     ) : Response<Unit>
 
-    @GET("/api/v1/missing/paths")
+    @GET("/api/v1/walk/paths")
     suspend fun getWalkingDataWithDate(
         @Header("Authorization")token : String,
         @Query("date") date: String

@@ -69,6 +69,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
 
         setFragmentResultListener("dateClick"){ key, bundle ->
             val date = bundle.getLong("date")
+            binding.calendarDateText.text = LocalDate.ofEpochDay(date).toString()
             selectedDate = LocalDate.ofEpochDay(date)
             Log.d("testt", "fragmentResultListener : $selectedDate")
             sharedViewModel.getRecord(selectedDate)

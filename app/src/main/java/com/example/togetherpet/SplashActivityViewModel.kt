@@ -15,9 +15,8 @@ class SplashActivityViewModel @Inject constructor(private val tokenRepository : 
     val userLoginState : StateFlow<Boolean> get() = _userLoginState.asStateFlow()
 
     fun isLoggedIn(){
-        //Todo : 수정
         if(tokenRepository.hasToken()) _userLoginState.value = true
-        Log.d("testt", "${_userLoginState.value}")
+        Log.d("testt", "token : ${_userLoginState.value}")
     }
 
 }
