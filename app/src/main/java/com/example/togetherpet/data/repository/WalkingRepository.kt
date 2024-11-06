@@ -4,7 +4,10 @@ import android.location.Location
 import com.example.togetherpet.data.datasource.WalkingNetworkSource
 import com.example.togetherpet.data.dto.LocationDTO
 import com.example.togetherpet.data.dto.WalkingRequestDTO
+import com.example.togetherpet.data.dto.WalkingResponseDTO
 import com.kakao.vectormap.LatLng
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,5 +28,12 @@ class WalkingRepository @Inject constructor(
             tokenRepository.getTokenOrThrow(),
             WalkingRequestDTO(distance.toFloat(), time, locationList)
         )
+    }
+
+    suspend fun getWalkingDataWithDateFromServer(
+        date: LocalDateTime
+    ) : List<WalkingResponseDTO>?{
+        val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        return walkingNetworkSource.getWalkingDataWithDate( tokenRepository.getTokenOrThrow(), formattedDate)
     }
 }
