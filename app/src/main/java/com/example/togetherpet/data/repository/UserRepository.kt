@@ -20,5 +20,4 @@ class UserRepository @Inject constructor(
             )
         } else UserData()
     }
-
 }

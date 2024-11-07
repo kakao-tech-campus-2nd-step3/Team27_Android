@@ -63,7 +63,7 @@ class WalkingPetViewModel @Inject constructor(
         setPetImage()
     }
 
-    private fun setPetImage(){
+    fun setPetImage(){
         viewModelScope.launch(Dispatchers.IO){
             _petImage.value = userRepository.getUserData().petImageUri
             Log.d("testt", "image : ${_petImage.value}")
@@ -139,15 +139,21 @@ class WalkingPetViewModel @Inject constructor(
                     val longitude = location.longitude
                     Log.d("testt", "Latitude: $latitude, Longitude: $longitude")
                     val latLng = LatLng.from(latitude, longitude)
-                    val newArrayLoc = ArrayList(_arrayLoc.value).apply{add(latLng)}
-                    _lastLoc.value = newArrayLoc.last()
-                    _arrayLoc.value = newArrayLoc
-                    Log.d("testt", "array : ${arrayLoc.value}")
-                    calculateCalories()
+                    if (isMove(latLng)){
+                        val newArrayLoc = ArrayList(_arrayLoc.value).apply{add(latLng)}
+                        _lastLoc.value = newArrayLoc.last()
+                        _arrayLoc.value = newArrayLoc
+//                    Log.d("testt", "array : ${arrayLoc.value}")
+                        calculateCalories()
+                    }
                 }
             }
         }
         return locationCallback
+    }
+
+    fun isMove(nowLatLng: LatLng) : Boolean{
+        return -0.00015 > _lastLoc.value.latitude - nowLatLng.latitude || 0.00015 < _lastLoc.value.latitude - nowLatLng.latitude
     }
 
     suspend fun calculateBetweenTwoLocation(indexOne : Int, indexTwo : Int) {

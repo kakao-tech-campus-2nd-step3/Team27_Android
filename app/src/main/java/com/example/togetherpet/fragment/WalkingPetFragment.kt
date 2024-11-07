@@ -72,6 +72,7 @@ class WalkingPetFragment : Fragment() {
         Log.d("testt", "시작")
         initVar()
         checkPermission()
+        viewModel.setPetImage()
     }
 
 
@@ -201,6 +202,10 @@ class WalkingPetFragment : Fragment() {
             }
 
         }, object : KakaoMapReadyCallback() {
+            override fun getZoomLevel(): Int {
+                return 18
+            }
+
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("testt", "MapReady")
                 kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
