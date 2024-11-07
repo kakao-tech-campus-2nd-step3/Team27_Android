@@ -36,6 +36,17 @@ fun getAbsolutePathFromUri(contentResolver: ContentResolver, uri: Uri): String? 
     return absolutePath
 }
 
+fun Uri.getAbsolutePath(context: Context): String? {
+    val proj = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor: Cursor? = context.contentResolver.query(this, proj, null, null, null)
+    cursor?.use {
+        val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        it.moveToFirst()
+        return it.getString(columnIndex)
+    }
+    return null
+}
+
 fun dpToPx(context: Context, dp: Int): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,

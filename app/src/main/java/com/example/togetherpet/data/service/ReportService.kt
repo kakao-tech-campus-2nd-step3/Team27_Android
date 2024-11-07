@@ -15,7 +15,7 @@ interface ReportService {
     suspend fun registerReportByMissing(
         @Header("Authorization") token: String,
         @Part("reportCreateRequestDTO") reportCreateRequestDTO: RequestBody,
-        @Part files: List<MultipartBody.Part>
+        @Part vararg files: MultipartBody.Part
     ): Response<Unit>
 
     @GET("/api/v1/report/user")

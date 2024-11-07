@@ -172,7 +172,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/report_missing_reportBtn"
-            app:layout_goneMarginBottom="30dp" />
+            app:layout_goneMarginBottom="30dp"
+            android:foreground="?attr/selectableItemBackground"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

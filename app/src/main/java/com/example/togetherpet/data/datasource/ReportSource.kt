@@ -27,37 +27,35 @@ class ReportSource @Inject constructor(
         reportCreateRequestDTO: ReportCreateRequestDTO,
         files: List<File>
     ) {
-        Log.d("yeong", "${files.last()}")
-
-        try {
-            val response = reportService.registerReportByMissing(
-                token,
-                gson.toJson(reportCreateRequestDTO)
-                    .toRequestBody("application/json".toMediaTypeOrNull()),
-                files.stream()
-                    .map { file ->
-                        MultipartBody.Part.createFormData(
-                            "reportImage",
-                            file.name,
-                            file.asRequestBody("image/*".toMediaTypeOrNull())
-                        )
-                    }
-                    .collect(Collectors.toList())
+        Log.d("sendReport", "File List in ReportSource: $files")
+        val fileParts = files.map { file ->
+            val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val part = MultipartBody.Part.createFormData(
+                "files",
+                file.name,
+                requestBody
             )
 
-            Log.d("yeong", "Response Success: ${response.isSuccessful}")
-            Log.d("yeong", "${response.body()}, ${response.errorBody()}")
+            Log.d("sendReport", "Multipart Part - File Name: ${file.name}, File Size: ${file.length()} bytes")
 
-            if (!response.isSuccessful) {
-                throw APIException(
-                    gson.fromJson(
-                        response.errorBody()?.string(),
-                        ErrorResponse::class.java
-                    )
+            part
+        }
+
+
+        val response = reportService.registerReportByMissing(
+            token,
+            gson.toJson(reportCreateRequestDTO)
+                .toRequestBody("application/json".toMediaTypeOrNull()),
+            *fileParts.toTypedArray() // 변환한 파트를 배열로 전달
+        )
+
+        if (!response.isSuccessful) {
+            throw APIException(
+                gson.fromJson(
+                    response.errorBody()?.string(),
+                    ErrorResponse::class.java
                 )
-            }
-        } catch (e: Exception) {
-            Log.e("yeong", "Exception occurred: ${e.message}")
+            )
         }
     }
 

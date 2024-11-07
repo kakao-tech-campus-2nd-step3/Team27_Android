@@ -10,17 +10,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.togetherpet.databinding.DateTimePickerBinding
 import com.example.togetherpet.databinding.ReportSuspectedMissingPetFragmentBinding
-import com.example.togetherpet.extensions.getAbsolutePathFromUri
+import com.example.togetherpet.extensions.getAbsolutePath
+import com.example.togetherpet.searching.report.ReportStatus
 import com.example.togetherpet.searching.report.viewModel.ReportSuspectedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -33,7 +37,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
 
     private val reportSuspectedViewModel: ReportSuspectedViewModel by viewModels()
 
-    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent> //선택한 이미지 화면에 띄우기
 
     private var selectedDateTime: String = ""
     private var latitude: Double = 37.0
@@ -47,10 +51,12 @@ class ReportSuspectedMissingPetFragment : Fragment() {
     ): View {
         _binding = ReportSuspectedMissingPetFragmentBinding.inflate(inflater, container, false)
 
+        //목격 시간 선택
         binding.reportMissingTime.setOnClickListener {
             setPicker()
         }
 
+        //목격 장소 선택
         binding.reportMissingLocation.setOnClickListener {
             goToSelectLocationFragment()
         }
@@ -111,11 +117,11 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             val selectedDate = pickerBinding.pickerNowDate.text.toString()
             val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
 
-            selectedDateTime = "$selectedDate $selectedTime:00"
+            selectedDateTime = "$selectedDate $selectedTime"
             Log.d("yeong", selectedDateTime)
 
             binding.reportMissingTime.apply {
-                text = "$selectedDateTime" + ":00"
+                text = selectedDateTime
                 setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
             }
 
@@ -145,14 +151,18 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             setImage()
         }
 
+        // 제보할 데이터 전달 받기
         parentFragmentManager.setFragmentResultListener("locationRequestKey", this) { _, bundle ->
-            Log.d("BundleCheck", "Bundle Content: $bundle")
+            Log.d("BundleCheck", "[Report Suspected] Bundle Content: $bundle")
 
             latitude = bundle.getDouble("latitude", 37.0)
             longitude = bundle.getDouble("longitude", 131.0)
             val address = bundle.getString("address") ?: "Unknown Address"
 
-            Log.d("yeong", "Received Latitude: $latitude, Longitude: $longitude, 주소: $address")
+            Log.d(
+                "ReceiveCheck",
+                "[Report Suspected] Received Latitude: $latitude, Longitude: $longitude, 주소: $address"
+            )
 
             binding.reportMissingLocation.apply {
                 text = address
@@ -164,7 +174,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
         binding.suspectedPetMissingRegisterButton.setOnClickListener {
             Log.d("yeong", "제보 하기 클릭 됨")
             sendReport()
-            //parentFragmentManager.popBackStack()
+            sendCheck()
         }
 
     }
@@ -180,24 +190,55 @@ class ReportSuspectedMissingPetFragment : Fragment() {
         val color = binding.reportMissingColor.text.toString()
         val gender = binding.reportMissingGender.text.toString()
         val species = binding.reportMissingSpecies.text.toString()
-        val info = binding.reportMissingInfoDetail.text.toString()
-        val absolutePath =
-            imgUri?.let { getAbsolutePathFromUri(requireContext().contentResolver, it) }
+        val info = binding.reportMissingReportBtn.text.toString()
+        val absolutePath = imgUri?.getAbsolutePath(requireContext())
+
+        Log.d("sendReport", "Absolute Path: $absolutePath")
 
         if (absolutePath != null) {
             val file = File(absolutePath)
             val fileList = listOf(file)
 
-            reportSuspectedViewModel.reportSuspected(
-                color = color,
-                gender = gender,
-                breed = species,
-                description = info,
-                foundLongitude = longitude,
-                foundLatitude = latitude,
-                foundDate = "$selectedDateTime",
-                file = fileList
-            )
+            Log.d("sendReport", "File: $file")
+            Log.d("sendReport", "File List: $fileList")
+
+            if (file.exists() && file.length() > 0) {
+                Log.d("sendReport", "File 정상: ${file.absolutePath}")
+
+                reportSuspectedViewModel.reportSuspected(
+                    color = color,
+                    gender = gender,
+                    breed = species,
+                    description = info,
+                    foundLongitude = longitude,
+                    foundLatitude = latitude,
+                    foundDate = selectedDateTime,
+                    file = fileList
+                )
+            } else {
+                Log.e("sendReport", "File 에러")
+            }
+        }
+    }
+
+    private fun sendCheck() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            reportSuspectedViewModel.reportStatus.collect { status ->
+                when (status) {
+                    ReportStatus.SUCCESS -> {
+                        Toast.makeText(context, "제보 성공", Toast.LENGTH_SHORT).show()
+                        parentFragmentManager.popBackStack()
+                    }
+
+                    ReportStatus.ERROR -> {
+                        Toast.makeText(context, "제보 실패", Toast.LENGTH_SHORT).show()
+                    }
+
+                    else -> {
+                        // IDLE 상태
+                    }
+                }
+            }
         }
     }
 

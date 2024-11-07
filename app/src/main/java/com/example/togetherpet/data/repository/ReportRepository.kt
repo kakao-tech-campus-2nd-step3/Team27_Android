@@ -13,6 +13,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Retrofit
 import java.io.File
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,7 +36,7 @@ class ReportRepository @Inject constructor(
         color: String,
         foundLatitude: Double,
         foundLongitude: Double,
-        foundDate: LocalDateTime,
+        foundDate: String,  //변경(11.05)
         description: String,
         breed: String,
         gender: String,
@@ -62,13 +63,14 @@ class ReportRepository @Inject constructor(
         color: String,
         foundLatitude: Double,
         foundLongitude: Double,
-        foundDate: LocalDateTime,
+        foundDate: String,  //변경(11.05)
         description: String,
         breed: String,
         gender: String,
         files: List<File>
     ) {
         Log.d("yeong", "repo")
+
         reportSource.registerReport(
             tokenRepository.getTokenOrThrow(),
             ReportCreateRequestDTO(
