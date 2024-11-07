@@ -79,6 +79,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sharedViewModel.arrayRecord.collectLatest {
+                    Log.d("testt", "submit $it")
                     walkingRecyclerViewAdapter.submitList(it)
                 }
             }
