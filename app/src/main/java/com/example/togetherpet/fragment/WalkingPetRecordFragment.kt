@@ -58,6 +58,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         binding.weekViewpager
         binding.weekViewpager.adapter = calendarAdapter
         binding.weekViewpager.setCurrentItem(CalendarViewPagerAdapter.START_POSITION, false)
+        binding.calendarDateText.text = selectedDate.toString()
         sharedViewModel.getRecord(selectedDate)
 
     }
@@ -69,6 +70,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
 
         setFragmentResultListener("dateClick"){ key, bundle ->
             val date = bundle.getLong("date")
+            binding.calendarDateText.text = LocalDate.ofEpochDay(date).toString()
             selectedDate = LocalDate.ofEpochDay(date)
             Log.d("testt", "fragmentResultListener : $selectedDate")
             sharedViewModel.getRecord(selectedDate)
