@@ -62,6 +62,7 @@ class ReportSource @Inject constructor(
     suspend fun getRegisterOwnByUser(
         token: String
     ): List<ReportResponseDTO> {
+        Log.d("sendReport","getRegisterOwnByUser()")
         val response = reportService.getReportOwnByUser(token)
 
         if (response.isSuccessful) {
@@ -80,6 +81,7 @@ class ReportSource @Inject constructor(
         latitude: Double,
         longitude: Double
     ): List<ReportResponseDTO> {
+        Log.d("sendReport","getReportByLocation()")
         val response = reportService.getReportByLocation(latitude, longitude)
 
         if (response.isSuccessful) {

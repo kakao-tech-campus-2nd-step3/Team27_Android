@@ -23,12 +23,11 @@ class ReportRepository @Inject constructor(
     private val reportSource: ReportSource,
     private val tokenRepository: TokenRepository
 ) {
-    private val db: ReportDataBase = Room.databaseBuilder(
+    val db: ReportDataBase = Room.databaseBuilder(
         context.applicationContext,
         ReportDataBase::class.java,
         "report_database"
-    ).addTypeConverter(TypeConverterModule(Gson()))
-        .build()
+    ).build()
 
     private val reportDao = db.reportDao()
 
@@ -108,20 +107,20 @@ class ReportRepository @Inject constructor(
         latitude: Double,
         longitude: Double,
     ) {
-        reportDao.insertReports(
-            reportSource.getReportByLocation(latitude, longitude)
-                .map { report ->
-                    ReportEntity(
-                        report.id,
-                        report.latitude,
-                        report.longitude,
-                        mutableListOf(report.imageUrl),
-                        null,
-                        null,
-                        null
-                    )
-                }
-        )
+        Log.d("yeong","근처 실종 데이터 받아옴")
+        val reports = reportSource.getReportByLocation(latitude, longitude)
+            .map { report ->
+                ReportEntity(
+                    report.id,
+                    report.latitude,
+                    report.longitude,
+                    mutableListOf(report.imageUrl),
+                    null,
+                    null,
+                    null
+                )
+            }
+        reportDao.insertReports(reports)
     }
 
     suspend fun getReportDetail(
@@ -136,7 +135,7 @@ class ReportRepository @Inject constructor(
                 findReport.copy(
                     description = detailReport.description,
                     reporterName = detailReport.reporterName,
-                    foundDate = detailReport.foundDate
+                    foundDate = detailReport.foundDate.toString()
                 )
             )
         }

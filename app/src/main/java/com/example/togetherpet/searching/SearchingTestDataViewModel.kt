@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchingViewModel @Inject constructor(
+class SearchingTestDataViewModel @Inject constructor(
     private val missingRepository: MissingRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
