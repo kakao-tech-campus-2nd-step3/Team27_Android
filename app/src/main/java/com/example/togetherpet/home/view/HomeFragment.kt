@@ -1,6 +1,7 @@
 package com.example.togetherpet.home.view
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.togetherpet.DataStoreRepository
 import com.example.togetherpet.R
 import com.example.togetherpet.Registration.RegistrationViewModel
 import com.example.togetherpet.databinding.FragmentHomeBinding
@@ -29,12 +31,15 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val registrationViewModel: RegistrationViewModel by viewModels()
+    @Inject
+    lateinit var dataStoreRepository: DataStoreRepository
+
     private val walkingPetRecordViewModel: WalkingPetRecordViewModel by viewModels()
 
     /*//테스용 더미 데이터 사용
@@ -58,21 +63,7 @@ class HomeFragment : Fragment() {
 
         //---유저 정보 띄우기---
         //case 1: 가입시 등록한 정보 사용
-        viewLifecycleOwner.lifecycleScope.launch {
-            registrationViewModel.petUserInfo.collectLatest { petUserInfo ->
-                val testText = "안녕하세요,  <b>${petUserInfo.petName}</b> 보호자 <b>${petUserInfo.userName}</b> 님"
-                binding.homeGreeting.text =
-                    Html.fromHtml(testText, Html.FROM_HTML_MODE_LEGACY)
-
-                Glide.with(this@HomeFragment)
-                    .load(petUserInfo.img)
-                    .apply(
-                        RequestOptions().centerCrop()
-                            .transform(RoundedCorners(dpToPx(requireContext(), 10)))
-                    )
-                    .into(binding.homeProfileImg)
-            }
-        }
+        setupUserInfo()
 
         //[추가할 부분] case 2: 이미 등록한 유저 -> 데이터 받아서 사용
 
@@ -158,6 +149,31 @@ class HomeFragment : Fragment() {
                 }
             }
         }*/
+    }
+
+    private fun setupUserInfo() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val petNameFlow = dataStoreRepository.petName
+            val userNameFlow = dataStoreRepository.userName
+            val imgUriFlow = dataStoreRepository.imgUri
+
+            // petName, userName, imgUri 값을 수집
+            petNameFlow.collectLatest { petName ->
+                userNameFlow.collectLatest { userName ->
+                    imgUriFlow.collectLatest { imgUri ->
+                        // UI에 표시할 텍스트 설정
+                        val greetingText = "안녕하세요,  <b>$petName</b> 보호자 <b>$userName</b> 님"
+                        binding.homeGreeting.text = Html.fromHtml(greetingText, Html.FROM_HTML_MODE_LEGACY)
+
+                        // 이미지 로드
+                        Glide.with(this@HomeFragment)
+                            .load(Uri.parse(imgUri))
+                            .apply(RequestOptions().centerCrop().transform(RoundedCorners(dpToPx(requireContext(), 10))))
+                            .into(binding.homeProfileImg)
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

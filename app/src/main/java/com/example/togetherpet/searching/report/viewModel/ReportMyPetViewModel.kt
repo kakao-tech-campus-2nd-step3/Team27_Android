@@ -1,29 +1,47 @@
 package com.example.togetherpet.searching.report.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.togetherpet.data.repository.ReportRepository
+import com.example.togetherpet.DataStoreRepository
+import com.example.togetherpet.data.dto.MissingRegisterRequestDTO
+import com.example.togetherpet.data.repository.MissingRepository
 import com.example.togetherpet.searching.report.ReportStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class ReportSuspectedViewModel @Inject constructor(
-    private val reportRepository : ReportRepository
+class ReportMyPetViewModel @Inject constructor(
+    private val missingRepository: MissingRepository,
+    private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
-
     private val _reportStatus = MutableStateFlow(ReportStatus.IDLE)
     val reportStatus: StateFlow<ReportStatus> = _reportStatus
 
-    fun reportSuspected(
+    private val _petName = MutableStateFlow("")
+    private val _birthMonth = MutableStateFlow(0L)
+    private val _isNeutering = MutableStateFlow(false)
+
+    init {
+        viewModelScope.launch {
+            dataStoreRepository.petName.collect { name ->
+                _petName.value = name
+            }
+            dataStoreRepository.petBirth.collect { birth ->
+                _birthMonth.value = birth
+            }
+            dataStoreRepository.petIsNeutral.collect { isNeuter ->
+                _isNeutering.value = isNeuter
+            }
+        }
+    }
+
+    fun reportMyPet(
         color: String,
         gender: String,
         breed: String,
@@ -31,19 +49,25 @@ class ReportSuspectedViewModel @Inject constructor(
         foundDate: String,
         foundLatitude: Double,
         foundLongitude: Double,
-        file: List<File>
-    ){
-        Log.d("yeong","report 진입")
-        Log.d("yeong", foundDate)
+    ) {
         val parsedDate = convertDateFormat(foundDate)
 
-        Log.d("yeong",parsedDate)
-        Log.d("sendReport", "File List in ViewModel: $file")
+        val missingRegisterRequestDTO = MissingRegisterRequestDTO(
+            petName = _petName.value,
+            petGender = gender,
+            birthMonth = _birthMonth.value,
+            breed = breed,
+            lostTime = parsedDate,
+            latitude = foundLatitude,
+            longitude = foundLongitude,
+            description = description,
+            isNeuterering = _isNeutering.value
+        )
 
         //HTTP 통신
         viewModelScope.launch {
             try {
-                reportRepository.registerReportWithoutMissing(color, foundLatitude, foundLongitude, parsedDate, description, breed, gender, file)
+                missingRepository.registerMissing(missingRegisterRequestDTO)
                 _reportStatus.value = ReportStatus.SUCCESS // 성공 시
             } catch (e: Exception) {
                 _reportStatus.value = ReportStatus.ERROR // 실패 시

@@ -5,23 +5,25 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.SearchingBtnListBinding
+import com.example.togetherpet.searching.searchingHome.ButtonType
 
 class SearchingBtnListAdapter(
     //missingStatusKey 상태
     private val isPetMissing: Boolean,
     private val petName: String? = null,
-    private val onItemClick: (String) -> Unit
+    private val onItemClick: (ButtonType) -> Unit
 ) : RecyclerView.Adapter<SearchingBtnListAdapter.ResearchingBtnViewHolder>() {
 
     //기본 데이터
-    private val defaultItem = listOf("실종 정보", "제보 정보")
+    private val defaultItem = listOf(ButtonType.MISSING, ButtonType.REPORT)
 
+    //MISSING 버튼 선택된 상태로 설정
     private var selectedPosition: Int = 0
 
     class ResearchingBtnViewHolder(val binding: SearchingBtnListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: String, isSelected: Boolean) {
-            binding.researchingBtn.text = item
+        fun bind(buttonType: ButtonType, isSelected: Boolean) {
+            binding.researchingBtn.text = buttonType.displayText
             binding.researchingBtn.setBackgroundResource(
                 if (isSelected) R.drawable.researching_list_btn_select else R.drawable.researching_list_btn
             )
@@ -36,7 +38,8 @@ class SearchingBtnListAdapter(
 
     override fun onBindViewHolder(holder: ResearchingBtnViewHolder, position: Int) {
         val itemToShow = if (isPetMissing) {
-            defaultItem + (petName ?: "반려견 이름 없음")
+            val petButton = petName?.let { ButtonType.MyPET.setPetName(it) } ?: ButtonType.MyPET
+            defaultItem + petButton
         } else {
             defaultItem
         }

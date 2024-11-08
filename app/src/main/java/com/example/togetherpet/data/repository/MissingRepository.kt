@@ -1,6 +1,7 @@
 package com.example.togetherpet.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.example.togetherpet.data.dao.MissingDao
 import com.example.togetherpet.data.database.MissingDataBase
@@ -36,6 +37,7 @@ class MissingRepository @Inject constructor(
         latitude: Double,
         longitude: Double
     ) {
+        Log.d("yeong","MissingRepository")
         missingDao.insertMissing(
             missingSource.getMissingNearBy(latitude, longitude)
                 .map { missing ->
