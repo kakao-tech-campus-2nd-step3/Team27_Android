@@ -8,8 +8,10 @@ import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.togetherpet.data.repository.TokenRepository
 import com.example.togetherpet.data.repository.UserRepository
 import com.example.togetherpet.data.repository.WalkingRepository
+import com.example.togetherpet.exception.APIException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -179,11 +181,18 @@ class WalkingPetViewModel @Inject constructor(
     private fun sendWalkingData(){
         if(_time.value > 60000) {
             viewModelScope.launch(Dispatchers.IO) {
-                walkingRepository.sendWalkingDataToServer(
+                try{
+                    walkingRepository.sendWalkingDataToServer(
                     _distance.value,
                     _time.value,
                     arrayLoc.value
-                )
+                )} catch (e : APIException){
+                    if(e.errorResponse.code == -10101) {
+                        Log.d("testt", "token 오류")
+                    }
+                    else Log.d("testt", "${e.errorResponse.code}")
+                }
+
             }
         }
     }
