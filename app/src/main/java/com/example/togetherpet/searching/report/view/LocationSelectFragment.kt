@@ -129,4 +129,9 @@ class LocationSelectFragment : DialogFragment() {
         })
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

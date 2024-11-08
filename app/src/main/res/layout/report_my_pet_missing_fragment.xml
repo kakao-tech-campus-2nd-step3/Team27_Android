@@ -23,6 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- 가입 시 등록 했던 이미지 활용
         <ImageView
             android:id="@+id/report_missing_img"
             android:layout_width="125dp"
@@ -43,6 +44,7 @@
             android:textAppearance="@style/TogetherPetText12White"
             app:layout_constraintBottom_toBottomOf="@id/report_missing_img"
             app:layout_constraintStart_toEndOf="@id/report_missing_img" />
+            -->
 
         <EditText
             android:id="@+id/report_missing_color"
@@ -57,7 +59,7 @@
             android:textColorHint="@color/KTC_red"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/report_missing_img" />
+            app:layout_constraintTop_toBottomOf="@id/report_missing_title" />
 
         <EditText
             android:id="@+id/report_missing_gender"
@@ -89,33 +91,33 @@
             app:layout_constraintStart_toStartOf="@id/report_missing_gender"
             app:layout_constraintTop_toBottomOf="@id/report_missing_gender" />
 
-        <EditText
+        <TextView
             android:id="@+id/report_missing_time"
             android:layout_width="296dp"
             android:layout_height="47dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/report_edittext"
-            android:hint="@string/report_time"
+            android:gravity="center|start"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
+            android:text="@string/report_missing_time"
             android:textAppearance="@style/TogetherPetTextMediumRed"
-            android:textColorHint="@color/KTC_red"
             app:layout_constraintStart_toStartOf="@id/report_missing_species"
             app:layout_constraintTop_toBottomOf="@id/report_missing_species" />
 
-        <EditText
+        <TextView
             android:id="@+id/report_missing_location"
             android:layout_width="296dp"
             android:layout_height="47dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/report_edittext"
-            android:hint="@string/report_time"
+            android:gravity="center|start"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
+            android:text="@string/report_missing_location"
             android:textAppearance="@style/TogetherPetTextMediumRed"
-            android:textColorHint="@color/KTC_red"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/report_missing_time" />
@@ -126,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:includeFontPadding="false"
-            android:text="@string/report_info"
+            android:text="@string/report_missing_info"
             android:textAppearance="@style/TogetherPetTextMedium"
             app:layout_constraintStart_toStartOf="@id/report_missing_location"
             app:layout_constraintTop_toBottomOf="@id/report_missing_location" />
@@ -152,20 +154,22 @@
             app:layout_constraintTop_toBottomOf="@id/report_missing_info_detail" />
 
         <TextView
-            android:id="@+id/myPet_missingRegister_button"
+            android:id="@+id/suspectedPet_missingRegister_button"
             android:layout_width="296dp"
             android:layout_height="46dp"
             android:layout_marginTop="70dp"
             android:layout_marginBottom="18dp"
             android:background="@drawable/report_btn"
-            android:drawableStart="@drawable/sos_icon_resize_30"
             android:drawablePadding="-30dp"
             android:elevation="8dp"
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:includeFontPadding="false"
             android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/missing_bottom_report_btn"
             android:textAppearance="@style/TogetherPetText20"
+            app:drawableStartCompat="@drawable/sos_icon_resize_30"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

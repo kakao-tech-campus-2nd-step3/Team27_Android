@@ -1,4 +1,4 @@
-package com.example.togetherpet.searching
+package com.example.togetherpet.searching.searchingHome.view
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -26,11 +26,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.togetherpet.DataStoreRepository
 import com.example.togetherpet.R
-import com.example.togetherpet.adapter.PetListAdapter
 import com.example.togetherpet.adapter.SearchingBtnListAdapter
 import com.example.togetherpet.databinding.FragmentSearchingPetBinding
+import com.example.togetherpet.searching.MissingBottomSheetFragment
+import com.example.togetherpet.searching.SearchingTestDataViewModel
 import com.example.togetherpet.searching.report.extensions.ItemSpacing
+import com.example.togetherpet.searching.report.view.MyPetReportFragment
 import com.example.togetherpet.searching.report.view.ReportSuspectedMissingPetFragment
+import com.example.togetherpet.searching.report.viewModel.ReportDataViewModel
+import com.example.togetherpet.searching.searchingHome.ButtonType
+import com.example.togetherpet.searching.searchingHome.viewModel.SearchingPetViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.kakao.vectormap.KakaoMap
@@ -54,12 +59,19 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SearchingPetFragment : Fragment() {
     @Inject
+    //내 반려 동물 missing 여부 저장
     lateinit var dataStoreRepository: DataStoreRepository
-    private val searchingViewModel: SearchingViewModel by viewModels()
+
+    //실종 제보 데이터 저장
+    private val reportDataViewModel: ReportDataViewModel by viewModels()
+
+    //UI 데이터
+    private val searchingPetViewModel: SearchingPetViewModel by viewModels()
 
     private var _binding: FragmentSearchingPetBinding? = null
     private val binding get() = _binding!!
 
+    //버튼 목록 : 실종 정보, 제보 정보, (나의 펫)
     private lateinit var searchingBtnListAdapter: SearchingBtnListAdapter
 
     //Google Play 위치 API
@@ -71,16 +83,19 @@ class SearchingPetFragment : Fragment() {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
 
+    //더미 데이터 사용
+    private val searchingViewModel: SearchingTestDataViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchingPetBinding.inflate(inflater, container, false)
 
+        //---현재 위치 얻기 위함---
         //FusedLocationProviderClient 등록
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
-        // 권한 요청 초기화
+        //권한 요청 초기화
         locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
@@ -109,12 +124,59 @@ class SearchingPetFragment : Fragment() {
                 return 18
             }
         })
+        setBtnListAdapter()
+        //btnList 사이의 간격 설정
+        binding.researchingBtnList.addItemDecoration(ItemSpacing(20))
 
         return binding.root
     }
 
+    private fun setBtnListAdapter() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            dataStoreRepository.missingStatus.collectLatest { isMissing ->
+                dataStoreRepository.petName.collectLatest { petName ->
+                    ButtonType.MyPET.setPetName(petName)
+                    updateAdapter(isMissing, petName)
+                }
+            }
+        }
+    }
+
+    private fun updateAdapter(isMissing: Boolean, petName: String) {
+        searchingBtnListAdapter = SearchingBtnListAdapter(isMissing, petName) { clickedItem ->
+            handleBtnClick(clickedItem)
+        }
+        binding.researchingBtnList.adapter = searchingBtnListAdapter
+    }
+
+    private fun handleBtnClick(item: ButtonType) {
+        reportDataViewModel.updateSelectedBtn(item)
+        when (item) {
+            ButtonType.MISSING -> {
+                binding.searchingMissingList.visibility = View.VISIBLE
+                binding.myPetMissingRegisterButton.visibility = View.VISIBLE
+                binding.searchingReportBtn.visibility = View.GONE
+                //실종 목록 어뎁터 설정
+            }
+
+            ButtonType.REPORT -> {
+                binding.searchingMissingList.visibility = View.VISIBLE
+                binding.myPetMissingRegisterButton.visibility = View.GONE
+                binding.searchingReportBtn.visibility = View.VISIBLE
+            }
+
+            ButtonType.MyPET -> {
+                binding.searchingMissingList.visibility = View.GONE
+                binding.myPetMissingRegisterButton.visibility = View.GONE
+                binding.searchingReportBtn.visibility = View.GONE
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        fetchData()
 
         //목격 제보 버튼 클릭
         binding.searchingReportBtn.setOnClickListener {
@@ -126,10 +188,22 @@ class SearchingPetFragment : Fragment() {
                 .commit()
         }
 
-        //btnList 사이의 간격 설정
-        binding.researchingBtnList.addItemDecoration(ItemSpacing(20))
+        //"내 반려동물 실종등록" 버튼 클릭
+        binding.myPetMissingRegisterButton.setOnClickListener {
+            val reportMyPet = MyPetReportFragment()
 
-        //RecyclerView 초기화 시 실종 정보를 보여줌
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_myPetMissing, reportMyPet)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        //refresh 버튼 클릭
+        binding.refreshDataBtn.setOnClickListener {
+            fetchData()
+        }
+
+        /*//RecyclerView 초기화 시 실종 정보를 보여줌
         viewLifecycleOwner.lifecycleScope.launch {
             searchingViewModel.missingPets.collectLatest { missingInfo ->
                 binding.searchingMissingList.visibility = View.VISIBLE
@@ -139,44 +213,22 @@ class SearchingPetFragment : Fragment() {
                     PetListAdapter(requireContext(), missingInfo)
                 searchingViewModel.pushBtn("실종 정보")
             }
-        }
+        }*/
+    }
 
+    private fun fetchData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            searchingViewModel.loadData()
-            dataStoreRepository.missingStatus.collect { isMissing ->
-                searchingViewModel.petName.collect { petName ->
-                    searchingBtnListAdapter =
-                        SearchingBtnListAdapter(isMissing, petName) { clickedItem ->
-                            when (clickedItem) {
-                                "실종 정보" -> {
-                                    searchingViewModel.pushBtn("실종 정보")
-                                    binding.searchingMissingList.visibility = View.VISIBLE
-                                    binding.myPetMissingRegisterButton.visibility = View.VISIBLE
-                                    binding.searchingReportBtn.visibility = View.GONE
-                                    viewLifecycleOwner.lifecycleScope.launch {
-                                        searchingViewModel.missingPets.collectLatest { missingInfo ->
-                                            binding.searchingMissingList.adapter =
-                                                PetListAdapter(requireContext(), missingInfo)
-                                        }
-                                    }
-                                }
-                                //<추후> 제보 정보 데이터 적용
-                                "제보 정보" -> {
-                                    searchingViewModel.pushBtn("제보 정보")
-                                    binding.myPetMissingRegisterButton.visibility = View.GONE
-                                    binding.searchingMissingList.visibility = View.GONE
-                                    binding.searchingReportBtn.visibility = View.VISIBLE
-                                }
+            when (reportDataViewModel.selectedButton.value) {
+                ButtonType.MISSING -> {
+                    reportDataViewModel.fetchMissingReports(latitude, longitude)
+                }
 
-                                petName -> {
-                                    searchingViewModel.pushBtn(petName)
-                                    binding.myPetMissingRegisterButton.visibility = View.GONE
-                                    binding.searchingMissingList.visibility = View.GONE
-                                    binding.searchingReportBtn.visibility = View.GONE
-                                }
-                            }
-                        }
-                    binding.researchingBtnList.adapter = searchingBtnListAdapter
+                ButtonType.REPORT -> {
+                    reportDataViewModel.fetchSuspectedReports(latitude, longitude)
+                }
+
+                ButtonType.MyPET -> {
+                    reportDataViewModel.fetchMyPetReports()
                 }
             }
         }
@@ -259,7 +311,7 @@ class SearchingPetFragment : Fragment() {
                                         existingFragment?.dismiss()
 
                                         viewLifecycleOwner.lifecycleScope.launch {
-                                            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                                            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                                                 searchingViewModel.selectedPet.collect { selectedPet ->
                                                     //BottomSheet 표시
                                                     val bottomSheet = MissingBottomSheetFragment()
