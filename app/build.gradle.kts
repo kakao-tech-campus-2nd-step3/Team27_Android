@@ -25,7 +25,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.togetherpet.CustomTestRunner"
+
         buildConfigField(
             "String",
             "KAKAO_NATIVE_APP_KEY",
@@ -90,21 +91,36 @@ dependencies {
     implementation("com.kakao.sdk:v2-user:2.20.6")
     implementation("com.kakao.maps.open:android:2.11.9")
     implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation("com.google.dagger:hilt-android:2.48.1")
+    implementation("com.google.dagger:hilt-android:2.51.1")
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.1")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.1")
+    implementation("androidx.test:core-ktx:1.6.1")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test:rules:1.6.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("com.google.dagger:hilt-android:2.48.1")
-    kapt("com.google.dagger:hilt-compiler:2.48.1")
+    kapt("com.google.dagger:hilt-compiler:2.51.1")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.activity:activity-ktx:1.9.2")
-    implementation("androidx.fragment:fragment-ktx:1.8.3")
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation("com.github.bumptech.glide:glide:4.16.0")    //Glide : url -> 이미지 로딩
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.mockito.core)
+    implementation("com.google.dagger:hilt-android-testing:2.51.1")
+    testImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    testAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.51.1")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.51.1")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.51.1")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.51.1")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
+    androidTestImplementation("androidx.fragment:fragment-testing:1.8.5")
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    androidTestImplementation("org.mockito:mockito-android:4.0.0")
 }

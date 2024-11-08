@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.datasource
 
+import android.util.Log
 import com.example.togetherpet.data.dto.UserResponseDTO
 import com.example.togetherpet.data.service.UserService
 import com.example.togetherpet.exception.APIException
@@ -13,7 +14,7 @@ class UserSource @Inject constructor(
 ) {
     suspend fun getUserResponseDTO(token: String): UserResponseDTO? {
         val response = userService.getUserData(token)
-
+        Log.d("testt", "User : ${response.body()}, ${response.errorBody()}")
         if (response.isSuccessful) {
             return response.body()
         }

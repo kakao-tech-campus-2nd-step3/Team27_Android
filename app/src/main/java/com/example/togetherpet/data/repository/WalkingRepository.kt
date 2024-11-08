@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.repository
 
+import android.util.Log
 import com.example.togetherpet.data.datasource.WalkingNetworkSource
 import com.example.togetherpet.data.dto.LocationDTO
 import com.example.togetherpet.data.dto.WalkingRequestDTO
@@ -34,20 +35,24 @@ class WalkingRepository @Inject constructor(
         date: LocalDate
     ) : ArrayList<WalkingRecord> {
         val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        val walkingResponseDTO = walkingNetworkSource.getWalkingDataWithDate(tokenRepository.getTokenOrThrow(), formattedDate)
-        return walkingResponseDTO?.map { walkingResponseDTO ->
-            val locationList : ArrayList<LatLng> =  walkingResponseDTO.locationList.map { locationDTO ->
-                LatLng.from(locationDTO.latitude, locationDTO.longitude)
-            } as ArrayList<LatLng>
-            WalkingRecord(
-                walkingResponseDTO.walkDistance.toLong(),
-                date,
-                walkingResponseDTO.walkTime,
-                LocalDateTime.parse(walkingResponseDTO.walkStartTimePoint),
-                LocalDateTime.parse(walkingResponseDTO.walkEndTimePoint),
-                1,
-                locationList
-            )
-        } as ArrayList<WalkingRecord>
+        try {
+            val walkingResponseDTO = walkingNetworkSource.getWalkingDataWithDate(tokenRepository.getTokenOrThrow(), formattedDate)
+            return walkingResponseDTO?.map { walkingResponseDTO ->
+                val locationList : ArrayList<LatLng> =  walkingResponseDTO.locationList.map { locationDTO ->
+                    LatLng.from(locationDTO.latitude, locationDTO.longitude)
+                } as ArrayList<LatLng>
+                WalkingRecord(
+                    walkingResponseDTO.walkDistance.toLong(),
+                    date,
+                    walkingResponseDTO.walkTime,
+                    LocalDateTime.parse(walkingResponseDTO.walkStartTimePoint),
+                    LocalDateTime.parse(walkingResponseDTO.walkEndTimePoint),
+                    1,
+                    locationList
+                )
+            } as ArrayList<WalkingRecord>
+        } catch (e : Exception){
+            return arrayListOf()
+        }
     }
 }

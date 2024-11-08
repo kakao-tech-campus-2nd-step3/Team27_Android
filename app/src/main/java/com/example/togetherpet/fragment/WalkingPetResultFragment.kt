@@ -32,6 +32,8 @@ import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -74,7 +76,7 @@ class WalkingPetResultFragment : Fragment() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("testt", "MapReady")
-                kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
+                kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(sharedViewModel.arrayLoc.value.first()))
                 this@WalkingPetResultFragment.kakaoMap = kakaoMap
 
                 initListener()

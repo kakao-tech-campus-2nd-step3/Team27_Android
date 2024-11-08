@@ -1,14 +1,17 @@
 # Team27_Android
-## Team27_Android 9주차 과제 제출
+## Team27_Android 10주차 과제 제출
 
 ### 구현한 내용
-- 로그인 및 정보 등록 api 통신 구현
-- 산책 완료시 저장 api 통신 구현
-- HTTP 통신위한 코드 리펙토링 중
-- 위도-경도 정보를 주소 정보로 변환하는 기능 추가
+- 산책 기록을 불러오는 api 통신 구현
+- 유저 정보를 불러오는 api 통신 구현
+- 스플래시 화면에서 토큰 유무 검사 기능 추가
+- 산책 종료를 누르면 커스텀 다이얼로그 화면을 띄우도록 변경
+- 같이 찾기 api 통신 구현
+- RegistrationPetFragment, RegistrationStartFragment 테스트 코드 작성
 
 ### 코치님께 피드백 요청드리고 싶은 부분
-#### 1. loginWithKakaoTalk 함수 AndroidRuntimeException
-- kakaoLogin 관련 함수들 중 loginWithKakaoTalk는 내부적으로 카카오톡으로 연결하기 위해 startActivity() 함수를 사용하는 것 같습니다. 그래서 activity에 위치하지 않으면 실행이 되지 않고 오류가 뜨는 상황입니다.
-- 이러한 경우 kakaoLogin 관련 함수들을 repository나 다른 곳에 위치시키지 않고 activity에 위치시켜야 할 지 궁금합니다.
+#### 1. 오류 처리 관련
+- 서버와 통신했을 때 오류처리 로직을 어디에 위치시켜야 할 지 잘 모르겠습니다.
+    - 예시로 tokenRepository를 사용하는 모든 곳에서 오류처리 로직을 넣어야 할 지, 아니면 tokenRepository 자체적으로 오류 처리 로직을 넣어야 할 지 잘 모르겠습니다.
+- 또한 9주차 피드백 관련해서 에러 핸들링 관련해서 어떻게 처리해야 할 지 감을 잘 못잡겠습니다. 혹시 에러 핸들링 관련 좋은 레퍼런스가 있는지 여쭙고 싶습니다!
 

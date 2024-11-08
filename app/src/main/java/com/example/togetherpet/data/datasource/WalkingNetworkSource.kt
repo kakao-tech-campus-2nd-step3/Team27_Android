@@ -35,10 +35,10 @@ class WalkingNetworkSource @Inject constructor(
         val response = walkingService.getWalkingDataWithDate(
             token, date
         )
-        Log.d("testt", "${response.body()}, ${response.code()}, ${response.errorBody()}")
-        if (response.isSuccessful) {
-            return response.body()
-        } else if (!response.isSuccessful) {
+        Log.d("testt", "${response.body()}, ${response.code()}, ${response.errorBody()?.string()}")
+        return if (response.isSuccessful) {
+            response.body()
+        } else  {
             throw APIException(
                 gson.fromJson(
                     response.errorBody()?.string(),
@@ -46,6 +46,5 @@ class WalkingNetworkSource @Inject constructor(
                 )
             )
         }
-        return null
     }
 }

@@ -56,8 +56,10 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRepositor
     fun getRecord(date: LocalDate) {
         viewModelScope.launch(Dispatchers.IO) {
             _selectDay.value = date
-            _arrayRecord.value = walkingRepository.getWalkingDataWithDateFromServer(date)
-            Log.d("testt", "${_arrayRecord.value}")
+            val walkingRecordList = walkingRepository.getWalkingDataWithDateFromServer(date)
+            Log.d("testt", "date : {$date}, walkingRecordList : ${walkingRepository.getWalkingDataWithDateFromServer(date)}")
+            _arrayRecord.value = walkingRecordList
+//            Log.d("testt", "${_arrayRecord.value}")
             calculateAllDistance()
             calculateAllTime()
         }
