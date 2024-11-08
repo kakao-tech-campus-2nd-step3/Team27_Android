@@ -1,6 +1,5 @@
-package com.example.togetherpet.fragment
+package com.example.togetherpet.searching.report.view
 
-import android.R.attr.label
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
@@ -8,35 +7,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
-import com.example.togetherpet.R
 import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.databinding.FragmentLocationSelectBinding
+import com.example.togetherpet.searching.report.extensions.LocationProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.label.LabelStyle
-import com.kakao.vectormap.label.LabelStyles
-import com.kakao.vectormap.label.TrackingManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+//24-11-03 Fragment -> DialogFragment 변경
 @AndroidEntryPoint
-class LocationSelectFragment : Fragment() {
-
-    // 일단 홈화면에서 이미지 클릭하면 넘어오도록 설정했습니다.... 추가로 변경해주시면 될 것 같습니다.
+class LocationSelectFragment : DialogFragment() {
     @Inject
     // 나중에 viewmodel과 연결해서 사용하시면 될거같습니다.
     lateinit var kakaoLocalRepository: KakaoLocalRepository
@@ -46,19 +37,32 @@ class LocationSelectFragment : Fragment() {
     var kakaoMap: KakaoMap? = null
     lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private lateinit var locationProvider: LocationProvider
+    private var currentLocation: LatLng = LatLng.from(37.0, 131.0)
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentLocationSelectBinding.inflate(inflater, container, false)
+
+        binding.confirmButton.setOnClickListener {
+            dismiss()
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        initMap()
 
+        // LocationProvider 초기화 및 콜백 설정
+        locationProvider = LocationProvider(requireContext()) { latitude, longitude ->
+            currentLocation = LatLng.from(latitude, longitude)
+            kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(currentLocation))
+        }
+
+        initMap()
     }
 
     @SuppressLint("MissingPermission")
@@ -108,11 +112,26 @@ class LocationSelectFragment : Fragment() {
                         Log.d("testt", address.toString())
                         // 필요한 정보를 DTO에서 뽑아서 사용하시면 됩니다.
                         binding.addressDisplay.text = address.address?.addressName
-                    }
 
+                        val result = Bundle().apply {
+                            putDouble("latitude", cameraPosition.position.latitude)
+                            putDouble("longitude", cameraPosition.position.longitude)
+                            putString("address", address.address?.addressName)
+                        }
+                        Log.d(
+                            "BundleCheck",
+                            "Latitude: ${cameraPosition.position.latitude}, Longitude: ${cameraPosition.position.longitude}, Address: ${address.address?.addressName}"
+                        )
+                        parentFragmentManager.setFragmentResult("locationRequestKey", result)
+                    }
                 }
             }
         })
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

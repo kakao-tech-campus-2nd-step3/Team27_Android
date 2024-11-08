@@ -25,4 +25,8 @@ class TokenRepository @Inject constructor(
             "토큰이 존재하지 않습니다."
         }
     }
+
+    fun hasToken(): Boolean{
+        return sharedPreferences.getString(tokenKey, null) != null
+    }
 }

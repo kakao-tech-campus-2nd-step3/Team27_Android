@@ -2,7 +2,6 @@ package com.example.togetherpet.di
 
 import com.example.togetherpet.PetRepository
 import com.example.togetherpet.PetRepositoryImpl
-import com.example.togetherpet.fragment.WalkingRecordRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

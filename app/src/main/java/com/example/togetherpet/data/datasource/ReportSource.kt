@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.datasource
 
+import android.util.Log
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
 import com.example.togetherpet.data.dto.ReportDetailResponseDTO
 import com.example.togetherpet.data.dto.ReportResponseDTO
@@ -26,19 +27,26 @@ class ReportSource @Inject constructor(
         reportCreateRequestDTO: ReportCreateRequestDTO,
         files: List<File>
     ) {
+        Log.d("sendReport", "File List in ReportSource: $files")
+        val fileParts = files.map { file ->
+            val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val part = MultipartBody.Part.createFormData(
+                "files",
+                file.name,
+                requestBody
+            )
+
+            Log.d("sendReport", "Multipart Part - File Name: ${file.name}, File Size: ${file.length()} bytes")
+
+            part
+        }
+
+
         val response = reportService.registerReportByMissing(
             token,
             gson.toJson(reportCreateRequestDTO)
                 .toRequestBody("application/json".toMediaTypeOrNull()),
-            files.stream()
-                .map { file ->
-                    MultipartBody.Part.createFormData(
-                        "reportImage",
-                        file.name,
-                        file.asRequestBody("image/*".toMediaTypeOrNull())
-                    )
-                }
-                .collect(Collectors.toList())
+            *fileParts.toTypedArray() // 변환한 파트를 배열로 전달
         )
 
         if (!response.isSuccessful) {
@@ -54,6 +62,7 @@ class ReportSource @Inject constructor(
     suspend fun getRegisterOwnByUser(
         token: String
     ): List<ReportResponseDTO> {
+        Log.d("sendReport","getRegisterOwnByUser()")
         val response = reportService.getReportOwnByUser(token)
 
         if (response.isSuccessful) {
@@ -72,6 +81,7 @@ class ReportSource @Inject constructor(
         latitude: Double,
         longitude: Double
     ): List<ReportResponseDTO> {
+        Log.d("sendReport","getReportByLocation()")
         val response = reportService.getReportByLocation(latitude, longitude)
 
         if (response.isSuccessful) {

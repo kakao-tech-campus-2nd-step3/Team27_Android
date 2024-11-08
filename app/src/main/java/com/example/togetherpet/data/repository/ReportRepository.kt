@@ -1,14 +1,19 @@
 package com.example.togetherpet.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.example.togetherpet.data.database.ReportDataBase
 import com.example.togetherpet.data.datasource.ReportSource
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
 import com.example.togetherpet.data.entity.ReportEntity
+import com.example.togetherpet.di.TypeConverterModule
+import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
+import retrofit2.Retrofit
 import java.io.File
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +23,7 @@ class ReportRepository @Inject constructor(
     private val reportSource: ReportSource,
     private val tokenRepository: TokenRepository
 ) {
-    private val db: ReportDataBase = Room.databaseBuilder(
+    val db: ReportDataBase = Room.databaseBuilder(
         context.applicationContext,
         ReportDataBase::class.java,
         "report_database"
@@ -30,7 +35,7 @@ class ReportRepository @Inject constructor(
         color: String,
         foundLatitude: Double,
         foundLongitude: Double,
-        foundDate: LocalDateTime,
+        foundDate: String,  //변경(11.05)
         description: String,
         breed: String,
         gender: String,
@@ -57,12 +62,14 @@ class ReportRepository @Inject constructor(
         color: String,
         foundLatitude: Double,
         foundLongitude: Double,
-        foundDate: LocalDateTime,
+        foundDate: String,  //변경(11.05)
         description: String,
         breed: String,
         gender: String,
         files: List<File>
     ) {
+        Log.d("yeong", "repo")
+
         reportSource.registerReport(
             tokenRepository.getTokenOrThrow(),
             ReportCreateRequestDTO(
@@ -100,20 +107,20 @@ class ReportRepository @Inject constructor(
         latitude: Double,
         longitude: Double,
     ) {
-        reportDao.insertReports(
-            reportSource.getReportByLocation(latitude, longitude)
-                .map { report ->
-                    ReportEntity(
-                        report.id,
-                        report.latitude,
-                        report.longitude,
-                        mutableListOf(report.imageUrl),
-                        null,
-                        null,
-                        null
-                    )
-                }
-        )
+        Log.d("yeong","근처 실종 데이터 받아옴")
+        val reports = reportSource.getReportByLocation(latitude, longitude)
+            .map { report ->
+                ReportEntity(
+                    report.id,
+                    report.latitude,
+                    report.longitude,
+                    mutableListOf(report.imageUrl),
+                    null,
+                    null,
+                    null
+                )
+            }
+        reportDao.insertReports(reports)
     }
 
     suspend fun getReportDetail(
@@ -128,7 +135,7 @@ class ReportRepository @Inject constructor(
                 findReport.copy(
                     description = detailReport.description,
                     reporterName = detailReport.reporterName,
-                    foundDate = detailReport.foundDate
+                    foundDate = detailReport.foundDate.toString()
                 )
             )
         }

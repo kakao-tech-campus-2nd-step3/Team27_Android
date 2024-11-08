@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +32,8 @@ import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -54,6 +57,7 @@ class WalkingPetResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMap()
+        displayToastMessage()
     }
 
     fun initMap(){
@@ -72,7 +76,7 @@ class WalkingPetResultFragment : Fragment() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("testt", "MapReady")
-                kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(loc))
+                kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(sharedViewModel.arrayLoc.value.first()))
                 this@WalkingPetResultFragment.kakaoMap = kakaoMap
 
                 initListener()
@@ -133,6 +137,11 @@ class WalkingPetResultFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun displayToastMessage(){
+        if(sharedViewModel.isTimeUnderMinTime())
+            Toast.makeText(requireContext(), "1분 이하의 기록은 저장되지 않습니다.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
