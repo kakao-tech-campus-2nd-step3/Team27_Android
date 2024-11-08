@@ -58,6 +58,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         binding.weekViewpager
         binding.weekViewpager.adapter = calendarAdapter
         binding.weekViewpager.setCurrentItem(CalendarViewPagerAdapter.START_POSITION, false)
+        binding.calendarDateText.text = selectedDate.toString()
         sharedViewModel.getRecord(selectedDate)
 
     }
@@ -67,8 +68,9 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
             navigateToWalkingPage()
         }
 
-        setFragmentResultListener("dateClick"){ key, bundle ->
+        setFragmentResultListener("dateClick") { key, bundle ->
             val date = bundle.getLong("date")
+            binding.calendarDateText.text = LocalDate.ofEpochDay(date).toString()
             selectedDate = LocalDate.ofEpochDay(date)
             Log.d("testt", "fragmentResultListener : $selectedDate")
             sharedViewModel.getRecord(selectedDate)
@@ -77,6 +79,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sharedViewModel.arrayRecord.collectLatest {
+                    Log.d("testt", "submit $it")
                     walkingRecyclerViewAdapter.submitList(it)
                 }
             }
@@ -85,7 +88,8 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sharedViewModel.allDistance.collectLatest {
-                    binding.distanceSumValue.text = "총 ${it.toString()}m 산책했어요!"
+                    if (it == 0L) binding.distanceSumValue.text = "오늘은 산책을 안했어요."
+                    else binding.distanceSumValue.text = "총 ${it.toString()}m 산책했어요!"
                 }
             }
         }
@@ -93,9 +97,12 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sharedViewModel.allTime.collectLatest {
-                    val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
-                    format.timeZone = TimeZone.getTimeZone("UTC")
-                    binding.timeSumValue.text = format.format(it)
+                    if (it == 0L) binding.timeSumValue.text = "오늘은 산책을 안했어요."
+                    else {
+                        val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
+                        format.timeZone = TimeZone.getTimeZone("UTC")
+                        binding.timeSumValue.text = format.format(it)
+                    }
                 }
             }
         }

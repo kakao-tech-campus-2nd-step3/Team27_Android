@@ -2,7 +2,6 @@ package com.example.togetherpet.di
 
 import android.content.Context
 import com.example.togetherpet.fragment.LocationService
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides

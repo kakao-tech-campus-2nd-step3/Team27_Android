@@ -83,7 +83,8 @@ class RegistrationNicknameFragment : Fragment() {
 
     private fun goToHomeActivitiy() {
         sharedViewModel.registerUserAndPet(File(absolutelyPath(sharedViewModel.petImage.value, requireContext())))
-        //navigateToHomeActivity()
+        //홈으로 이동
+        navigateToHomeActivity()
     }
 
     override fun onDestroyView() {

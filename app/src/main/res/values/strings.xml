@@ -18,7 +18,7 @@
     <string name="home_total_time_title">총 시간</string>
     <string name="home_avg_count">/평균 %s회</string>
     <string name="home_avg_distance">/평균 %skm</string>
-    <string name="home_avg_time">/평균 %s</string>
+    <string name="home_avg_time">/평균 %sm</string>
     <string name="searching_myPet_missing_btn">내 반려동물 실종등록</string>
     <string name="searching_missing_info_btn">실종 정보</string>
     <string name="searching_report_info_btn">제보 정보</string>
@@ -36,11 +36,13 @@
     <string name="report_gender">반려동물 성별</string>
     <string name="report_species">반려동물 종</string>
     <string name="report_time">반려동물 목격 시간</string>
+    <string name="report_missing_time">반려동물 실종 시간</string>
     <string name="report_location">반려동물 목격 장소</string>
+    <string name="report_missing_location">반려동물 실종 장소</string>
     <string name="report_info">반려동물을 목격했을 때 상황을 적어주세요</string>
+    <string name="report_missing_info">반려동물을 실종했을 때 상황을 적어주세요</string>
     <string name="report_info_detail">(자세히 적어주시면 큰 도움이 됩니다)</string>
     <string name="report_suspected_title">실종 의심 동물 제보</string>
     <string name="report_myPetMissing_title">반려동물 실종 정보 등록</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_confirm">확인</string>
 </resources>

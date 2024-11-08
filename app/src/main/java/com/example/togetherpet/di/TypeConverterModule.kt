@@ -1,18 +1,14 @@
 package com.example.togetherpet.di
 
-import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
-@ProvidedTypeConverter
-class TypeConverterModule @Inject constructor(
-    private val gson: Gson
-) {
+class TypeConverterModule {
 
+    private val gson = Gson()
     private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
     @TypeConverter

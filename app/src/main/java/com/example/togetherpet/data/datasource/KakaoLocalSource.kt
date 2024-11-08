@@ -20,7 +20,7 @@ class KakaoLocalSource @Inject constructor(
             latitude
         )
         Log.d("testt", "${result.body().toString()}, ${result.errorBody().toString()}")
+        Log.d("testt", "Body: ${result.body().toString()}, Error: ${result.errorBody()?.string()}")
         return result.body()?.documents ?: emptyList()
     }
-
 }

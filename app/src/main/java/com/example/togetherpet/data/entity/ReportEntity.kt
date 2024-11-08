@@ -12,5 +12,6 @@ data class ReportEntity(
     val imageUrl: MutableList<String>,
     val description: String?,
     val reporterName: String?,
-    val foundDate: LocalDateTime?
+    val foundDate: String?
+    //val foundDate: LocalDateTime?
 )
