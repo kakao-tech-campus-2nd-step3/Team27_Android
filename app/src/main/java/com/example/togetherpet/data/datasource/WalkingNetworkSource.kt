@@ -1,6 +1,8 @@
 package com.example.togetherpet.data.datasource
 
+import android.util.Log
 import com.example.togetherpet.data.dto.WalkingRequestDTO
+import com.example.togetherpet.data.dto.WalkingResponseDTO
 import com.example.togetherpet.data.service.WalkingService
 import com.example.togetherpet.exception.APIException
 import com.example.togetherpet.exception.ErrorResponse
@@ -16,7 +18,7 @@ class WalkingNetworkSource @Inject constructor(
     suspend fun postWalkingData(
         token: String,
         walkingRequestDTO: WalkingRequestDTO
-    ){
+    ) {
         val response = walkingService.postWalkingData(
             token, walkingRequestDTO
         )
@@ -27,5 +29,23 @@ class WalkingNetworkSource @Inject constructor(
                 ErrorResponse::class.java
             )
         )
+    }
+
+    suspend fun getWalkingDataWithDate(token: String, date: String): List<WalkingResponseDTO>? {
+        val response = walkingService.getWalkingDataWithDate(
+            token, date
+        )
+        Log.d("testt", "${response.body()}, ${response.code()}, ${response.errorBody()}")
+        if (response.isSuccessful) {
+            return response.body()
+        } else if (!response.isSuccessful) {
+            throw APIException(
+                gson.fromJson(
+                    response.errorBody()?.string(),
+                    ErrorResponse::class.java
+                )
+            )
+        }
+        return null
     }
 }

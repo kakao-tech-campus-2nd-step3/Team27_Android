@@ -7,6 +7,7 @@ import com.example.togetherpet.data.service.LoginService
 import com.example.togetherpet.data.service.MissingService
 import com.example.togetherpet.data.service.RegisterService
 import com.example.togetherpet.data.service.ReportService
+import com.example.togetherpet.data.service.UserService
 import com.example.togetherpet.data.service.WalkingService
 import dagger.Module
 import dagger.Provides
@@ -80,5 +81,11 @@ class NetworkModule {
     @Singleton
     fun provideKakaoLocalService(@Named("kakaoLocalRetrofit") retrofit: Retrofit): KakaoLocalService {
         return retrofit.create(KakaoLocalService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
     }
 }

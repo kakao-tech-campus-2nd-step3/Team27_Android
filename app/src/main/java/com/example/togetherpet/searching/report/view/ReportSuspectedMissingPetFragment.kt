@@ -34,7 +34,6 @@ import java.util.Locale
 class ReportSuspectedMissingPetFragment : Fragment() {
     private var _binding: ReportSuspectedMissingPetFragmentBinding? = null
     private val binding get() = _binding!!
-
     private val reportSuspectedViewModel: ReportSuspectedViewModel by viewModels()
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent> //선택한 이미지 화면에 띄우기
@@ -128,7 +127,6 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             dialog.dismiss()
         }
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

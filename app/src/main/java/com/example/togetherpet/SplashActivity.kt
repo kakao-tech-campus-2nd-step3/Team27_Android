@@ -17,10 +17,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.togetherpet.Login.LoginActivity
 import com.example.togetherpet.dashboard.view.DashboardActivity
 import com.example.togetherpet.fragment.WalkingPetViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var splashScreen: SplashScreen

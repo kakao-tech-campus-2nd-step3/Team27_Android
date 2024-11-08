@@ -1,6 +1,7 @@
 package com.example.togetherpet.fragment
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
@@ -24,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.togetherpet.R
+import com.example.togetherpet.databinding.CustomDialogBinding
 import com.example.togetherpet.databinding.FragmentWalkingPetBinding
 import com.example.togetherpet.extensions.drawLine
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -112,10 +114,7 @@ class WalkingPetFragment : Fragment() {
             // 지도의 스와이프을 막기 위해서 생성. 실제로 하는 역할 X
         }
         binding.walkingStopButton.setOnClickListener{
-            viewModel.stopLocationTracking()
-            binding.timeValue.stop()
             showStopDialog()
-            navigateToResultPage()
         }
 
         binding.timeValue.onChronometerTickListener = Chronometer.OnChronometerTickListener {
@@ -200,6 +199,7 @@ class WalkingPetFragment : Fragment() {
                 Log.d("testt", error.message.toString())
                 //에러 처리
             }
+
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("testt", "MapReady")
@@ -213,10 +213,6 @@ class WalkingPetFragment : Fragment() {
     fun startWalkingTracker(){
         checkPermission()
         viewModel.startLocationTracking()
-    }
-
-    fun setMyLocationPin(array: Array<LatLng>){
-        createLabel(array.last())
     }
 
     fun checkPermission(){
@@ -261,8 +257,22 @@ class WalkingPetFragment : Fragment() {
     }
 
     fun showStopDialog(){
-        // TODO : 다이얼로그 띄워야함
-        Toast.makeText(requireContext(), "취소 버튼 클릭", Toast.LENGTH_SHORT).show()
+        val dialogBinding = CustomDialogBinding.inflate(layoutInflater)
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+        val alertDialog = dialogBuilder.create()
+
+        dialogBinding.dialogYesButton.setOnClickListener {
+            Toast.makeText(requireContext(), "취소 버튼 클릭", Toast.LENGTH_SHORT).show()
+            viewModel.stopLocationTracking()
+            binding.timeValue.stop()
+            navigateToResultPage()
+            alertDialog.dismiss()
+        }
+        dialogBinding.dialogNoButton.setOnClickListener{
+            alertDialog.dismiss()
+        }
+        alertDialog.show()
     }
 
     fun navigateToResultPage(){
@@ -290,10 +300,6 @@ class WalkingPetFragment : Fragment() {
         val style = labelManager
             ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.walking_my_location_pin).setAnchorPoint(0.5f, 0.5f).setApplyDpScale(true)))
         kakaoMap?.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style))
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onDestroyView() {

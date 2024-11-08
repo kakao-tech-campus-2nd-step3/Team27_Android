@@ -3,10 +3,12 @@ package com.example.togetherpet.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.togetherpet.data.repository.UserRepository
 import com.example.togetherpet.data.repository.WalkingRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.lang.Thread.State
 import javax.inject.Inject
 import kotlin.math.asin
 import kotlin.math.cos
@@ -32,7 +35,8 @@ import kotlin.math.sqrt
 class WalkingPetViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
-    private val walkingRepository: WalkingRepository
+    private val walkingRepository: WalkingRepository,
+    private val userRepository: UserRepository
 ) :
     ViewModel() {
 
@@ -42,6 +46,7 @@ class WalkingPetViewModel @Inject constructor(
     private val _arrayLoc = MutableStateFlow<ArrayList<LatLng>>(ArrayList())
     private val _lastLoc = MutableStateFlow<LatLng>(LatLng.from(0.0, 0.0))
     private val _isWalking = MutableStateFlow<Boolean>(false)
+    private val _petImage = MutableStateFlow<Uri>(Uri.EMPTY)
 
     var base: Long = 0
 
@@ -51,8 +56,19 @@ class WalkingPetViewModel @Inject constructor(
     val arrayLoc: StateFlow<ArrayList<LatLng>> get() = _arrayLoc.asStateFlow()
     val lastLoc: StateFlow<LatLng> get() = _lastLoc.asStateFlow()
     val isWalking: StateFlow<Boolean> get() = _isWalking.asStateFlow()
+    val petImage: StateFlow<Uri> get() = _petImage.asStateFlow()
     private lateinit var locationCallback: LocationCallback
 
+    init {
+        setPetImage()
+    }
+
+    private fun setPetImage(){
+        viewModelScope.launch(Dispatchers.IO){
+            _petImage.value = userRepository.getUserData().petImageUri
+            Log.d("testt", "image : ${_petImage.value}")
+        }
+    }
 
     fun calculateDistance(latLng1: LatLng, latLng2: LatLng) {
         val R = 6372.8 * 1000
@@ -155,8 +171,19 @@ class WalkingPetViewModel @Inject constructor(
     }
 
     private fun sendWalkingData(){
-        viewModelScope.launch(Dispatchers.IO) {
-            walkingRepository.sendWalkingDataToServer(_distance.value, _time.value, arrayLoc.value)
+        if(_time.value > 60000) {
+            viewModelScope.launch(Dispatchers.IO) {
+                walkingRepository.sendWalkingDataToServer(
+                    _distance.value,
+                    _time.value,
+                    arrayLoc.value
+                )
+            }
         }
+    }
+
+    fun isTimeUnderMinTime(): Boolean{
+        val minTime = 60000L
+        return _time.value <= minTime
     }
 }

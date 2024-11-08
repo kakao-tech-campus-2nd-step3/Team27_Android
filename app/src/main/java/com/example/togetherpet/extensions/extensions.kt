@@ -8,6 +8,8 @@ import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
 import com.kakao.vectormap.route.RouteLineStyles
 import com.kakao.vectormap.route.RouteLineStylesSet
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 fun KakaoMap.drawLine(arrayList: ArrayList<LatLng>){
     val layer = this.routeLineManager?.layer
@@ -24,4 +26,9 @@ fun KakaoMap.drawLine(arrayList: ArrayList<LatLng>){
         .setStylesSet(stylesSet)
 
     val routeLine = layer?.addRouteLine(options)
+}
+
+fun LocalDateTime.formattingLocalDateTimeToString(): String{
+    val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+    return this.format(formatter)
 }
