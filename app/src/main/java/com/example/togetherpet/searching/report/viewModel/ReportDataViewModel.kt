@@ -66,4 +66,6 @@ class ReportDataViewModel @Inject constructor(
             reportRepository.getReportOwnByUser()
         }
     }
+
+    //fun fetchMissingDetail()
 }

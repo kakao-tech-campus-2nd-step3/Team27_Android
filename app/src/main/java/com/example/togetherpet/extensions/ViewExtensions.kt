@@ -11,7 +11,7 @@ import android.util.TypedValue
 import android.view.View
 import java.io.File
 
-/*fun View.toBitmap(): Bitmap {
+fun View.toBitmap(): Bitmap {
     this.measure(
         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
@@ -21,7 +21,7 @@ import java.io.File
     val canvas = Canvas(bitmap)
     this.draw(canvas)
     return bitmap
-}*/
+}
 
 fun getAbsolutePathFromUri(contentResolver: ContentResolver, uri: Uri): String? {
     var absolutePath: String? = null
