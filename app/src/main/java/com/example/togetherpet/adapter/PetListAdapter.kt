@@ -18,8 +18,8 @@ class PetListAdapter(
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class ViewHolder(val binding: ListMissingPetBinding) : RecyclerView.ViewHolder(binding.root) {
-        val name: TextView = binding.listMissingPetName
-        val date: TextView = binding.listMissingPetDate
+        /*val name: TextView = binding.listMissingPetName
+        val date: TextView = binding.listMissingPetDate*/
         val place: TextView = binding.listMissingPetAddress
         val img: CircleImageView = binding.listMissingPetImg
     }
@@ -35,10 +35,10 @@ class PetListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val pet = missingPetList[position]
         val viewHolder = holder as ViewHolder
-        viewHolder.name.text = pet.missingPetName
+        //viewHolder.name.text = pet.missingPetName
 
         val missingDateInt = pet.missingDate
-        viewHolder.date.text = context.getString(R.string.sos_missing_date, missingDateInt)
+        //viewHolder.date.text = context.getString(R.string.sos_missing_date, missingDateInt)
 
         viewHolder.place.text = pet.missingPlace
         Glide.with(viewHolder.img.context).load(pet.missingPetImgUrl).into(holder.img)

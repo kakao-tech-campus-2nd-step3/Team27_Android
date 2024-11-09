@@ -8,8 +8,8 @@ import com.example.togetherpet.R
 import com.example.togetherpet.fragment.CommunityFragment
 import com.example.togetherpet.fragment.DiaryFragment
 import com.example.togetherpet.home.view.HomeFragment
-import com.example.togetherpet.searching.searchingHome.view.SearchingPetFragment
 import com.example.togetherpet.fragment.WalkingPetFragment
+import com.example.togetherpet.searching.searchingHome.view.SearchingPetFragment
 
 class DashboardViewModel : ViewModel() {
     private val _selectedFragment = MutableLiveData<Fragment>()

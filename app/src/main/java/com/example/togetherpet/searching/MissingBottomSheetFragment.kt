@@ -101,7 +101,7 @@ class MissingBottomSheetFragment : BottomSheetDialogFragment() {
             val reportFragment = ReportMissingPetFragment()
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_myPetMissing, reportFragment)
+                .replace(R.id.home_frameLayout, reportFragment)
                 .addToBackStack(null)
                 .commit()
 

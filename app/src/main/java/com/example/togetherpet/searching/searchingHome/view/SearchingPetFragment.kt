@@ -125,6 +125,7 @@ class SearchingPetFragment : Fragment() {
             }
         })
         setBtnListAdapter()
+
         //btnList 사이의 간격 설정
         binding.researchingBtnList.addItemDecoration(ItemSpacing(20))
 
@@ -156,7 +157,6 @@ class SearchingPetFragment : Fragment() {
                 binding.searchingMissingList.visibility = View.VISIBLE
                 binding.myPetMissingRegisterButton.visibility = View.VISIBLE
                 binding.searchingReportBtn.visibility = View.GONE
-                //실종 목록 어뎁터 설정
             }
 
             ButtonType.REPORT -> {
@@ -176,14 +176,20 @@ class SearchingPetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fetchData()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                reportDataViewModel.selectedButton.collectLatest { buttonType ->
+                    handleBtnClick(buttonType)
+                }
+            }
+        }
 
         //목격 제보 버튼 클릭
         binding.searchingReportBtn.setOnClickListener {
             val reportSuspectedMissingPet = ReportSuspectedMissingPetFragment()
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_myPetMissing, reportSuspectedMissingPet)
+                .replace(R.id.fragment_searching, reportSuspectedMissingPet)
                 .addToBackStack(null)
                 .commit()
         }
@@ -193,7 +199,7 @@ class SearchingPetFragment : Fragment() {
             val reportMyPet = MyPetReportFragment()
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_myPetMissing, reportMyPet)
+                .replace(R.id.fragment_searching, reportMyPet)
                 .addToBackStack(null)
                 .commit()
         }
@@ -220,19 +226,36 @@ class SearchingPetFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             when (reportDataViewModel.selectedButton.value) {
                 ButtonType.MISSING -> {
+                    Log.d("parent","Missing Data Fetch")
                     reportDataViewModel.fetchMissingReports(latitude, longitude)
                 }
 
                 ButtonType.REPORT -> {
+                    Log.d("parent","Reported Data Fetch")
                     reportDataViewModel.fetchSuspectedReports(latitude, longitude)
                 }
 
                 ButtonType.MyPET -> {
+                    Log.d("parent","MyPet Data Fetch")
                     reportDataViewModel.fetchMyPetReports()
                 }
             }
         }
     }
+
+    /*private fun fetchAllData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            dataStoreRepository.missingStatus.collectLatest { isMissing ->
+                reportDataViewModel.fetchMissingReports(latitude, longitude)
+                reportDataViewModel.fetchSuspectedReports(latitude, longitude)
+
+                if (isMissing) {
+                    reportDataViewModel.fetchMyPetReports()
+                }
+            }
+        }
+    }*/
+
 
     private fun setMarker() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
