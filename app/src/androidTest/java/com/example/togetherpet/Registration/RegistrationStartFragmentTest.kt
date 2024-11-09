@@ -2,6 +2,8 @@ package com.example.togetherpet.Registration
 
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.action.ViewActions.*
@@ -14,7 +16,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.*
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -29,15 +30,15 @@ class RegistrationStartFragmentTest {
 
     @Test
     fun `testWhenClickNextButtonMoveToNextFragment`(){
-        val navController = mock(NavController::class.java)
+        val navController : NavController = TestNavHostController(
+            ApplicationProvider.getApplicationContext())
 
         launchFragmentInHiltContainer<RegistrationStartFragment>{
+            navController.setGraph(R.navigation.reg_navigation_graph)
             Navigation.setViewNavController(requireView(), navController)
         }
         onView(withId(R.id.start_white_button)).perform(click())
 
-        verify(navController).navigate(
-            R.id.action_registrationStartFragment_to_registrationPetFragment
-        )
+        assert(navController.currentDestination?.id == R.id.registrationPetFragment)
     }
 }
