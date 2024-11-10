@@ -20,5 +20,5 @@ interface ReportDao {
     suspend fun getAllIds(): List<Long>
 
     @Query("SELECT * FROM report")
-    fun getAllReports(): Flow<List<ReportEntity>>
+    fun getAllSuspectedReports(): Flow<List<ReportEntity>>
 }

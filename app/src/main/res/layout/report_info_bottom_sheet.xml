@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
+        android:layout_marginStart="10dp"
         android:text="@string/report_info_locationNTime"
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         app:layout_constraintStart_toEndOf="@id/report_info_img"
@@ -75,6 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/report_info_nickName"
-        app:layout_constraintTop_toBottomOf="@id/report_info_nickName" />
+        app:layout_constraintTop_toBottomOf="@id/report_info_nickName"
+        android:layout_marginBottom="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

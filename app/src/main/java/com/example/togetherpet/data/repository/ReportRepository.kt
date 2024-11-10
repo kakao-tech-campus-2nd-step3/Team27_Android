@@ -3,6 +3,7 @@ package com.example.togetherpet.data.repository
 import android.content.Context
 import android.util.Log
 import com.example.togetherpet.data.DatabaseProvider
+import com.example.togetherpet.data.dao.ReportDao
 import com.example.togetherpet.data.database.ReportDataBase
 import com.example.togetherpet.data.datasource.ReportSource
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
@@ -20,9 +21,7 @@ class ReportRepository @Inject constructor(
     private val tokenRepository: TokenRepository
 ) {
     private val db: ReportDataBase = DatabaseProvider.getReportDatabase(context)
-    private val reportDao = db.reportDao()
-
-    val allReports: Flow<List<ReportEntity>> = reportDao.getAllReports()
+    private val reportDao: ReportDao = db.reportDao()
 
     suspend fun registerReportByMissing(
         color: String,
@@ -118,24 +117,22 @@ class ReportRepository @Inject constructor(
 
     suspend fun getReportDetail(
         reportId: Long
-    ) {
+    ): ReportEntity? {
         val findReport = reportDao.getReportById(reportId)
 
         if (findReport != null) {
             val detailReport = reportSource.getReportDetail(reportId)
             findReport.imageUrl.addAll(detailReport.imageUrl)
-            reportDao.updateReport(
-                findReport.copy(
-                    description = detailReport.description,
-                    reporterName = detailReport.reporterName,
-                    foundDate = detailReport.foundDate.toString()
-                )
+            val updateReporting = findReport.copy(
+                description = detailReport.description,
+                reporterName = detailReport.reporterName,
+                foundDate = detailReport.foundDate.toString()
             )
+            reportDao.updateReport( updateReporting)
+            return updateReporting
         }
-
-        // TODO Error 발생 로직 추가
+        return null
     }
 
-    fun getReportsFlow(): Flow<List<ReportEntity>> = reportDao.getAllReports()
-
+    fun getAllSuspectedReports(): Flow<List<ReportEntity>> = reportDao.getAllSuspectedReports()
 }

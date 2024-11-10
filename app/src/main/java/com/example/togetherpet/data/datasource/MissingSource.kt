@@ -1,5 +1,6 @@
 package com.example.togetherpet.data.datasource
 
+import android.util.Log
 import com.example.togetherpet.data.dto.MissingDetailResponseDTO
 import com.example.togetherpet.data.dto.MissingRegisterRequestDTO
 import com.example.togetherpet.data.dto.MissingResponseDTO
@@ -53,11 +54,15 @@ class MissingSource @Inject constructor(
         missingId: Number
     ): MissingDetailResponseDTO {
         val response = missingService.getMissingByMissingId(missingId)
+        Log.d("MissingSource", "API call response: $response")
 
         if (response.isSuccessful) {
+            val responseBody = response.body()
+            Log.d("MissingSource", "API call successful, response body: $responseBody")
             return response.body()!!
         }
 
+        Log.e("MissingSource", "API call failed, error: ${response.errorBody()?.string()}")
         throw APIException(
             gson.fromJson(
                 response.errorBody()?.string(),

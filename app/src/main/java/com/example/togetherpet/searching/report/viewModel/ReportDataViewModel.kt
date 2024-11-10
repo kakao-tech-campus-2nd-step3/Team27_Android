@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.togetherpet.data.entity.MissingEntity
+import com.example.togetherpet.data.entity.ReportEntity
 import com.example.togetherpet.data.repository.MissingRepository
 import com.example.togetherpet.data.repository.ReportRepository
 import com.example.togetherpet.searching.searchingHome.ButtonType
@@ -31,6 +32,15 @@ class ReportDataViewModel @Inject constructor(
     val missingReports: StateFlow<List<MissingEntity>> = missingRepository.getAllMissingReports()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+    val suspectedReports: StateFlow<List<ReportEntity>> = reportRepository.getAllSuspectedReports()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    private val _missingDetail = MutableStateFlow<MissingEntity?>(null)
+    val missingDetail: StateFlow<MissingEntity?> = _missingDetail
+
+    private val _suspectedDetail = MutableStateFlow<ReportEntity?>(null)
+    val suspectedDetail: StateFlow<ReportEntity?> = _suspectedDetail
+
     init {
         viewModelScope.launch {
             missingReports.collectLatest { reports ->
@@ -47,7 +57,16 @@ class ReportDataViewModel @Inject constructor(
     fun fetchSuspectedReports(latitude: Double, longitude: Double) {
         Log.d("child", "Reported Data Fetch")
         viewModelScope.launch {
-            reportRepository.getReportByLocation(latitude, longitude)
+            reportRepository.getReportByLocation(latitude,longitude)
+        }
+    }
+
+    //근처 실종 의심 자세한 정보 가져 오기
+    fun fetchSuspectedDetails(reportId:Long) {
+        Log.d("child", "Reported Data Fetch")
+        viewModelScope.launch {
+            val detail = reportRepository.getReportDetail(reportId)
+            _suspectedDetail.value = detail
         }
     }
 
@@ -59,6 +78,16 @@ class ReportDataViewModel @Inject constructor(
         }
     }
 
+    //근처 실종 정보 자세한 정보 가져 오기
+    fun fetchMissingDetails(missingId:Long){
+        Log.d("child","Missing Detail Fetch")
+        viewModelScope.launch {
+            val detail = missingRepository.getMissingByMissingId(missingId)
+            _missingDetail.value = detail
+            Log.d("ReportDataViewModel", "Fetched detail: $detail")
+        }
+    }
+
     //받은 제보 정보 가져 오기
     fun fetchMyPetReports() {
         Log.d("child", "MyPet Data Fetch")
@@ -66,6 +95,4 @@ class ReportDataViewModel @Inject constructor(
             reportRepository.getReportOwnByUser()
         }
     }
-
-    //fun fetchMissingDetail()
 }

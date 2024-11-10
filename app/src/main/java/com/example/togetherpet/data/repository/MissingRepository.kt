@@ -35,7 +35,7 @@ class MissingRepository @Inject constructor(
         latitude: Double,
         longitude: Double
     ) {
-        Log.d("yeong","MissingRepository")
+        Log.d("yeong", "MissingRepository")
         missingDao.insertMissing(
             missingSource.getMissingNearBy(latitude, longitude)
                 .map { missing ->
@@ -56,8 +56,9 @@ class MissingRepository @Inject constructor(
 
     suspend fun getMissingByMissingId(
         missingId: Long
-    ) {
+    ): MissingEntity? {
         val findMissing = missingDao.getMissing(missingId)
+        Log.d("MissingRepository", "Initial findMissing: $findMissing")
 
         if (findMissing != null) {
             val detailMissing = missingSource.getMissingByMissingId(missingId)
@@ -69,10 +70,11 @@ class MissingRepository @Inject constructor(
                 description = detailMissing.description,
             )
             missingDao.updateMissing(updateMissing)
+            Log.d("MissingRepository", "Updated missing entity: $updateMissing")
+            return updateMissing
         }
-
-        // TODO Error 발생 로직 추가
+        return null
     }
 
-    fun getAllMissingReports() : Flow<List<MissingEntity>> = missingDao.getAllMissingReports()
+    fun getAllMissingReports(): Flow<List<MissingEntity>> = missingDao.getAllMissingReports()
 }
