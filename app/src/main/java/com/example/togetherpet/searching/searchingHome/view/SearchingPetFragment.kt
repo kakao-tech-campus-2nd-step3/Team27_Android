@@ -173,7 +173,7 @@ class SearchingPetFragment : Fragment() {
                 binding.searchingReportBtn.visibility = View.GONE
                 clearRecyclerView()
                 kakaoMap?.labelManager?.clearAll()
-                //observeMyPetReports()
+                observeMyPetReports()
             }
         }
     }
@@ -307,13 +307,29 @@ class SearchingPetFragment : Fragment() {
 
     private fun observeSuspectedReports() {
         viewLifecycleOwner.lifecycleScope.launch {
-            reportDataViewModel.suspectedReports.collectLatest { suspected ->
+            reportDataViewModel.nearbySuspectedReports.collectLatest { suspected ->
                 if (suspected.isNotEmpty()) {
                     binding.searchingMissingList.adapter =
                         SuspectedAdapter(suspected, kakaoLocalRepository) { suspectedEntity ->
                             moveMapToLocation(suspectedEntity.latitude, suspectedEntity.longitude)
                         }
                     setReportMarker(suspected)
+                } else {
+                    Log.d("SearchingPetFragment", "No Suspected Missing Data")
+                }
+            }
+        }
+    }
+
+    private fun observeMyPetReports() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            reportDataViewModel.myPetReports.collectLatest { reports ->
+                if (reports.isNotEmpty()) {
+                    binding.searchingMissingList.adapter =
+                        SuspectedAdapter(reports, kakaoLocalRepository) { suspectedEntity ->
+                            moveMapToLocation(suspectedEntity.latitude, suspectedEntity.longitude)
+                        }
+                    setReportMarker(reports)
                 } else {
                     Log.d("SearchingPetFragment", "No Suspected Missing Data")
                 }

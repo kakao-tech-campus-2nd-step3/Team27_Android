@@ -32,7 +32,12 @@ class ReportDataViewModel @Inject constructor(
     val missingReports: StateFlow<List<MissingEntity>> = missingRepository.getAllMissingReports()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    val suspectedReports: StateFlow<List<ReportEntity>> = reportRepository.getAllSuspectedReports()
+    // 내 반려동물 제보 StateFlow
+    val myPetReports: StateFlow<List<ReportEntity>> = reportRepository.getOwnReports()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    // 근처 목격 제보 StateFlow
+    val nearbySuspectedReports: StateFlow<List<ReportEntity>> = reportRepository.getNearbyReports()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _missingDetail = MutableStateFlow<MissingEntity?>(null)

@@ -89,7 +89,8 @@ class ReportRepository @Inject constructor(
                         mutableListOf(report.imageUrl),
                         null,
                         null,
-                        null
+                        null,
+                        true
                     )
                 }
         )
@@ -109,7 +110,8 @@ class ReportRepository @Inject constructor(
                     mutableListOf(report.imageUrl),
                     null,
                     null,
-                    null
+                    null,
+                    false
                 )
             }
         reportDao.insertReports(reports)
@@ -134,5 +136,9 @@ class ReportRepository @Inject constructor(
         return null
     }
 
-    fun getAllSuspectedReports(): Flow<List<ReportEntity>> = reportDao.getAllSuspectedReports()
+    // 내 반려동물 목격 제보 가져오기
+    fun getOwnReports(): Flow<List<ReportEntity>> = reportDao.getOwnReports()
+
+    // 근처 목격 제보 가져오기
+    fun getNearbyReports(): Flow<List<ReportEntity>> = reportDao.getNearbyReports()
 }
