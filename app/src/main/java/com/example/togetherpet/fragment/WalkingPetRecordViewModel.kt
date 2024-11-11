@@ -57,7 +57,6 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRepositor
         viewModelScope.launch(Dispatchers.IO) {
             _selectDay.value = date
             val walkingRecordList = walkingRepository.getWalkingDataWithDateFromServer(date)
-            Log.d("testt", "date : {$date}, walkingRecordList : ${walkingRepository.getWalkingDataWithDateFromServer(date)}")
             _arrayRecord.value = walkingRecordList
 //            Log.d("testt", "${_arrayRecord.value}")
             calculateAllDistance()

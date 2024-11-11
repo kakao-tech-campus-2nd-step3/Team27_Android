@@ -23,6 +23,8 @@ class WalkingNetworkSource @Inject constructor(
             token, walkingRequestDTO
         )
 
+        Log.d("testt", "${response.errorBody()}, ${response.body()}, ${response.code()}")
+
         if (!response.isSuccessful) throw APIException(
             gson.fromJson(
                 response.errorBody()?.string(),

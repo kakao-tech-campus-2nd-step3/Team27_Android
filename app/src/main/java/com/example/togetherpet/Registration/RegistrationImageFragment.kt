@@ -51,7 +51,10 @@ class RegistrationImageFragment : Fragment() {
 
         binding.apply {
             nextButton.setOnClickListener { goToNextScreen() }
-            imageInputButton.setOnClickListener { setImage() }
+            imageInputButton.setOnClickListener {
+                checkPermission()
+                setImage()
+            }
             resultLauncher =
                 registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                     if (result.resultCode == Activity.RESULT_OK) {
@@ -64,30 +67,6 @@ class RegistrationImageFragment : Fragment() {
                                 )
                                 .into(binding.animalImage)
                             sharedViewModel.setPetImage(uri)
-                        }
-                        if (ContextCompat.checkSelfPermission(
-                                requireContext(),
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                            ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            ActivityCompat.requestPermissions(
-                                requireActivity(),
-                                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                                100
-                            )
-                        }
-                        if (ContextCompat.checkSelfPermission(
-                                requireContext(),
-                                Manifest.permission.READ_MEDIA_IMAGES
-                            ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                ActivityCompat.requestPermissions(
-                                    requireActivity(),
-                                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                                    101
-                                )
-                            }
                         }
                     }
                 }
@@ -120,6 +99,33 @@ class RegistrationImageFragment : Fragment() {
         return when(checkImage()){
             InputState.EXIST_IMAGE -> true
             InputState.NOT_EXIST_IMAGE -> false
+        }
+    }
+
+    private fun checkPermission(){
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                100
+            )
+        }
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_MEDIA_IMAGES
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                    101
+                )
+            }
         }
     }
 

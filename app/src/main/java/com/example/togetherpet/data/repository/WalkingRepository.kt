@@ -34,23 +34,33 @@ class WalkingRepository @Inject constructor(
     suspend fun getWalkingDataWithDateFromServer(
         date: LocalDate
     ) : ArrayList<WalkingRecord> {
-        val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         try {
-            val walkingResponseDTO = walkingNetworkSource.getWalkingDataWithDate(tokenRepository.getTokenOrThrow(), formattedDate)
-            return walkingResponseDTO?.map { walkingResponseDTO ->
-                val locationList : ArrayList<LatLng> =  walkingResponseDTO.locationList.map { locationDTO ->
-                    LatLng.from(locationDTO.latitude, locationDTO.longitude)
-                } as ArrayList<LatLng>
+            val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+            val walkingResponseDTO = walkingNetworkSource.getWalkingDataWithDate(
+                tokenRepository.getTokenOrThrow(),
+                formattedDate
+            )
+            val walkingRecordData =  walkingResponseDTO?.map { walkingResponseDTO ->
+                val locationList: ArrayList<LatLng> =
+                    walkingResponseDTO.locationList.map { locationDTO ->
+                        LatLng.from(locationDTO.latitude, locationDTO.longitude)
+                    } as ArrayList<LatLng>
+                Log.d("testt", "locationList : ${locationList}")
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 WalkingRecord(
                     walkingResponseDTO.walkDistance.toLong(),
                     date,
                     walkingResponseDTO.walkTime,
-                    LocalDateTime.parse(walkingResponseDTO.walkStartTimePoint),
-                    LocalDateTime.parse(walkingResponseDTO.walkEndTimePoint),
+                    LocalDateTime.parse(walkingResponseDTO.walkStartTimePoint, formatter),
+                    LocalDateTime.parse(walkingResponseDTO.walkEndTimePoint, formatter),
                     1,
                     locationList
                 )
-            } as ArrayList<WalkingRecord>
+            }
+
+            Log.d("testt", "walkingRecord : ${walkingRecordData}")
+            return walkingRecordData?.let { ArrayList(it) } ?: arrayListOf()
         } catch (e : Exception){
             return arrayListOf()
         }
