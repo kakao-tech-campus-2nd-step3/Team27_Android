@@ -112,7 +112,7 @@ class RegistrationImageFragment : Fragment() {
     }
 
     private fun checkImage(): InputState {
-        return if (binding.animalImage.drawable == null) InputState.NOT_EXIST_IMAGE
+        return if (sharedViewModel.petImage.value == Uri.EMPTY) InputState.NOT_EXIST_IMAGE
         else InputState.EXIST_IMAGE
     }
 

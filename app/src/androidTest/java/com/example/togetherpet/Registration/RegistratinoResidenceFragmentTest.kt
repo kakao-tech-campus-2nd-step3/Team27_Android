@@ -1,5 +1,6 @@
 package com.example.togetherpet.Registration
 
+import android.widget.ImageView
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
@@ -36,7 +37,6 @@ class RegistratinoResidenceFragmentTest {
             navController.setGraph(R.navigation.reg_navigation_graph)
             navController.setCurrentDestination(R.id.registrationResidenceFragment)
             Navigation.setViewNavController(requireView(), navController)
-
         }
 
         onView(withId(R.id.residence_input_field)).perform(replaceText("북구 용봉동"))

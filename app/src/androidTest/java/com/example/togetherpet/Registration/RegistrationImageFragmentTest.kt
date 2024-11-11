@@ -1,21 +1,30 @@
 package com.example.togetherpet.Registration
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
+import android.widget.ImageView
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.*
+import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.togetherpet.R
 import com.example.togetherpet.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.core.AllOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import androidx.test.espresso.intent.Intents.*
-import androidx.test.espresso.intent.matcher.IntentMatchers
-import org.junit.After
+
 
 @HiltAndroidTest
 class RegistrationImageFragmentTest {
@@ -40,7 +49,7 @@ class RegistrationImageFragmentTest {
             ApplicationProvider.getApplicationContext()
         )
 
-        launchFragmentInHiltContainer<RegistrationResidenceFragment> {
+        launchFragmentInHiltContainer<RegistrationImageFragment> {
             navController.setGraph(R.navigation.reg_navigation_graph)
             navController.setCurrentDestination(R.id.registrationImageFragment)
             Navigation.setViewNavController(requireView(), navController)
@@ -50,13 +59,35 @@ class RegistrationImageFragmentTest {
     }
 
     @Test
-    fun `testWhenClickImageChoiceButtonNavigateToImageFolder`(){
-        launchFragmentInHiltContainer<RegistrationResidenceFragment>{}
+    fun `testWhenClickImageChoiceButtonNavigateToImageFolder`() {
+        launchFragmentInHiltContainer<RegistrationImageFragment> {}
+        Thread.sleep(1000)
         onView(withId(R.id.image_input_button)).perform(click())
-        intended(IntentMatchers.hasComponent("campus.tech.kakao.map.view.SearchActivity"))
+        intended(hasAction(Intent.ACTION_GET_CONTENT))
     }
 
+    @Test
+    fun `testWhenClickNextButtonWithImageNavigateToNextFragment`() {
+        val navController = TestNavHostController(
+            ApplicationProvider.getApplicationContext()
+        )
 
 
+        launchFragmentInHiltContainer<RegistrationImageFragment> {
+            navController.setGraph(R.navigation.reg_navigation_graph)
+            navController.setCurrentDestination(R.id.registrationImageFragment)
+            Navigation.setViewNavController(requireView(), navController)
+            requireView().findViewById<ImageView>(R.id.animal_image)
+                .setImageResource(R.drawable.emergency_icon)
+            val viewModel: RegistrationViewModel by activityViewModels()
+
+            viewModel.setPetImage(Uri.parse("android.resource://${context?.packageName}/${R.drawable.emergency_icon}"))
+        }
+        Thread.sleep(1000)
+        onView(withId(R.id.animal_image)).check(matches(isDisplayed()))
+        onView(withId(R.id.next_button)).perform(click())
+        assert(navController.currentDestination?.id == R.id.registrationNicknameFragment)
+    }
 
 }
+
