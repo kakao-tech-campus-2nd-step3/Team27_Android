@@ -13,4 +13,7 @@ interface ReportDao {
 
     @Update
     suspend fun updateReport(reportEntity: ReportEntity)
+
+    @Query("SELECT id FROM report")
+    suspend fun getAllIds(): List<Long>
 }

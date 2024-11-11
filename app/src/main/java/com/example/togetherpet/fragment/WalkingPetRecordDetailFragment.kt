@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.togetherpet.R
 import com.example.togetherpet.databinding.FragmentWalkingPetResultBinding
 import com.example.togetherpet.extensions.drawLine
+import com.example.togetherpet.extensions.formattingLocalDateTimeToString
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -130,8 +131,6 @@ class WalkingPetRecordDetailFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 sharedViewModel.time.collectLatest {
                     val format = SimpleDateFormat("HH:mm:ss", Locale.KOREAN)
-                    val time : Long = it
-                    binding.timeResultRedText.text = "${format.format(baseTime)} ~ ${format.format(baseTime+ time)}"
                     format.timeZone = TimeZone.getTimeZone("UTC")
                     binding.timeResultText.text = format.format(it)
                 }
@@ -141,6 +140,13 @@ class WalkingPetRecordDetailFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 sharedViewModel.calories.collectLatest {
                     binding.caloriesResultText.text = "꾸릉이가 총 ${it}kcal 만큼 소모했어요!"
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                sharedViewModel.startTime.collectLatest {
+                    binding.timeResultRedText.text = "${it.formattingLocalDateTimeToString()} ~ ${sharedViewModel.endTime.value.formattingLocalDateTimeToString()}"
                 }
             }
         }

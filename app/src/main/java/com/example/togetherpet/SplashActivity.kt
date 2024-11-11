@@ -17,14 +17,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.togetherpet.Login.LoginActivity
 import com.example.togetherpet.dashboard.view.DashboardActivity
 import com.example.togetherpet.fragment.WalkingPetViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var splashScreen: SplashScreen
-    private val viewModel : SplashActivityViewModel by viewModels()
+    private val viewModel: SplashActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,22 +35,27 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         lifecycleScope.launch {
-            repeatOnLifecycle((Lifecycle.State.STARTED)){
-                viewModel.userLoginState.collectLatest{
+            repeatOnLifecycle((Lifecycle.State.STARTED)) {
+                viewModel.userLoginState.collectLatest {
                     delay(3000)
                     if (it) navigateToHome()
                     else navigateToLogin()
+
+                    /*//실제 실행
+                    if (it) navigateToLogin()
+                    else navigateToHome()*/
                 }
             }
         }
     }
 
-    fun navigateToLogin(){
+    fun navigateToLogin() {
         val intent = Intent(this@SplashActivity, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
-    fun navigateToHome(){
+
+    fun navigateToHome() {
         val intent = Intent(this@SplashActivity, DashboardActivity::class.java)
         startActivity(intent)
         finish()

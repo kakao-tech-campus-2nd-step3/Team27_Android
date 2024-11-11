@@ -5,7 +5,7 @@
     android:id="@+id/fragment_myPetMissing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".searching.SearchingPetFragment">
+    tools:context=".searching.searchingHome.view.SearchingPetFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -89,6 +89,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+        
+        <ImageButton
+            android:id="@+id/refresh_data_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/refresh_icon"
+            android:background="@drawable/refresh_btn_background"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@id/researching_top_sheet"
+            android:layout_marginTop="14dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

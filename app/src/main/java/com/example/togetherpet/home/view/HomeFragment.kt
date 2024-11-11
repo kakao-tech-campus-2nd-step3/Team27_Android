@@ -1,6 +1,7 @@
 package com.example.togetherpet.home.view
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -15,12 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.togetherpet.DataStoreRepository
 import com.example.togetherpet.R
+import com.example.togetherpet.Registration.RegistrationViewModel
 import com.example.togetherpet.databinding.FragmentHomeBinding
 import com.example.togetherpet.home.viewModel.HomeViewModel
 import com.example.togetherpet.adapter.PetListAdapter
-import com.example.togetherpet.fragment.LocationSelectFragment
-import com.example.togetherpet.fragment.WalkingPetRecordFragment
+import com.example.togetherpet.extensions.dpToPx
+import com.example.togetherpet.fragment.WalkingPetRecordViewModel
 import com.example.togetherpet.testData.viewModel.MissingViewModel
 import com.example.togetherpet.testData.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,14 +31,21 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    @Inject
+    lateinit var dataStoreRepository: DataStoreRepository
+
+    private val walkingPetRecordViewModel: WalkingPetRecordViewModel by viewModels()
+
+    /*//테스용 더미 데이터 사용
     private val userViewModel: UserViewModel by viewModels()
     private val missingViewModel: MissingViewModel by viewModels()
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,13 +58,35 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.homeProfileImg.setOnClickListener {
-            navigateToLocationPage()
-        }
-
         binding.homeMissingPetList.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
+        //---유저 정보 띄우기---
+        //case 1: 가입시 등록한 정보 사용
+        setupUserInfo()
+
+        //[추가할 부분] case 2: 이미 등록한 유저 -> 데이터 받아서 사용
+
+        //---산책 정보 띄우기---
+        viewLifecycleOwner.lifecycleScope.launch {
+            walkingPetRecordViewModel.getWalkingData()
+            walkingPetRecordViewModel.walkingData.collectLatest {data->
+                binding.homeTotalCount.text = "${data.todayWalkCount}"
+                binding.homeTotalDistance.text = "${data.distance}"
+                binding.homeTotalTime.text ="${data.time}"
+            }
+        }
+
+        //[추가할 부분] 평균 데이터 받아서 사용 (api 구현 여부 확인 필요)
+        val avgCount = "-"
+        val avgDistance = "-"
+        val avgTime = "-"
+        binding.homeAvgCount.text = getString(R.string.home_avg_count, avgCount)
+        binding.homeAvgDistance.text =
+            getString(R.string.home_avg_distance, avgDistance)
+        binding.homeAvgTime.text = getString(R.string.home_avg_time, avgTime)
+
+        /*//테스용 더미 데이터 사용
         viewLifecycleOwner.lifecycleScope.launch {
             val userJob = async { userViewModel.addDummyUser() }
             val missingJob = async { missingViewModel.addDummyMissingPet() }
@@ -116,26 +148,36 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+        }*/
+    }
+
+    private fun setupUserInfo() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val petNameFlow = dataStoreRepository.petName
+            val userNameFlow = dataStoreRepository.userName
+            val imgUriFlow = dataStoreRepository.imgUri
+
+            // petName, userName, imgUri 값을 수집
+            petNameFlow.collectLatest { petName ->
+                userNameFlow.collectLatest { userName ->
+                    imgUriFlow.collectLatest { imgUri ->
+                        // UI에 표시할 텍스트 설정
+                        val greetingText = "안녕하세요,  <b>$petName</b> 보호자 <b>$userName</b> 님"
+                        binding.homeGreeting.text = Html.fromHtml(greetingText, Html.FROM_HTML_MODE_LEGACY)
+
+                        // 이미지 로드
+                        Glide.with(this@HomeFragment)
+                            .load(Uri.parse(imgUri))
+                            .apply(RequestOptions().centerCrop().transform(RoundedCorners(dpToPx(requireContext(), 10))))
+                            .into(binding.homeProfileImg)
+                    }
+                }
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun dpToPx(context: Context, dp: Int): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp.toFloat(),
-            context.resources.displayMetrics
-        ).toInt()
-    }
-
-    private fun navigateToLocationPage(){
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.home_frameLayout, LocationSelectFragment())
-        transaction.addToBackStack(null)
-        transaction.commit()
     }
 }
