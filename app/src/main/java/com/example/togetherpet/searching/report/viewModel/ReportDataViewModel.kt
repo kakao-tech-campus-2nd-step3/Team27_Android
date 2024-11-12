@@ -68,10 +68,16 @@ class ReportDataViewModel @Inject constructor(
 
     //근처 실종 의심 자세한 정보 가져 오기
     fun fetchSuspectedDetails(reportId:Long) {
-        Log.d("child", "Reported Data Fetch")
+        if (_suspectedDetail.value != null) {
+            Log.d("child", "이미 데이터가 로드되어 있음")
+            return
+        }
+        Log.d("child", "Reported Data Fetch - Report ID: $reportId")
         viewModelScope.launch {
+            Log.d("child", "viewModelScope안에 들어옴 - Report ID: $reportId")
             val detail = reportRepository.getReportDetail(reportId)
             _suspectedDetail.value = detail
+            Log.d("child", "viewModelScope에서 이제 나감")
         }
     }
 

@@ -11,17 +11,27 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.togetherpet.R
+import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.utils.DpUtils
 import com.example.togetherpet.databinding.MissingBottomSheetBinding
 import com.example.togetherpet.searching.report.viewModel.ReportDataViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.kakao.vectormap.LatLng
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MissingBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: MissingBottomSheetBinding? = null
     private val binding get() = _binding!!
     private val reportDataViewModel: ReportDataViewModel by activityViewModels ()
+    @Inject
+    lateinit var kakaoLocalRepository: KakaoLocalRepository
 
     companion object {
         private const val ARG_MISSING_ID = "missing_id"
@@ -44,6 +54,7 @@ class MissingBottomSheetFragment : BottomSheetDialogFragment() {
         _binding = MissingBottomSheetBinding.inflate(inflater, container, false)
         val missingId = arguments?.getLong(ARG_MISSING_ID)
             ?: throw IllegalArgumentException("Missing ID 없음")
+        reportDataViewModel.fetchMissingDetails(missingId)
         observeMissingDetails()
         return binding.root
     }
@@ -51,16 +62,27 @@ class MissingBottomSheetFragment : BottomSheetDialogFragment() {
     private fun observeMissingDetails() {
         viewLifecycleOwner.lifecycleScope.launch {
             reportDataViewModel.missingDetail.collectLatest { detail ->
-                Log.d("MissingBottomSheetFragment", "Received detail: $detail")
+                Log.d("yeong", "Received detail: $detail")
                 detail?.let {
+                    val address = withContext(Dispatchers.IO) {
+                        try {
+                            kakaoLocalRepository.latLngToAddress(LatLng.from(it.latitude, it.longitude))
+                        } catch (e: Exception) {
+                            Log.e("MissingBottomSheetFragment", "Failed to get address", e)
+                            null
+                        }
+                    }
                     updateBottomSheet(
                         petName = it.name ?: "Unknown",
                         species = it.breed ?: "Unknown",
                         age = it.birthMonth?.toString() ?: "Unknown",
-                        missingPlace = "${it.latitude}, ${it.longitude}",
+                        //missingPlace = "${it.latitude}, ${it.longitude}",
+                        missingPlace = address?.address?.addressName ?: "Unknown",
                         addInfo = it.description ?: "No additional info",
                         url = it.petImageUrl.firstOrNull()
                     )
+
+                    Log.d("yeong","address 변환 : $address")
                 }
             }
         }
@@ -77,17 +99,19 @@ class MissingBottomSheetFragment : BottomSheetDialogFragment() {
         if (_binding != null && isAdded) {
             binding.missingBottomPetName.text = petName
             binding.missingBottomSpeciesText.text = species
-            binding.missingBottomAgeText.text = age
+            binding.missingBottomAgeText.text = String.format("%s개월", age)
             binding.missingBottomMissingPlaceText.text = missingPlace
-            binding.missingBottomAddInfo.text = addInfo
+            binding.missingBottomAddInfoText.text = addInfo
 
-            Glide.with(this)
-                .load(url)
-                .apply(
-                    RequestOptions().centerCrop()
-                        .transform(RoundedCorners(DpUtils.dpToPx(requireContext(), 85)))
-                )
-                .into(binding.missingBottomPetImg)
+            url?.let {
+                Glide.with(this)
+                    .load(it)
+                    .apply(
+                        RequestOptions().centerCrop()
+                            .transform(RoundedCorners(DpUtils.dpToPx(requireContext(), 85)))
+                    )
+                    .into(binding.missingBottomPetImg)
+            } ?: Log.d("MissingBottomSheetFragment", "Image URL is null")
 
             Log.d("yeong", "BottomSheet 업데이트 완료")
         }

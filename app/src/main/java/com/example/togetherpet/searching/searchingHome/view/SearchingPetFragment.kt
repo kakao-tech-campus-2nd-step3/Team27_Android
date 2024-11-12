@@ -3,6 +3,8 @@ package com.example.togetherpet.searching.searchingHome.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +20,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.togetherpet.DataStoreRepository
 import com.example.togetherpet.R
 import com.example.togetherpet.adapter.SearchingBtnListAdapter
@@ -48,6 +53,7 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -111,6 +117,7 @@ class SearchingPetFragment : Fragment() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(p0: KakaoMap) {
                 kakaoMap = p0
+                Log.d("testtt", "onMapReady")
                 observeMissingReports()
 
                 //클릭 이벤트 활성화
@@ -194,40 +201,57 @@ class SearchingPetFragment : Fragment() {
         }
     }
 
-    @SuppressLint("InflateParams")
-    private fun setMissingMarker(missings: List<MissingEntity>) {
+    private suspend fun setMissingMarker(missings: List<MissingEntity>) {
         val labelManager: LabelManager? = kakaoMap?.labelManager
         labelManager?.clearAll() // 기존 마커 초기화
 
         for (pet in missings) {
+            delay(500)
+
             val markerView = LayoutInflater.from(requireContext())
-                .inflate(R.layout.pet_img_map_marker, null, false)
+                .inflate(R.layout.pet_img_map_marker, null, true)
 
             val petImgMarker =
                 markerView.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.petImg_marker)
 
-            Glide.with(requireContext())
-                .load(pet.petImageUrl.firstOrNull())
+            Glide.with(this)
+                .load(Uri.parse(pet.petImageUrl.first()))
+                .apply(RequestOptions())
                 .placeholder(R.drawable.main_logo) // 기본 이미지 설정
-                .into(petImgMarker)
+                .into(object : CustomTarget<Drawable>() {
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        //Log.d("testt", "--- onResourceReady (CustomTarget): $resource")
+                        petImgMarker.setImageDrawable(resource)
 
-            val bitmapImg = markerView.toBitmap()
+                        val bitmapImg = markerView.toBitmap()
 
-            // 마커 스타일 설정
-            val markerStyle = labelManager?.addLabelStyles(
-                LabelStyles.from(LabelStyle.from(bitmapImg))
-            )
+                        // 마커 스타일 설정
+                        val markerStyle = labelManager?.addLabelStyles(
+                            LabelStyles.from(LabelStyle.from(bitmapImg))
+                        )
 
-            // 마커 위치 지정
-            val pos = LatLng.from(pet.latitude, pet.longitude)
+                        // 마커 위치 지정
+                        val pos = LatLng.from(pet.latitude, pet.longitude)
 
-            // 레이어 가져오기
-            val layer = labelManager?.layer
+                        // 레이어 가져오기
+                        val layer = labelManager?.layer
 
-            // 레이어에 라벨 추가
-            layer?.addLabel(
-                LabelOptions.from(pos).setStyles(markerStyle).setTag(pet.id)
-            )
+                        // 레이어에 라벨 추가
+                        layer?.addLabel(
+                            LabelOptions.from(pos)
+                                .setStyles(markerStyle)
+                                .setTag(pet.id)
+                        )
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        //Log.d("testt", "--- onLoadCleared (CustomTarget): $placeholder")
+                        petImgMarker.setImageDrawable(placeholder)
+                    }
+                })
         }
 
         // 마커 클릭 리스너 설정
@@ -246,49 +270,63 @@ class SearchingPetFragment : Fragment() {
 
     private fun showMissingBottomSheet(missingId: Long) {
         val bottomSheetFragment = MissingBottomSheetFragment.newInstance(missingId)
+        Log.d("yeong","miss Id: $missingId")
         bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
     private fun showSuspectedBottomSheet(reportId: Long) {
         val bottomSheetFragment = SuspectedBottomSheetFragment.newInstance(reportId)
+        Log.d("yeong","miss Id: $reportId")
         bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
-    @SuppressLint("InflateParams")
-    private fun setReportMarker(suspected: List<ReportEntity>) {
+    private suspend fun setReportMarker(suspected: List<ReportEntity>) {
         val labelManager: LabelManager? = kakaoMap?.labelManager
         labelManager?.clearAll() // 기존 마커 초기화
 
         for (pet in suspected) {
+            delay(500)
+
             val markerView = LayoutInflater.from(requireContext())
-                .inflate(R.layout.pet_img_map_marker, null, false)
+                .inflate(R.layout.pet_img_map_marker, null, true)
 
             val petImgMarker =
                 markerView.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.petImg_marker)
 
-            Glide.with(requireContext())
-                .load(pet.imageUrl.firstOrNull())
+            Glide.with(this)
+                .load(Uri.parse(pet.imageUrl.first()))
+                .apply(RequestOptions())
                 .placeholder(R.drawable.main_logo) // 기본 이미지 설정
-                .into(petImgMarker)
+                .into(object: CustomTarget<Drawable>(){
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        petImgMarker.setImageDrawable(resource)
+                        val bitmapImg = markerView.toBitmap()
 
-            val bitmapImg = markerView.toBitmap()
+                        // 마커 스타일 설정
+                        val markerStyle = labelManager?.addLabelStyles(
+                            LabelStyles.from(LabelStyle.from(bitmapImg))
+                        )
 
-            // 마커 스타일 설정
-            val markerStyle = labelManager?.addLabelStyles(
-                LabelStyles.from(LabelStyle.from(bitmapImg))
-            )
+                        // 마커 위치 지정
+                        val pos = LatLng.from(pet.latitude, pet.longitude)
 
-            // 마커 위치 지정
-            val pos = LatLng.from(pet.latitude, pet.longitude)
+                        // 레이어 가져오기
+                        val layer = labelManager?.layer
 
-            // 레이어 가져오기
-            val layer = labelManager?.layer
+                        // 레이어에 라벨 추가
+                        layer?.addLabel(
 
-            // 레이어에 라벨 추가
-            layer?.addLabel(
+                            LabelOptions.from(pos).setStyles(markerStyle).setTag(pet.id)
+                        )
+                    }
 
-                LabelOptions.from(pos).setStyles(markerStyle).setTag(pet.id)
-            )
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        petImgMarker.setImageDrawable(placeholder)
+                    }
+                })
         }
 
         // 마커 클릭 리스너 설정
@@ -331,7 +369,7 @@ class SearchingPetFragment : Fragment() {
                         }
                     setReportMarker(reports)
                 } else {
-                    Log.d("SearchingPetFragment", "No Suspected Missing Data")
+                    Log.d("SearchingPetFragment", "No My Pet Observing Data")
                 }
             }
         }

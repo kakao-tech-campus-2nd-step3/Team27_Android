@@ -139,25 +139,6 @@ class MyPetReportFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*// resultLauncher 초기화
-        resultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let { uri ->
-                    Glide.with(this)
-                        .load(uri)
-                        .into(binding.reportMissingImg)
-                    imgUri = uri
-                }
-            }
-        }*/
-
-        /*//이미지 업로드
-        binding.imgUploadBtn.setOnClickListener {
-            setImage()
-        }*/
-
         // 제보할 데이터 전달 받기
         parentFragmentManager.setFragmentResultListener("locationRequestKey", this) { _, bundle ->
             Log.d("BundleCheck", "[Report Suspected] Bundle Content: $bundle")
@@ -186,38 +167,12 @@ class MyPetReportFragment : Fragment() {
 
     }
 
-    /*private fun setImage() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "image/*"
-        }
-        resultLauncher.launch(intent)
-    }
-   */*/
-
     private fun sendReport() {
         val color = binding.reportMissingColor.text.toString()
         val gender = binding.reportMissingGender.text.toString()
         val species = binding.reportMissingSpecies.text.toString()
         val info = binding.reportMissingReportBtn.text.toString()
-        //val absolutePath = imgUri?.getAbsolutePath(requireContext())
 
-        //Log.d("sendReport", "Absolute Path: $absolutePath")
-
-        /*if (absolutePath != null) {
-            val file = File(absolutePath)
-            val fileList = listOf(file)
-
-            Log.d("sendReport", "File: $file")
-            Log.d("sendReport", "File List: $fileList")
-
-            if (file.exists() && file.length() > 0) {
-                Log.d("sendReport", "File 정상: ${file.absolutePath}")
-
-                //보내는 부분
-            } else {
-                Log.e("sendReport", "File 에러")
-            }
-        }*/
         reportMyPetViewModel.reportMyPet(
             color = color,
             gender = gender,

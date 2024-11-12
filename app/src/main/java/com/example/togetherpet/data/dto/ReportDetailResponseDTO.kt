@@ -9,5 +9,5 @@ data class ReportDetailResponseDTO(
     @SerializedName("description") val description: String,
     @SerializedName("reporter_name") val reporterName: String,
     @SerializedName("image_url") val imageUrl: List<String>,
-    @SerializedName("found_date") val foundDate: LocalDateTime
+    @SerializedName("found_date") val foundDate: String //변경(11.12)
 )

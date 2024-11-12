@@ -24,6 +24,7 @@ import com.example.togetherpet.databinding.ReportMissingPetFragmentBinding
 import com.example.togetherpet.extensions.getAbsolutePath
 import com.example.togetherpet.searching.report.ReportStatus
 import com.example.togetherpet.searching.report.viewModel.ReportMissingViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
@@ -31,6 +32,7 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.properties.Delegates
 
+@AndroidEntryPoint
 class ReportMissingPetFragment : Fragment() {
     private lateinit var _binding: ReportMissingPetFragmentBinding
     private val binding get() = _binding

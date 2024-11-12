@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.togetherpet.data.repository.ReportRepository
 import com.example.togetherpet.searching.report.ReportStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
+@HiltViewModel
 class ReportMissingViewModel @Inject constructor(
     private val reportRepository : ReportRepository
 ) : ViewModel() {

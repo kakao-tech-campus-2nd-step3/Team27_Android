@@ -10,17 +10,24 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.databinding.ReportInfoBottomSheetBinding
 import com.example.togetherpet.searching.report.viewModel.ReportDataViewModel
 import com.example.togetherpet.utils.DpUtils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SuspectedBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: ReportInfoBottomSheetBinding? = null
     private val binding get() = _binding!!
     private val reportDataViewModel: ReportDataViewModel by activityViewModels()
+
+    @Inject
+    lateinit var kakaoLocalRepository: KakaoLocalRepository
 
     companion object {
         private const val ARG_REPORT_ID = "report_id"
@@ -35,7 +42,8 @@ class SuspectedBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = ReportInfoBottomSheetBinding.inflate(inflater, container, false)

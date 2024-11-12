@@ -120,10 +120,12 @@ class ReportRepository @Inject constructor(
     suspend fun getReportDetail(
         reportId: Long
     ): ReportEntity? {
+        Log.d("yoeng","ReportId 전달 : $reportId")
         val findReport = reportDao.getReportById(reportId)
 
         if (findReport != null) {
             val detailReport = reportSource.getReportDetail(reportId)
+            Log.d("ReportRepository", "서버로 받은 reports: $detailReport")
             findReport.imageUrl.addAll(detailReport.imageUrl)
             val updateReporting = findReport.copy(
                 description = detailReport.description,
