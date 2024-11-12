@@ -15,9 +15,12 @@ import com.example.togetherpet.databinding.ReportInfoBottomSheetBinding
 import com.example.togetherpet.searching.report.viewModel.ReportDataViewModel
 import com.example.togetherpet.utils.DpUtils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.kakao.vectormap.LatLng
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,7 +50,10 @@ class SuspectedBottomSheetFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = ReportInfoBottomSheetBinding.inflate(inflater, container, false)
-        val reportId = arguments?.getLong(ARG_REPORT_ID) ?: error("Report ID 없음")
+        val reportId = arguments?.getLong(ARG_REPORT_ID)
+            ?: throw IllegalArgumentException("Report ID 없음")
+        reportDataViewModel.clearSuspectedDetail()
+        reportDataViewModel.fetchSuspectedDetails(reportId)
         observeReportDetails(reportId)
         return binding.root
     }
@@ -57,11 +63,19 @@ class SuspectedBottomSheetFragment : BottomSheetDialogFragment() {
             reportDataViewModel.suspectedDetail.collectLatest { detail ->
                 Log.d("MissingBottomSheetFragment", "Received detail: $detail")
                 detail?.let {
+                    val address = withContext(Dispatchers.IO) {
+                        try {
+                            kakaoLocalRepository.latLngToAddress(LatLng.from(it.latitude, it.longitude))
+                        } catch (e: Exception) {
+                            Log.e("MissingBottomSheetFragment", "Failed to get address", e)
+                            null
+                        }
+                    }
                     updateBottomSheet(
-                        description = it.description,
-                        missingPlace = "${it.latitude}, ${it.longitude}",
+                        url = it.imageUrl.firstOrNull(),
+                        missingPlace = address?.address?.addressName ?: "Unknown",
                         missingDate = it.foundDate!!,
-                        uri = it.imageUrl.toString(),
+                        description = it.description ?: "Unknown",
                         reporterName = it.reporterName
                     )
                 }
@@ -70,24 +84,26 @@ class SuspectedBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateBottomSheet(
-        description: String?,
+        url: String?,
         missingPlace: String,
         missingDate: String,
-        uri: String?,
+        description: String?,
         reporterName : String?
     ){
         if (_binding !=null && isAdded){
             binding.reportInfoLocation.text = missingPlace
             binding.reportInfoDate.text = missingDate
             binding.reportInfoInfoText.text = description
-            binding.reportInfoInfoText.text = reporterName
-            Glide.with(this)
-                .load(uri)
-                .apply(
-                    RequestOptions().centerCrop()
-                        .transform(RoundedCorners(DpUtils.dpToPx(requireContext(), 85)))
-                )
-                .into(binding.reportInfoImg)
+            binding.reportInfoNickNameText.text = reporterName
+            url?.let {
+                Glide.with(this)
+                    .load(it)
+                    .apply(
+                        RequestOptions().centerCrop()
+                            .transform(RoundedCorners(DpUtils.dpToPx(requireContext(), 85)))
+                    )
+                    .into(binding.reportInfoImg)
+            } ?: Log.d("SuspectedBottomSheet", "Image URL is null")
         }
     }
 

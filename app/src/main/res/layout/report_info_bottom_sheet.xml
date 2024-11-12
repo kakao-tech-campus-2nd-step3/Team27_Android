@@ -22,9 +22,9 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="62dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="fitStart"/>
 
     <TextView
         android:id="@+id/report_info_locationNTime_title"
@@ -61,12 +61,12 @@
         android:id="@+id/report_info_infoTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="25dp"
         android:includeFontPadding="false"
         android:text="@string/report_info_info"
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         app:layout_constraintStart_toStartOf="@id/report_info_location"
-        app:layout_constraintTop_toBottomOf="@id/report_info_location" />
+        app:layout_constraintTop_toBottomOf="@id/report_info_date" />
 
     <TextView
         android:id="@+id/report_info_infoText"
@@ -82,7 +82,7 @@
         android:id="@+id/report_info_nickName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="25dp"
         android:text="@string/report_info_nickName"
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         app:layout_constraintStart_toStartOf="@id/report_info_infoText"
@@ -97,6 +97,7 @@
         app:layout_constraintStart_toStartOf="@id/report_info_nickName"
         app:layout_constraintTop_toBottomOf="@id/report_info_nickName"
         android:layout_marginBottom="10dp"
-        android:includeFontPadding="false" />
+        android:includeFontPadding="false"
+        app:layout_goneMarginBottom="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

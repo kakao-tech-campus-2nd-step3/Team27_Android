@@ -106,4 +106,8 @@ class ReportDataViewModel @Inject constructor(
             reportRepository.getReportOwnByUser()
         }
     }
+
+    fun clearSuspectedDetail() {
+        _suspectedDetail.value = null
+    }
 }
