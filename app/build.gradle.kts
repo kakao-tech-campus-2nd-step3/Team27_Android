@@ -76,6 +76,7 @@ android {
         buildConfig = true
         dataBinding = true
     }
+    packaging { resources.excludes.add("META-INF/*") }
 
 }
 dependencies {
@@ -100,6 +101,7 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.6.1")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     kapt("com.google.dagger:hilt-compiler:2.51.1")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.activity:activity-ktx:1.9.2")
@@ -110,7 +112,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")    //Glide : url -> 이미지 로딩
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation(libs.mockito.core)
     implementation("com.google.dagger:hilt-android-testing:2.51.1")
     testImplementation("com.google.dagger:hilt-android-testing:2.51.1")
     testAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -120,7 +121,8 @@ dependencies {
     kaptAndroidTest("com.google.dagger:hilt-compiler:2.51.1")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
     androidTestImplementation("androidx.fragment:fragment-testing:1.8.5")
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-    androidTestImplementation("org.mockito:mockito-android:4.0.0")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.8.1")
+    implementation("io.mockk:mockk:1.13.11")
+    testImplementation("io.mockk:mockk-android:1.13.11")
+    testImplementation("io.mockk:mockk-agent:1.13.11")
 }

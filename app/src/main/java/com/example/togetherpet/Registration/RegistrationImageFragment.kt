@@ -36,6 +36,7 @@ class RegistrationImageFragment : Fragment() {
     private val binding get() = _binding!!
     private val sharedViewModel: RegistrationViewModel by activityViewModels()
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var permissionLauncher : ActivityResultLauncher<Array<String>>
 
 
     override fun onCreateView(
@@ -51,7 +52,9 @@ class RegistrationImageFragment : Fragment() {
 
         binding.apply {
             nextButton.setOnClickListener { goToNextScreen() }
-            imageInputButton.setOnClickListener { setImage() }
+            imageInputButton.setOnClickListener {
+                checkPermissionAndRequest()
+            }
             resultLauncher =
                 registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                     if (result.resultCode == Activity.RESULT_OK) {
@@ -65,32 +68,19 @@ class RegistrationImageFragment : Fragment() {
                                 .into(binding.animalImage)
                             sharedViewModel.setPetImage(uri)
                         }
-                        if (ContextCompat.checkSelfPermission(
-                                requireContext(),
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                            ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            ActivityCompat.requestPermissions(
-                                requireActivity(),
-                                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                                100
-                            )
-                        }
-                        if (ContextCompat.checkSelfPermission(
-                                requireContext(),
-                                Manifest.permission.READ_MEDIA_IMAGES
-                            ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                ActivityCompat.requestPermissions(
-                                    requireActivity(),
-                                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                                    101
-                                )
-                            }
-                        }
                     }
                 }
+
+            permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                if (permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true ||
+                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                            permissions[Manifest.permission.READ_MEDIA_IMAGES] == true)) {
+                    // 권한이 허용되었을 경우 이미지 설정 메서드 호출
+                    setImage()
+                } else {
+                    Toast.makeText(requireContext(), "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -112,7 +102,7 @@ class RegistrationImageFragment : Fragment() {
     }
 
     private fun checkImage(): InputState {
-        return if (binding.animalImage.drawable == null) InputState.NOT_EXIST_IMAGE
+        return if (sharedViewModel.petImage.value == Uri.EMPTY) InputState.NOT_EXIST_IMAGE
         else InputState.EXIST_IMAGE
     }
 
@@ -120,6 +110,50 @@ class RegistrationImageFragment : Fragment() {
         return when(checkImage()){
             InputState.EXIST_IMAGE -> true
             InputState.NOT_EXIST_IMAGE -> false
+        }
+    }
+
+    private fun checkPermission(){
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                100
+            )
+        }
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_MEDIA_IMAGES
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                    101
+                )
+            }
+        }
+    }
+
+    private fun checkPermissionAndRequest(){
+        val permissions = mutableListOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
+        }
+
+        val permissionsToRequest = permissions.filter {
+            ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            permissionLauncher.launch(permissionsToRequest.toTypedArray())
+        } else {
+            setImage()
         }
     }
 
