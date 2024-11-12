@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.databinding.ReportInfoBottomSheetBinding
+import com.example.togetherpet.extensions.formatDateTime
 import com.example.togetherpet.searching.report.viewModel.ReportDataViewModel
 import com.example.togetherpet.utils.DpUtils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -71,10 +72,11 @@ class SuspectedBottomSheetFragment : BottomSheetDialogFragment() {
                             null
                         }
                     }
+                    val date = it.foundDate?.let { it1 -> formatDateTime(it1) }
                     updateBottomSheet(
                         url = it.imageUrl.firstOrNull(),
                         missingPlace = address?.address?.addressName ?: "Unknown",
-                        missingDate = it.foundDate!!,
+                        missingDate = date ?: "Unknown",
                         description = it.description ?: "Unknown",
                         reporterName = it.reporterName
                     )

@@ -10,6 +10,9 @@ import android.provider.MediaStore
 import android.util.TypedValue
 import android.view.View
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun View.toBitmap(): Bitmap {
     this.measure(
@@ -53,4 +56,15 @@ fun dpToPx(context: Context, dp: Int): Int {
         dp.toFloat(),
         context.resources.displayMetrics
     ).toInt()
+}
+
+fun formatDateTime(input: String): String {
+    // 원래 문자열의 형식
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    // 변환할 형식
+    val outputFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd (E) HH:mm", Locale("ko", "KR"))
+
+    // 문자열을 LocalDateTime으로 파싱 후 원하는 형식으로 변환
+    val dateTime = LocalDateTime.parse(input, inputFormatter)
+    return dateTime.format(outputFormatter)
 }

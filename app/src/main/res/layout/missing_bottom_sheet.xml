@@ -120,13 +120,14 @@
 
     <TextView
         android:id="@+id/missing_bottom_addInfo_text"
-        android:layout_width="wrap_content"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TogetherPetTextSmall"
         android:includeFontPadding="false"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="@id/missing_bottom_addInfo"
-        app:layout_constraintTop_toBottomOf="@id/missing_bottom_addInfo" />
+        app:layout_constraintTop_toBottomOf="@id/missing_bottom_addInfo"
+        android:breakStrategy="simple" />
 
     <TextView
         android:id="@+id/myPet_missingRegister_button"
