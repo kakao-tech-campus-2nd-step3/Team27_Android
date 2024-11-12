@@ -86,13 +86,10 @@ class WalkingPetViewModel @Inject constructor(
     }
 
     fun calculateCalories() {
-
-        val timeHours = time.value / (1000.0 * 60 * 60)
-        // MET, 평균체중 (MVP)
-        val MET = 4.0
+        val distanceKilometer = _distance.value.toDouble() / (1000.0)
         val averageWeightKg = 15.0
 
-        _calories.value = (MET * averageWeightKg * timeHours).toInt()
+        _calories.value = (averageWeightKg * distanceKilometer * 0.75).toInt()
     }
 
     fun setTimeBase() {
