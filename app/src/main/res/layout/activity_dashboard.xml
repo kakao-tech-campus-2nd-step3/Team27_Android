@@ -31,6 +31,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
+            android:id="@+id/board_alarm_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -41,6 +42,7 @@
             app:layout_constraintTop_toTopOf="@id/home_title" />
 
         <ImageButton
+            android:id="@+id/board_setting_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"

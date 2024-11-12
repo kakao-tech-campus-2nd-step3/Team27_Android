@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.togetherpet"
+    namespace = "com.jnu.togetherpet"
     compileSdk = 34
 
     defaultConfig {
@@ -19,7 +19,7 @@ android {
             abiFilters.add("x86")
             abiFilters.add("x86_64")
         }
-        applicationId = "com.example.togetherpet"
+        applicationId = "com.jnu.togetherpet"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

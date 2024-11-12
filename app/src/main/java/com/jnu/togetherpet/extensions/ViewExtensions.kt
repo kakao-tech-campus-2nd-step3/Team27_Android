@@ -1,0 +1,69 @@
+package com.jnu.togetherpet.extensions
+
+import android.content.ContentResolver
+import android.content.Context
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
+import android.provider.MediaStore
+import android.util.TypedValue
+import android.view.View
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+
+fun View.toBitmap(): Bitmap {
+    this.measure(
+        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    )
+    this.layout(0, 0, this.measuredWidth, this.measuredHeight)
+    val bitmap = Bitmap.createBitmap(this.measuredWidth, this.measuredHeight, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    this.draw(canvas)
+    return bitmap
+}
+
+fun getAbsolutePathFromUri(contentResolver: ContentResolver, uri: Uri): String? {
+    var absolutePath: String? = null
+    val projection = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor: Cursor? = contentResolver.query(uri, projection, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            absolutePath = it.getString(columnIndex)
+        }
+    }
+    return absolutePath
+}
+
+fun Uri.getAbsolutePath(context: Context): String? {
+    val proj = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor: Cursor? = context.contentResolver.query(this, proj, null, null, null)
+    cursor?.use {
+        val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        it.moveToFirst()
+        return it.getString(columnIndex)
+    }
+    return null
+}
+
+fun dpToPx(context: Context, dp: Int): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp.toFloat(),
+        context.resources.displayMetrics
+    ).toInt()
+}
+
+fun formatDateTime(input: String): String {
+    // 원래 문자열의 형식
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    // 변환할 형식
+    val outputFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd (E) HH:mm", Locale("ko", "KR"))
+
+    // 문자열을 LocalDateTime으로 파싱 후 원하는 형식으로 변환
+    val dateTime = LocalDateTime.parse(input, inputFormatter)
+    return dateTime.format(outputFormatter)
+}
