@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -18,9 +17,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.togetherpet.R
 import com.example.togetherpet.databinding.DateTimePickerBinding
 import com.example.togetherpet.databinding.ReportSuspectedMissingPetFragmentBinding
 import com.example.togetherpet.extensions.getAbsolutePath
+import com.example.togetherpet.searching.CustomToast
 import com.example.togetherpet.searching.report.ReportStatus
 import com.example.togetherpet.searching.report.viewModel.ReportSuspectedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -224,12 +225,18 @@ class ReportSuspectedMissingPetFragment : Fragment() {
             reportSuspectedViewModel.reportStatus.collect { status ->
                 when (status) {
                     ReportStatus.SUCCESS -> {
-                        Toast.makeText(context, "제보 성공", Toast.LENGTH_SHORT).show()
+                        context?.let {
+                            val messageS = requireContext().getString(R.string.report_success)
+                            CustomToast.displayToast(it, messageS)
+                        }
                         parentFragmentManager.popBackStack()
                     }
 
                     ReportStatus.ERROR -> {
-                        Toast.makeText(context, "제보 실패", Toast.LENGTH_SHORT).show()
+                        context?.let {
+                            val messageF = requireContext().getString(R.string.fail)
+                            CustomToast.displayToast(it, messageF)
+                        }
                     }
 
                     else -> {

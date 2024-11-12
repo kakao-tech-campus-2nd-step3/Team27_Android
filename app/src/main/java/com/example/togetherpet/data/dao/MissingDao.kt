@@ -2,6 +2,7 @@ package com.example.togetherpet.data.dao
 
 import androidx.room.*
 import com.example.togetherpet.data.entity.MissingEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MissingDao {
@@ -13,4 +14,7 @@ interface MissingDao {
 
     @Update(entity = MissingEntity::class)
     suspend fun updateMissing(missingEntity: MissingEntity)
+
+    @Query("SELECT * FROM missing")
+    fun getAllMissingReports(): Flow<List<MissingEntity>>
 }

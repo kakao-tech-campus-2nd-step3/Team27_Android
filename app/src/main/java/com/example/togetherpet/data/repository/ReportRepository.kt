@@ -2,18 +2,15 @@ package com.example.togetherpet.data.repository
 
 import android.content.Context
 import android.util.Log
-import androidx.room.Room
+import com.example.togetherpet.data.DatabaseProvider
+import com.example.togetherpet.data.dao.ReportDao
 import com.example.togetherpet.data.database.ReportDataBase
 import com.example.togetherpet.data.datasource.ReportSource
 import com.example.togetherpet.data.dto.ReportCreateRequestDTO
 import com.example.togetherpet.data.entity.ReportEntity
-import com.example.togetherpet.di.TypeConverterModule
-import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
-import retrofit2.Retrofit
+import kotlinx.coroutines.flow.Flow
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,13 +20,8 @@ class ReportRepository @Inject constructor(
     private val reportSource: ReportSource,
     private val tokenRepository: TokenRepository
 ) {
-    val db: ReportDataBase = Room.databaseBuilder(
-        context.applicationContext,
-        ReportDataBase::class.java,
-        "report_database"
-    ).build()
-
-    private val reportDao = db.reportDao()
+    private val db: ReportDataBase = DatabaseProvider.getReportDatabase(context)
+    private val reportDao: ReportDao = db.reportDao()
 
     suspend fun registerReportByMissing(
         color: String,
@@ -97,7 +89,8 @@ class ReportRepository @Inject constructor(
                         mutableListOf(report.imageUrl),
                         null,
                         null,
-                        null
+                        null,
+                        true
                     )
                 }
         )
@@ -107,7 +100,7 @@ class ReportRepository @Inject constructor(
         latitude: Double,
         longitude: Double,
     ) {
-        Log.d("yeong","근처 실종 데이터 받아옴")
+        Log.d("yeong", "근처 실종 데이터 받아옴")
         val reports = reportSource.getReportByLocation(latitude, longitude)
             .map { report ->
                 ReportEntity(
@@ -117,7 +110,8 @@ class ReportRepository @Inject constructor(
                     mutableListOf(report.imageUrl),
                     null,
                     null,
-                    null
+                    null,
+                    false
                 )
             }
         reportDao.insertReports(reports)
@@ -125,21 +119,28 @@ class ReportRepository @Inject constructor(
 
     suspend fun getReportDetail(
         reportId: Long
-    ) {
+    ): ReportEntity? {
+        Log.d("yoeng","ReportId 전달 : $reportId")
         val findReport = reportDao.getReportById(reportId)
 
         if (findReport != null) {
             val detailReport = reportSource.getReportDetail(reportId)
+            Log.d("ReportRepository", "서버로 받은 reports: $detailReport")
             findReport.imageUrl.addAll(detailReport.imageUrl)
-            reportDao.updateReport(
-                findReport.copy(
-                    description = detailReport.description,
-                    reporterName = detailReport.reporterName,
-                    foundDate = detailReport.foundDate.toString()
-                )
+            val updateReporting = findReport.copy(
+                description = detailReport.description,
+                reporterName = detailReport.reporterName,
+                foundDate = detailReport.foundDate.toString()
             )
+            reportDao.updateReport( updateReporting)
+            return updateReporting
         }
-
-        // TODO Error 발생 로직 추가
+        return null
     }
+
+    // 내 반려동물 목격 제보 가져오기
+    fun getOwnReports(): Flow<List<ReportEntity>> = reportDao.getOwnReports()
+
+    // 근처 목격 제보 가져오기
+    fun getNearbyReports(): Flow<List<ReportEntity>> = reportDao.getNearbyReports()
 }

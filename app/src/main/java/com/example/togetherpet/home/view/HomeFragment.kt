@@ -1,34 +1,35 @@
 package com.example.togetherpet.home.view
 
-import android.content.Context
+import android.Manifest
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
-import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.togetherpet.DataStoreRepository
 import com.example.togetherpet.R
-import com.example.togetherpet.Registration.RegistrationViewModel
+import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.databinding.FragmentHomeBinding
-import com.example.togetherpet.home.viewModel.HomeViewModel
-import com.example.togetherpet.adapter.PetListAdapter
 import com.example.togetherpet.extensions.dpToPx
 import com.example.togetherpet.fragment.WalkingPetRecordViewModel
-import com.example.togetherpet.testData.viewModel.MissingViewModel
-import com.example.togetherpet.testData.viewModel.UserViewModel
+import com.example.togetherpet.searching.report.adapter.MissingAdapter
+import com.example.togetherpet.searching.report.viewModel.ReportDataViewModel
+import com.example.togetherpet.searching.searchingHome.view.SearchingPetFragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,29 +38,117 @@ import javax.inject.Inject
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
     @Inject
     lateinit var dataStoreRepository: DataStoreRepository
 
+    @Inject
+    lateinit var kakaoLocalRepository: KakaoLocalRepository
+
+    //산책 데이터
     private val walkingPetRecordViewModel: WalkingPetRecordViewModel by viewModels()
 
-    /*//테스용 더미 데이터 사용
-    private val userViewModel: UserViewModel by viewModels()
-    private val missingViewModel: MissingViewModel by viewModels()
-    private val homeViewModel: HomeViewModel by viewModels()*/
+    //실종 제보 데이터
+    private val reportDataViewModel: ReportDataViewModel by viewModels()
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+
+    private lateinit var locationPermissionRequest: ActivityResultLauncher<String>
+
+    private lateinit var reportAdapter: MissingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        //---현재 위치 얻기 위함---
+        //FusedLocationProviderClient 등록
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        //권한 요청 초기화
+        locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                getCurrentLocation()
+            } else {
+                Toast.makeText(requireContext(), "위치 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+                locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+        fetchMissingData()
+        setupRecyclerView()
+        observeMissingReports()
+
         return binding.root
+    }
+
+    private fun setupRecyclerView() {
+        Log.d("HomeFragment", "Initializing RecyclerView")
+        reportAdapter = MissingAdapter(emptyList(), kakaoLocalRepository) { missingEntity ->
+            val searchingFragment = SearchingPetFragment()
+
+            val bundle = Bundle().apply {
+                putString("missingId", missingEntity.petId.toString())
+            }
+            searchingFragment.arguments = bundle
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_home, searchingFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+        binding.homeMissingPetList.adapter = reportAdapter
+    }
+
+    private fun observeMissingReports() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            reportDataViewModel.missingReports.collectLatest { missings ->
+                if (missings.isEmpty()) {
+                    Log.d("HomeFragment", "Missing db 데이터 없음")
+                    binding.homeLogo.visibility = View.VISIBLE
+                    binding.homeSos.visibility = View.GONE
+                } else {
+                    // 데이터가 있으면 로고 숨기고 RecyclerView 표시
+                    Log.d("HomeFragment", "Missing 데이터베이스에 데이터 있음: ${missings.size} 개")
+                    binding.homeLogo.visibility = View.GONE
+                    binding.homeSos.visibility = View.VISIBLE
+                    reportAdapter.updateReports(missings)
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCurrentLocation() {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    Log.d("HomeFragment", "현재 위치: $latitude / $longitude")
+                    fetchMissingData()
+                } else {
+                    Log.d("HomeFragment", "현재 위치를 가져올 수 없습니다.")
+                }
+            }
+    }
+
+    private fun fetchMissingData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (latitude != 0.0 && longitude != 0.0) {
+                reportDataViewModel.fetchMissingReports(latitude, longitude)
+            } else {
+                Log.d("HomeFragment", "위치 정보가 없습니다.")
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.homeMissingPetList.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         //---유저 정보 띄우기---
         //case 1: 가입시 등록한 정보 사용
@@ -70,10 +159,10 @@ class HomeFragment : Fragment() {
         //---산책 정보 띄우기---
         viewLifecycleOwner.lifecycleScope.launch {
             walkingPetRecordViewModel.getWalkingData()
-            walkingPetRecordViewModel.walkingData.collectLatest {data->
+            walkingPetRecordViewModel.walkingData.collectLatest { data ->
                 binding.homeTotalCount.text = "${data.todayWalkCount}"
                 binding.homeTotalDistance.text = "${data.distance}"
-                binding.homeTotalTime.text ="${data.time}"
+                binding.homeTotalTime.text = "${data.time}"
             }
         }
 
@@ -85,70 +174,6 @@ class HomeFragment : Fragment() {
         binding.homeAvgDistance.text =
             getString(R.string.home_avg_distance, avgDistance)
         binding.homeAvgTime.text = getString(R.string.home_avg_time, avgTime)
-
-        /*//테스용 더미 데이터 사용
-        viewLifecycleOwner.lifecycleScope.launch {
-            val userJob = async { userViewModel.addDummyUser() }
-            val missingJob = async { missingViewModel.addDummyMissingPet() }
-
-            //더미 데이터 생성이 완료될 때까지 기다림
-            awaitAll(userJob, missingJob)
-
-            homeViewModel.loadData()
-
-            homeViewModel.isDataLoaded.collectLatest { isLoaded ->
-                if (isLoaded) {
-                    // 데이터 로드가 완료된 후에만 관찰을 시작
-                    homeViewModel.missingPets.collectLatest { missingInfo ->
-                        Log.d("yeong", "Missing data: $missingInfo")
-
-                        if (missingInfo.isNotEmpty()) {
-                            binding.homeMissingPetList.adapter =
-                                PetListAdapter(requireContext(), missingInfo)
-                            binding.homeLogo.visibility = View.GONE
-                            binding.homeSos.visibility = View.VISIBLE
-                        } else {
-                            binding.homeSos.visibility = View.GONE
-                            binding.homeLogo.visibility = View.VISIBLE
-                        }
-                        homeViewModel.user.collectLatest { user ->
-                            Log.d("yeong", "User data: $user")
-                            val userNickname = user?.userNickname
-                            val petName = user?.petName
-                            val petImgUrl = user?.petImgUrl
-
-                            val avgCount = user?.avgWalkCount.toString()
-                            val avgDistance = user?.avgWalkDistance.toString()
-                            val avgTime = user?.avgWalkTime
-
-                            val testText = "안녕하세요,  <b>${petName}</b> 보호자 <b>${userNickname}</b> 님"
-                            binding.homeGreeting.text =
-                                Html.fromHtml(testText, Html.FROM_HTML_MODE_LEGACY)
-
-                            binding.homeWalkingTitle.text =
-                                getString(R.string.home_walking_title, petName)
-
-                            Glide.with(requireContext())
-                                .load(petImgUrl)
-                                .apply(
-                                    RequestOptions().centerCrop()
-                                        .transform(RoundedCorners(dpToPx(requireContext(), 10)))
-                                )
-                                .into(binding.homeProfileImg)
-
-                            binding.homeTotalCount.text = user?.todayWalkCount.toString()
-                            binding.homeTotalDistance.text = user?.todayWalkDistance.toString()
-                            binding.homeTotalTime.text = user?.todayWalkTime
-
-                            binding.homeAvgCount.text = getString(R.string.home_avg_count, avgCount)
-                            binding.homeAvgDistance.text =
-                                getString(R.string.home_avg_distance, avgDistance)
-                            binding.homeAvgTime.text = getString(R.string.home_avg_time, avgTime)
-                        }
-                    }
-                }
-            }
-        }*/
     }
 
     private fun setupUserInfo() {
@@ -163,12 +188,16 @@ class HomeFragment : Fragment() {
                     imgUriFlow.collectLatest { imgUri ->
                         // UI에 표시할 텍스트 설정
                         val greetingText = "안녕하세요,  <b>$petName</b> 보호자 <b>$userName</b> 님"
-                        binding.homeGreeting.text = Html.fromHtml(greetingText, Html.FROM_HTML_MODE_LEGACY)
+                        binding.homeGreeting.text =
+                            Html.fromHtml(greetingText, Html.FROM_HTML_MODE_LEGACY)
 
                         // 이미지 로드
                         Glide.with(this@HomeFragment)
                             .load(Uri.parse(imgUri))
-                            .apply(RequestOptions().centerCrop().transform(RoundedCorners(dpToPx(requireContext(), 10))))
+                            .apply(
+                                RequestOptions().centerCrop()
+                                    .transform(RoundedCorners(dpToPx(requireContext(), 10)))
+                            )
                             .into(binding.homeProfileImg)
                     }
                 }

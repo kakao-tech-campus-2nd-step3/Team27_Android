@@ -3,13 +3,8 @@ package com.example.togetherpet.searching.searchingHome.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
-import android.graphics.Rect
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,15 +19,25 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.togetherpet.DataStoreRepository
 import com.example.togetherpet.R
 import com.example.togetherpet.adapter.SearchingBtnListAdapter
+import com.example.togetherpet.data.entity.MissingEntity
+import com.example.togetherpet.data.entity.ReportEntity
+import com.example.togetherpet.data.repository.KakaoLocalRepository
 import com.example.togetherpet.databinding.FragmentSearchingPetBinding
-import com.example.togetherpet.searching.MissingBottomSheetFragment
-import com.example.togetherpet.searching.SearchingTestDataViewModel
+import com.example.togetherpet.extensions.toBitmap
+import com.example.togetherpet.searching.report.view.MissingBottomSheetFragment
+import com.example.togetherpet.searching.report.adapter.MissingAdapter
+import com.example.togetherpet.searching.report.adapter.SuspectedAdapter
 import com.example.togetherpet.searching.report.extensions.ItemSpacing
 import com.example.togetherpet.searching.report.view.MyPetReportFragment
 import com.example.togetherpet.searching.report.view.ReportSuspectedMissingPetFragment
+import com.example.togetherpet.searching.report.view.SuspectedBottomSheetFragment
 import com.example.togetherpet.searching.report.viewModel.ReportDataViewModel
 import com.example.togetherpet.searching.searchingHome.ButtonType
 import com.example.togetherpet.searching.searchingHome.viewModel.SearchingPetViewModel
@@ -48,19 +53,20 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchingPetFragment : Fragment() {
-    @Inject
     //내 반려 동물 missing 여부 저장
+    @Inject
     lateinit var dataStoreRepository: DataStoreRepository
+
+    //위도, 경도 -> 주소
+    @Inject
+    lateinit var kakaoLocalRepository: KakaoLocalRepository
 
     //실종 제보 데이터 저장
     private val reportDataViewModel: ReportDataViewModel by viewModels()
@@ -82,9 +88,6 @@ class SearchingPetFragment : Fragment() {
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
-
-    //더미 데이터 사용
-    private val searchingViewModel: SearchingTestDataViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -114,6 +117,8 @@ class SearchingPetFragment : Fragment() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(p0: KakaoMap) {
                 kakaoMap = p0
+                Log.d("testtt", "onMapReady")
+                observeMissingReports()
 
                 //클릭 이벤트 활성화
                 kakaoMap!!.isPoiClickable = true
@@ -125,6 +130,7 @@ class SearchingPetFragment : Fragment() {
             }
         })
         setBtnListAdapter()
+
         //btnList 사이의 간격 설정
         binding.researchingBtnList.addItemDecoration(ItemSpacing(20))
 
@@ -156,34 +162,245 @@ class SearchingPetFragment : Fragment() {
                 binding.searchingMissingList.visibility = View.VISIBLE
                 binding.myPetMissingRegisterButton.visibility = View.VISIBLE
                 binding.searchingReportBtn.visibility = View.GONE
-                //실종 목록 어뎁터 설정
+                observeMissingReports()
             }
 
             ButtonType.REPORT -> {
                 binding.searchingMissingList.visibility = View.VISIBLE
                 binding.myPetMissingRegisterButton.visibility = View.GONE
                 binding.searchingReportBtn.visibility = View.VISIBLE
+                clearRecyclerView()
+                kakaoMap?.labelManager?.clearAll()
+                observeSuspectedReports()
             }
 
             ButtonType.MyPET -> {
                 binding.searchingMissingList.visibility = View.GONE
                 binding.myPetMissingRegisterButton.visibility = View.GONE
                 binding.searchingReportBtn.visibility = View.GONE
+                clearRecyclerView()
+                kakaoMap?.labelManager?.clearAll()
+                observeMyPetReports()
             }
         }
+    }
+
+    private fun observeMissingReports() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            reportDataViewModel.missingReports.collectLatest { missings ->
+                if (missings.isNotEmpty()) {
+                    binding.searchingMissingList.adapter =
+                        MissingAdapter(missings, kakaoLocalRepository) { missingEntity ->
+                            moveMapToLocation(missingEntity.latitude, missingEntity.longitude)
+                        }
+                    setMissingMarker(missings)
+                } else {
+                    Log.d("SearchingPetFragment", "No Missing Data")
+                }
+            }
+        }
+    }
+
+    private suspend fun setMissingMarker(missings: List<MissingEntity>) {
+        val labelManager: LabelManager? = kakaoMap?.labelManager
+        labelManager?.clearAll() // 기존 마커 초기화
+
+        for (pet in missings) {
+            delay(500)
+
+            val markerView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.pet_img_map_marker, null, true)
+
+            val petImgMarker =
+                markerView.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.petImg_marker)
+
+            Glide.with(this)
+                .load(Uri.parse(pet.petImageUrl.first()))
+                .apply(RequestOptions())
+                .placeholder(R.drawable.main_logo) // 기본 이미지 설정
+                .into(object : CustomTarget<Drawable>() {
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        //Log.d("testt", "--- onResourceReady (CustomTarget): $resource")
+                        petImgMarker.setImageDrawable(resource)
+
+                        val bitmapImg = markerView.toBitmap()
+
+                        // 마커 스타일 설정
+                        val markerStyle = labelManager?.addLabelStyles(
+                            LabelStyles.from(LabelStyle.from(bitmapImg))
+                        )
+
+                        // 마커 위치 지정
+                        val pos = LatLng.from(pet.latitude, pet.longitude)
+
+                        // 레이어 가져오기
+                        val layer = labelManager?.layer
+
+                        // 레이어에 라벨 추가
+                        layer?.addLabel(
+                            LabelOptions.from(pos)
+                                .setStyles(markerStyle)
+                                .setTag(pet.id)
+                        )
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        //Log.d("testt", "--- onLoadCleared (CustomTarget): $placeholder")
+                        petImgMarker.setImageDrawable(placeholder)
+                    }
+                })
+        }
+
+        // 마커 클릭 리스너 설정
+        kakaoMap?.setOnLabelClickListener { _, _, label ->
+            label?.let {
+                val missingId = it.tag.toString().toLongOrNull()
+                if (missingId != null) {
+                    //Toast.makeText(requireContext(), "마커 클릭", Toast.LENGTH_SHORT).show()
+                    reportDataViewModel.fetchMissingDetails(missingId)
+                    showMissingBottomSheet(missingId)
+                }
+            }
+            true
+        }
+    }
+
+    private fun showMissingBottomSheet(missingId: Long) {
+        val bottomSheetFragment = MissingBottomSheetFragment.newInstance(missingId)
+        Log.d("yeong","miss Id: $missingId")
+        bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+    }
+
+    private fun showSuspectedBottomSheet(reportId: Long) {
+        val bottomSheetFragment = SuspectedBottomSheetFragment.newInstance(reportId)
+        Log.d("yeong","miss Id: $reportId")
+        bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+    }
+
+    private suspend fun setReportMarker(suspected: List<ReportEntity>) {
+        val labelManager: LabelManager? = kakaoMap?.labelManager
+        labelManager?.clearAll() // 기존 마커 초기화
+
+        for (pet in suspected) {
+            delay(500)
+
+            val markerView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.pet_img_map_marker, null, true)
+
+            val petImgMarker =
+                markerView.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.petImg_marker)
+
+            Glide.with(this)
+                .load(Uri.parse(pet.imageUrl.first()))
+                .apply(RequestOptions())
+                .placeholder(R.drawable.main_logo) // 기본 이미지 설정
+                .into(object: CustomTarget<Drawable>(){
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        petImgMarker.setImageDrawable(resource)
+                        val bitmapImg = markerView.toBitmap()
+
+                        // 마커 스타일 설정
+                        val markerStyle = labelManager?.addLabelStyles(
+                            LabelStyles.from(LabelStyle.from(bitmapImg))
+                        )
+
+                        // 마커 위치 지정
+                        val pos = LatLng.from(pet.latitude, pet.longitude)
+
+                        // 레이어 가져오기
+                        val layer = labelManager?.layer
+
+                        // 레이어에 라벨 추가
+                        layer?.addLabel(
+
+                            LabelOptions.from(pos).setStyles(markerStyle).setTag(pet.id)
+                        )
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        petImgMarker.setImageDrawable(placeholder)
+                    }
+                })
+        }
+
+        // 마커 클릭 리스너 설정
+        kakaoMap?.setOnLabelClickListener { _, _, label ->
+            label?.let {
+                val reportId = it.tag.toString().toLongOrNull()
+                if (reportId != null) {
+                    //Toast.makeText(requireContext(), "마커 클릭", Toast.LENGTH_SHORT).show()
+                    reportDataViewModel.fetchSuspectedDetails(reportId)
+                    showSuspectedBottomSheet(reportId)
+                }
+            }
+            true
+        }
+    }
+
+    private fun observeSuspectedReports() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            reportDataViewModel.nearbySuspectedReports.collectLatest { suspected ->
+                if (suspected.isNotEmpty()) {
+                    binding.searchingMissingList.adapter =
+                        SuspectedAdapter(suspected, kakaoLocalRepository) { suspectedEntity ->
+                            moveMapToLocation(suspectedEntity.latitude, suspectedEntity.longitude)
+                        }
+                    setReportMarker(suspected)
+                } else {
+                    Log.d("SearchingPetFragment", "No Suspected Missing Data")
+                }
+            }
+        }
+    }
+
+    private fun observeMyPetReports() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            reportDataViewModel.myPetReports.collectLatest { reports ->
+                if (reports.isNotEmpty()) {
+                    binding.searchingMissingList.adapter =
+                        SuspectedAdapter(reports, kakaoLocalRepository) { suspectedEntity ->
+                            moveMapToLocation(suspectedEntity.latitude, suspectedEntity.longitude)
+                        }
+                    setReportMarker(reports)
+                } else {
+                    Log.d("SearchingPetFragment", "No My Pet Observing Data")
+                }
+            }
+        }
+    }
+
+    private fun moveMapToLocation(latitude: Double, longitude: Double) {
+        val position = LatLng.from(latitude, longitude)
+        kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(position))
+    }
+
+    private fun clearRecyclerView() {
+        binding.searchingMissingList.adapter = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fetchData()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                reportDataViewModel.selectedButton.collectLatest { buttonType ->
+                    handleBtnClick(buttonType)
+                }
+            }
+        }
 
         //목격 제보 버튼 클릭
         binding.searchingReportBtn.setOnClickListener {
             val reportSuspectedMissingPet = ReportSuspectedMissingPetFragment()
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_myPetMissing, reportSuspectedMissingPet)
+                .replace(R.id.fragment_searching, reportSuspectedMissingPet)
                 .addToBackStack(null)
                 .commit()
         }
@@ -193,7 +410,7 @@ class SearchingPetFragment : Fragment() {
             val reportMyPet = MyPetReportFragment()
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_myPetMissing, reportMyPet)
+                .replace(R.id.fragment_searching, reportMyPet)
                 .addToBackStack(null)
                 .commit()
         }
@@ -202,226 +419,27 @@ class SearchingPetFragment : Fragment() {
         binding.refreshDataBtn.setOnClickListener {
             fetchData()
         }
-
-        /*//RecyclerView 초기화 시 실종 정보를 보여줌
-        viewLifecycleOwner.lifecycleScope.launch {
-            searchingViewModel.missingPets.collectLatest { missingInfo ->
-                binding.searchingMissingList.visibility = View.VISIBLE
-                binding.myPetMissingRegisterButton.visibility = View.VISIBLE
-                binding.searchingReportBtn.visibility = View.GONE
-                binding.searchingMissingList.adapter =
-                    PetListAdapter(requireContext(), missingInfo)
-                searchingViewModel.pushBtn("실종 정보")
-            }
-        }*/
     }
 
     private fun fetchData() {
         viewLifecycleOwner.lifecycleScope.launch {
             when (reportDataViewModel.selectedButton.value) {
                 ButtonType.MISSING -> {
+                    Log.d("parent", "Missing Data Fetch")
                     reportDataViewModel.fetchMissingReports(latitude, longitude)
                 }
 
                 ButtonType.REPORT -> {
+                    Log.d("parent", "Reported Data Fetch")
                     reportDataViewModel.fetchSuspectedReports(latitude, longitude)
                 }
 
                 ButtonType.MyPET -> {
+                    Log.d("parent", "MyPet Data Fetch")
                     reportDataViewModel.fetchMyPetReports()
                 }
             }
         }
-    }
-
-    private fun setMarker() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val labelManager: LabelManager? = kakaoMap?.labelManager
-
-            //선택된 버튼을 확인 -> 마커 표시
-            searchingViewModel.selectedBtn.collectLatest { selectedBtn ->
-                //추후에 제보 정보, 자신의 반려견 버튼을 클릭 했을 때 로직 추가
-                if (selectedBtn == "실종 정보") {
-                    labelManager?.clearAll()
-
-                    //실종 동물 데이터 -> 마커 표시
-                    searchingViewModel.missingPets.collectLatest { missingInfo ->
-                        for (pet in missingInfo) {
-                            //url -> bitmap
-                            val petImg = convertBitmapFromURL(pet.missingPetImgUrl)
-                            //bitmap -> 원형
-                            val circlePetImg = getBitmapCircleCrop(petImg, 120, 120)
-
-                            //마커 이미지 생성
-                            val markerBitmap =
-                                BitmapFactory.decodeResource(resources, R.drawable.map_marker_icon)
-                            val scaledMarkerBitmap =
-                                Bitmap.createScaledBitmap(markerBitmap, 220, 250, false)
-
-                            val offsetY = 37 * resources.displayMetrics.density
-
-                            val bitmapImg =
-                                circlePetImg?.let {
-                                    combineBitmaps(
-                                        scaledMarkerBitmap,
-                                        it,
-                                        offsetY
-                                    )
-                                }
-
-                            /*// 메모리 해제
-                            markerBitmap.recycle()
-                            petImg?.recycle()*/
-
-                            //마커 스타일
-                            val markerStyle =
-                                labelManager?.addLabelStyles(
-                                    LabelStyles.from(
-                                        LabelStyle.from(
-                                            bitmapImg
-                                        )
-                                    )
-                                )
-                            //위치 지정
-                            val pos = LatLng.from(pet.missingLatitude, pet.missingLongitude)
-
-                            //레이어 가져 오기
-                            val layer = labelManager?.layer
-                            //레이어 라벨 추가
-                            layer?.addLabel(
-                                LabelOptions.from(pos).setStyles(markerStyle).setTag(pet.missingId)
-                            )
-                        }
-
-
-                        withContext(Dispatchers.Main) {
-                            // 라벨 클릭 리스너 설정
-                            kakaoMap?.setOnLabelClickListener { _, _, label ->
-                                label?.let {
-                                    Log.d("yeong", "라벨 클릭: ${label.tag}")
-
-                                    val missingId = it.tag.toString().toIntOrNull()
-                                    if (missingId != null) {
-                                        //viewModel에 선택된 missingId 전달
-                                        searchingViewModel.fetchMissingPetById(missingId)
-
-                                        //bottomSheet 중복 생성 방지
-                                        val existingFragment =
-                                            childFragmentManager.findFragmentByTag("bottom_sheet") as? MissingBottomSheetFragment
-                                        existingFragment?.dismiss()
-
-                                        viewLifecycleOwner.lifecycleScope.launch {
-                                            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                                                searchingViewModel.selectedPet.collect { selectedPet ->
-                                                    //BottomSheet 표시
-                                                    val bottomSheet = MissingBottomSheetFragment()
-                                                    // BottomSheet 나타내기
-                                                    bottomSheet.show(
-                                                        childFragmentManager,
-                                                        "bottom_sheet"
-                                                    )
-                                                    childFragmentManager.executePendingTransactions()
-                                                    Log.d("yeong", "bottomSheet 표시 후")
-
-                                                    bottomSheet.updateBottomSheet(
-                                                        petName = selectedPet.missingPetName,
-                                                        species = "-",
-                                                        age = "-",
-                                                        missingPlace = selectedPet.missingPlace,
-                                                        addInfo = "-",
-                                                        url = selectedPet.missingPetImgUrl
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                true
-                            }
-                        }
-                    }
-                } else if (selectedBtn == "제보 정보") {
-                    labelManager?.clearAll()
-                }
-            }
-        }
-    }
-
-    // 두 비트맵을 하나로 합쳐 겹치는 이미지 생성
-    private fun combineBitmaps(markerBitmap: Bitmap, petBitmap: Bitmap, offsetY: Float): Bitmap {
-        // 마커 이미지 크기와 동일한 크기의 새 비트맵을 생성
-        val resultBitmap =
-            Bitmap.createBitmap(markerBitmap.width, markerBitmap.height, markerBitmap.config)
-        val canvas = Canvas(resultBitmap)
-
-        // 마커 비트맵을 먼저 그리기
-        canvas.drawBitmap(markerBitmap, 0f, 0f, null)
-
-        // 동물 비트맵을 Y축으로 offset을 주어 마커 이미지 위에 그리기
-        val centerX = (markerBitmap.width - petBitmap.width) / 2f  // 중앙에 배치
-        val petY = markerBitmap.height - petBitmap.height - offsetY  // 아래에서 offset만큼 위로 배치
-        canvas.drawBitmap(petBitmap, centerX, petY, null)
-
-        return resultBitmap
-    }
-
-    //추후에 로직 분리
-    private fun getBitmapCircleCrop(bitmap: Bitmap?, width: Int, height: Int): Bitmap? {
-        if (bitmap == null) {
-            return null // bitmap이 null인 경우 null 반환
-        }
-
-        // 원을 그릴 때 가로와 세로 중 작은 쪽을 기준으로 크기를 설정
-        val size = minOf(bitmap.width, bitmap.height)
-
-        // 출력 비트맵을 정사각형으로 만듦
-        val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(output)
-
-        val paint = Paint().apply {
-            isAntiAlias = true
-            color = 0xff424242.toInt()
-        }
-
-        // 원을 그릴 때 중심점과 반지름을 설정 (정사각형 안에 원을 그림)
-        val radius = size / 2f
-        val centerX = size / 2f
-        val centerY = size / 2f
-
-        // 원형 영역 그리기
-        canvas.drawARGB(0, 0, 0, 0)
-        canvas.drawCircle(centerX, centerY, radius, paint)
-
-        // 원형 안에 비트맵을 그리기 위한 Xfermode 설정
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-
-        // 원본 비트맵의 중앙 영역을 잘라서 원형 영역에 그리기
-        val srcRect = Rect(
-            (bitmap.width - size) / 2,  // 가로 중심점 계산
-            (bitmap.height - size) / 2, // 세로 중심점 계산
-            (bitmap.width + size) / 2,
-            (bitmap.height + size) / 2
-        )
-        val destRect = Rect(0, 0, size, size)
-        canvas.drawBitmap(bitmap, srcRect, destRect, paint)
-
-        // 크기 조정
-        return if (width != 0 && height != 0) {
-            Bitmap.createScaledBitmap(output, width, height, false)
-        } else {
-            output
-        }
-    }
-
-
-    //추후에 로직 분리
-    private fun convertBitmapFromURL(url: String): Bitmap? {
-        val connection = URL(url).openConnection() as HttpURLConnection
-        connection.doInput = true
-        connection.connect()
-        val input = connection.inputStream
-
-        return BitmapFactory.decodeStream(input)
     }
 
     @SuppressLint("MissingPermission")
@@ -435,7 +453,7 @@ class SearchingPetFragment : Fragment() {
         ) {
             //권한 o -> 위치 정보 가져오기
             getCurrentLocation()
-            setMarker()
+            //setMarker()
         } else {
             //권한 x -> 권한 요청
             locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -459,7 +477,6 @@ class SearchingPetFragment : Fragment() {
             CameraUpdateFactory.newCenterPosition(position)
         )
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

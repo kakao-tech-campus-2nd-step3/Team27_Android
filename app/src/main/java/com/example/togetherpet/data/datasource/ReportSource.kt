@@ -83,6 +83,7 @@ class ReportSource @Inject constructor(
     ): List<ReportResponseDTO> {
         Log.d("sendReport","getReportByLocation()")
         val response = reportService.getReportByLocation(latitude, longitude)
+        Log.d("MissingSource", "JSON Response: $response")
 
         if (response.isSuccessful) {
             return response.body()!!

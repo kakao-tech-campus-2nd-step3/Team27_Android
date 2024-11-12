@@ -2,9 +2,11 @@ package com.example.togetherpet.data.dao
 
 import androidx.room.*
 import com.example.togetherpet.data.entity.ReportEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ReportDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertReports(reportEntities: List<ReportEntity>)
 
@@ -16,4 +18,15 @@ interface ReportDao {
 
     @Query("SELECT id FROM report")
     suspend fun getAllIds(): List<Long>
+
+    /*@Query("SELECT * FROM report")
+    fun getAllSuspectedReports(): Flow<List<ReportEntity>>*/
+
+    // 내 반려동물 목격 제보 가져오기
+    @Query("SELECT * FROM report WHERE isOwnReport = 1")
+    fun getOwnReports(): Flow<List<ReportEntity>>
+
+    // 근처 목격 제보 가져오기
+    @Query("SELECT * FROM report WHERE isOwnReport = 0")
+    fun getNearbyReports(): Flow<List<ReportEntity>>
 }
