@@ -1,6 +1,7 @@
 package com.example.togetherpet.fragment
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -30,6 +31,7 @@ import com.example.togetherpet.databinding.FragmentWalkingPetBinding
 import com.example.togetherpet.extensions.drawLine
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -83,14 +85,21 @@ class WalkingPetFragment : Fragment() {
         initListener()
     }
 
+    @SuppressLint("MissingPermission")
     fun initResultLauncher(){
         locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
             when {
                 permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener {
+                        location ->
+                        val latLng = LatLng.from(location.latitude, location.longitude)
+                        kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(latLng))
+                    }
                 }
                 permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+
                 } else -> {
                 Toast.makeText(requireContext(), "권한 거절", Toast.LENGTH_SHORT).show()
             }
@@ -232,14 +241,6 @@ class WalkingPetFragment : Fragment() {
             locationPermissionRequest.launch(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION))
-        }
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED) {
-            locationPermissionRequest.launch(arrayOf(
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-            )
         }
     }
 
