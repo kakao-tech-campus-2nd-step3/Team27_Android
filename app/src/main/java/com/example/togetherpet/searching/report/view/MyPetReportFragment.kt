@@ -1,34 +1,26 @@
 package com.example.togetherpet.searching.report.view
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
 import com.example.togetherpet.DataStoreRepository
+import com.example.togetherpet.R
 import com.example.togetherpet.databinding.DateTimePickerBinding
 import com.example.togetherpet.databinding.ReportMyPetMissingFragmentBinding
-import com.example.togetherpet.databinding.ReportSuspectedMissingPetFragmentBinding
-import com.example.togetherpet.extensions.getAbsolutePath
+import com.example.togetherpet.searching.CustomToast
 import com.example.togetherpet.searching.report.ReportStatus
 import com.example.togetherpet.searching.report.viewModel.ReportMyPetViewModel
-import com.example.togetherpet.searching.report.viewModel.ReportSuspectedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -189,13 +181,19 @@ class MyPetReportFragment : Fragment() {
             reportMyPetViewModel.reportStatus.collect { status ->
                 when (status) {
                     ReportStatus.SUCCESS -> {
-                        Toast.makeText(context, "제보 성공", Toast.LENGTH_SHORT).show()
+                        context?.let {
+                            val messageS = requireContext().getString(R.string.my_pet_report_success)
+                            CustomToast.displayToast(it, messageS)
+                        }
                         dataStoreRepository.saveMissingStatus(true)
                         parentFragmentManager.popBackStack()
                     }
 
                     ReportStatus.ERROR -> {
-                        Toast.makeText(context, "제보 실패", Toast.LENGTH_SHORT).show()
+                        context?.let {
+                            val messageF = requireContext().getString(R.string.fail)
+                            CustomToast.displayToast(it, messageF)
+                        }
                     }
 
                     else -> {

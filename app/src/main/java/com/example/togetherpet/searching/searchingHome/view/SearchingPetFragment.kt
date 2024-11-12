@@ -259,7 +259,7 @@ class SearchingPetFragment : Fragment() {
             label?.let {
                 val missingId = it.tag.toString().toLongOrNull()
                 if (missingId != null) {
-                    Toast.makeText(requireContext(), "마커 클릭", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(requireContext(), "마커 클릭", Toast.LENGTH_SHORT).show()
                     reportDataViewModel.fetchMissingDetails(missingId)
                     showMissingBottomSheet(missingId)
                 }
@@ -334,7 +334,7 @@ class SearchingPetFragment : Fragment() {
             label?.let {
                 val reportId = it.tag.toString().toLongOrNull()
                 if (reportId != null) {
-                    Toast.makeText(requireContext(), "마커 클릭", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(requireContext(), "마커 클릭", Toast.LENGTH_SHORT).show()
                     reportDataViewModel.fetchSuspectedDetails(reportId)
                     showSuspectedBottomSheet(reportId)
                 }
