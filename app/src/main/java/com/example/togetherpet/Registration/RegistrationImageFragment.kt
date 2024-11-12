@@ -36,6 +36,7 @@ class RegistrationImageFragment : Fragment() {
     private val binding get() = _binding!!
     private val sharedViewModel: RegistrationViewModel by activityViewModels()
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var permissionLauncher : ActivityResultLauncher<Array<String>>
 
 
     override fun onCreateView(
@@ -52,8 +53,7 @@ class RegistrationImageFragment : Fragment() {
         binding.apply {
             nextButton.setOnClickListener { goToNextScreen() }
             imageInputButton.setOnClickListener {
-                checkPermission()
-                setImage()
+                checkPermissionAndRequest()
             }
             resultLauncher =
                 registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -70,6 +70,17 @@ class RegistrationImageFragment : Fragment() {
                         }
                     }
                 }
+
+            permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                if (permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true ||
+                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                            permissions[Manifest.permission.READ_MEDIA_IMAGES] == true)) {
+                    // 권한이 허용되었을 경우 이미지 설정 메서드 호출
+                    setImage()
+                } else {
+                    Toast.makeText(requireContext(), "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -126,6 +137,23 @@ class RegistrationImageFragment : Fragment() {
                     101
                 )
             }
+        }
+    }
+
+    private fun checkPermissionAndRequest(){
+        val permissions = mutableListOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
+        }
+
+        val permissionsToRequest = permissions.filter {
+            ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            permissionLauncher.launch(permissionsToRequest.toTypedArray())
+        } else {
+            setImage()
         }
     }
 
