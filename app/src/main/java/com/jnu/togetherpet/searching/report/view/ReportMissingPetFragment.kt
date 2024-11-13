@@ -212,12 +212,12 @@ class ReportMissingPetFragment : Fragment() {
         val gender = binding.reportMissingGender.text.toString()
         val species = binding.reportMissingSpecies.text.toString()
         val info = binding.reportMissingReportBtn.text.toString()
-        val absolutePath = imgUri?.getAbsolutePath(requireContext())
+        val absolutePath = imgUri
 
         Log.d("sendReport", "Absolute Path: $absolutePath")
 
         if (absolutePath != null) {
-            val file = File(absolutePath)
+            val file = getFileFromUri(absolutePath)
             val fileList = listOf(file)
 
             Log.d("sendReport", "File: $file")
@@ -241,6 +241,16 @@ class ReportMissingPetFragment : Fragment() {
                 Log.e("sendReport", "File 에러")
             }
         }
+    }
+
+    fun getFileFromUri(uri: Uri?): File {
+        val contentResolver = requireContext().contentResolver
+        val inputStream = uri?.let { contentResolver.openInputStream(it) } ?: return File("null")
+        val file = File(requireContext().cacheDir, "temp_image.jpg")
+        file.outputStream().use { output ->
+            inputStream.copyTo(output)
+        }
+        return file
     }
 
     private fun sendCheck() {
