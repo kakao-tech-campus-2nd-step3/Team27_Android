@@ -1,9 +1,11 @@
 package com.jnu.togetherpet.data.repository
 
 import android.util.Log
+import com.jnu.togetherpet.data.datasource.WalkingLocalSource
 import com.jnu.togetherpet.data.datasource.WalkingNetworkSource
 import com.jnu.togetherpet.data.dto.LocationDTO
 import com.jnu.togetherpet.data.dto.WalkingRequestDTO
+import com.jnu.togetherpet.data.entity.WalkEntity
 import com.jnu.togetherpet.testData.entity.WalkingRecord
 import com.kakao.vectormap.LatLng
 import java.time.LocalDate
@@ -15,7 +17,8 @@ import javax.inject.Singleton
 @Singleton
 class WalkingRepository @Inject constructor(
     private val walkingNetworkSource: WalkingNetworkSource,
-    private val tokenRepository: TokenRepository
+    private val tokenRepository: TokenRepository,
+    private val walkingLocalSource : WalkingLocalSource
 ) {
     suspend fun sendWalkingDataToServer(
         distance : Int,
@@ -28,6 +31,21 @@ class WalkingRepository @Inject constructor(
         walkingNetworkSource.postWalkingData(
             tokenRepository.getTokenOrThrow(),
             WalkingRequestDTO(distance.toFloat(), time, locationList)
+        )
+    }
+
+    suspend fun sendWalkingDataToLocal(
+        distance : Int,
+        walkTime : Long,
+        startTime : LocalDateTime,
+        endTime : LocalDateTime,
+        arrayLocation : ArrayList<LatLng>,
+        walkCalories : Long,
+        walkDay : LocalDate
+    ) {
+        val walkEntity = WalkEntity(0, distance.toLong(), walkTime, startTime, endTime, arrayLocation.toList(), walkCalories, walkDay)
+        walkingLocalSource.insertWalkingData(
+            walkEntity
         )
     }
 
@@ -55,6 +73,36 @@ class WalkingRepository @Inject constructor(
                     LocalDateTime.parse(walkingResponseDTO.walkStartTimePoint, formatter),
                     LocalDateTime.parse(walkingResponseDTO.walkEndTimePoint, formatter),
                     1,
+                    locationList
+                )
+            }
+
+            Log.d("testt", "walkingRecord : ${walkingRecordData}")
+            return walkingRecordData?.let { ArrayList(it) } ?: arrayListOf()
+        } catch (e : Exception){
+            return arrayListOf()
+        }
+    }
+
+    suspend fun getWalkingDataWithDateFromLocal(
+        date: LocalDate
+    ) : ArrayList<WalkingRecord> {
+        try {
+            val walkEntity = walkingLocalSource.readWalkingDataWithDate(date)
+            val walkingRecordData =  walkEntity?.map { entity ->
+                val locationList: ArrayList<LatLng> =
+                    entity.locationList.map { location ->
+                        LatLng.from(location.latitude, location.longitude)
+                    } as ArrayList<LatLng>
+                Log.d("testt", "locationList : ${locationList}")
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                WalkingRecord(
+                    entity.walkDistance.toLong(),
+                    date,
+                    entity.walkTime,
+                    entity.walkStartTime,
+                    entity.walkEndTime,
+                    entity.walkCalories,
                     locationList
                 )
             }

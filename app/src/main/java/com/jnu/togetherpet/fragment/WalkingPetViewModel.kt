@@ -16,6 +16,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
+import com.jnu.togetherpet.DataStoreRepository
 import com.kakao.vectormap.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,6 +25,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.math.asin
 import kotlin.math.cos
@@ -36,7 +39,8 @@ class WalkingPetViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val walkingRepository: WalkingRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val dataStoreRepository: DataStoreRepository
 ) :
     ViewModel() {
 
@@ -47,6 +51,7 @@ class WalkingPetViewModel @Inject constructor(
     private val _lastLoc = MutableStateFlow<LatLng>(LatLng.from(0.0, 0.0))
     private val _isWalking = MutableStateFlow<Boolean>(false)
     private val _petImage = MutableStateFlow<Uri>(Uri.EMPTY)
+    private val _petName = MutableStateFlow<String>(" ")
 
     var base: Long = 0
 
@@ -57,16 +62,23 @@ class WalkingPetViewModel @Inject constructor(
     val lastLoc: StateFlow<LatLng> get() = _lastLoc.asStateFlow()
     val isWalking: StateFlow<Boolean> get() = _isWalking.asStateFlow()
     val petImage: StateFlow<Uri> get() = _petImage.asStateFlow()
+    val petName : StateFlow<String> get() = _petName.asStateFlow()
     private lateinit var locationCallback: LocationCallback
 
     init {
         setPetImage()
+        setPetName()
     }
 
     fun setPetImage(){
         viewModelScope.launch(Dispatchers.IO){
             _petImage.value = userRepository.getUserData().petImageUri
             Log.d("testt", "image : ${_petImage.value}")
+        }
+    }
+    fun setPetName(){
+        viewModelScope.launch(Dispatchers.IO) {
+            _petName.value = userRepository.getUserData().petName
         }
     }
 
@@ -176,16 +188,18 @@ class WalkingPetViewModel @Inject constructor(
     private fun sendWalkingData(){
         if(_time.value > 60000) {
             viewModelScope.launch(Dispatchers.IO) {
-                try{
-                    walkingRepository.sendWalkingDataToServer(
-                    _distance.value,
-                    _time.value,
-                    arrayLoc.value
-                )} catch (e : APIException){
-                    if(e.errorResponse.code == -10101) {
-                        Log.d("testt", "token 오류")
-                    }
-                    else Log.d("testt", "${e.errorResponse.code}")
+                try {
+                    walkingRepository.sendWalkingDataToLocal(
+                        _distance.value,
+                        _time.value,
+                        LocalDateTime.now().minusNanos(_time.value * 1_000_000),
+                        LocalDateTime.now(),
+                        arrayLoc.value,
+                        _calories.value.toLong(),
+                        LocalDate.now()
+                    )
+                } catch (e : Exception){
+                    Log.d("testt", "e : ${e.message}")
                 }
 
             }

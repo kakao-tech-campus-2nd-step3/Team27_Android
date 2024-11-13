@@ -18,10 +18,9 @@ import javax.inject.Singleton
 class ReportRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     private val reportSource: ReportSource,
-    private val tokenRepository: TokenRepository
+    private val tokenRepository: TokenRepository,
+    private val reportDao: ReportDao
 ) {
-    private val db: ReportDataBase = DatabaseProvider.getReportDatabase(context)
-    private val reportDao: ReportDao = db.reportDao()
 
     suspend fun registerReportByMissing(
         color: String,

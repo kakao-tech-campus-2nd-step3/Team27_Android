@@ -15,11 +15,9 @@ import javax.inject.Inject
 class MissingRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     private val missingSource: MissingSource,
-    private val tokenRepository: TokenRepository
+    private val tokenRepository: TokenRepository,
+    private val missingDao: MissingDao
 ) {
-    private val db: MissingDataBase = DatabaseProvider.getMissingDatabase(context)
-    private val missingDao: MissingDao = db.missingDao()
-
     suspend fun registerMissing(
         missingRegisterRequestDTO: MissingRegisterRequestDTO
     ) {

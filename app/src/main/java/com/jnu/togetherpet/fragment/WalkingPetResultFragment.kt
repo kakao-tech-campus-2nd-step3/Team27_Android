@@ -124,7 +124,7 @@ class WalkingPetResultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 sharedViewModel.calories.collectLatest {
-                    binding.caloriesResultText.text = "꾸릉이가 총 ${it}kcal 만큼 소모했어요!"
+                    binding.caloriesResultText.text = "${sharedViewModel.petName.value}가 총 ${it}kcal 만큼 소모했어요!"
                 }
             }
         }

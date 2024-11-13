@@ -1,7 +1,9 @@
 package com.jnu.togetherpet.fragment
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jnu.togetherpet.data.repository.UserRepository
 import com.jnu.togetherpet.data.repository.WalkingRepository
 import com.jnu.togetherpet.testData.entity.WalkingRecord
 import com.kakao.vectormap.LatLng
@@ -16,7 +18,10 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class WalkingPetRecordViewModel @Inject constructor(private val walkingRepository: WalkingRepository) :
+class WalkingPetRecordViewModel @Inject constructor(
+    private val walkingRepository: WalkingRepository,
+    private val userRepository: UserRepository,
+) :
     ViewModel() {
     private val _allDistance = MutableStateFlow<Long>(0)
     private val _allTime = MutableStateFlow<Long>(0)
@@ -29,30 +34,53 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRepositor
     private val _startTime = MutableStateFlow<LocalDateTime>(LocalDateTime.now())
     private val _endTime = MutableStateFlow<LocalDateTime>(LocalDateTime.now())
     private val _arrayLoc = MutableStateFlow<ArrayList<LatLng>>(ArrayList())
+    private val _petName = MutableStateFlow<String>(" ")
 
     val distance: StateFlow<Long> get() = _distance.asStateFlow()
     val calories: StateFlow<Long> get() = _calories.asStateFlow()
     val time: StateFlow<Long> get() = _time.asStateFlow()
-    val base : StateFlow<Long> get() = _base.asStateFlow()
+    val base: StateFlow<Long> get() = _base.asStateFlow()
     val arrayLoc: StateFlow<ArrayList<LatLng>> get() = _arrayLoc.asStateFlow()
     val allDistance: StateFlow<Long> get() = _allDistance.asStateFlow()
     val allTime: StateFlow<Long> get() = _allTime.asStateFlow()
     val arrayRecord: StateFlow<ArrayList<WalkingRecord>> get() = _arrayRecord.asStateFlow()
-    val startTime:StateFlow<LocalDateTime> get() = _startTime.asStateFlow()
-    val endTime : StateFlow<LocalDateTime> get() = _endTime.asStateFlow()
+    val startTime: StateFlow<LocalDateTime> get() = _startTime.asStateFlow()
+    val endTime: StateFlow<LocalDateTime> get() = _endTime.asStateFlow()
     val selectDay: StateFlow<LocalDate> get() = _selectDay.asStateFlow()
+    val petName: StateFlow<String> get() = _petName.asStateFlow()
+
 
     private var walkCount: Int = 0
 
     private val _walkingData = MutableStateFlow(WalkingData(0, 0, 0))
     val walkingData: StateFlow<WalkingData> get() = _walkingData.asStateFlow()
-    
+
+    init {
+        setPetName()
+    }
+
+    fun setPetName() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _petName.value = userRepository.getUserData().petName
+        }
+    }
+
     fun getRecord(date: LocalDate) {
         viewModelScope.launch(Dispatchers.IO) {
             _selectDay.value = date
             val walkingRecordList = walkingRepository.getWalkingDataWithDateFromServer(date)
             _arrayRecord.value = walkingRecordList
 //            Log.d("testt", "${_arrayRecord.value}")
+            calculateAllDistance()
+            calculateAllTime()
+        }
+    }
+
+    fun getRecordToLocal(date: LocalDate) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _selectDay.value = date
+            val walkingRecordList = walkingRepository.getWalkingDataWithDateFromLocal(date)
+            _arrayRecord.value = walkingRecordList
             calculateAllDistance()
             calculateAllTime()
         }
@@ -74,7 +102,7 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRepositor
         _allTime.value = sumTime
     }
 
-    fun getSelectedDetailRecord(position : Int){
+    fun getSelectedDetailRecord(position: Int) {
         val selectedDetail = _arrayRecord.value[position]
         _distance.value = selectedDetail.distance
         _time.value = selectedDetail.time
@@ -83,7 +111,8 @@ class WalkingPetRecordViewModel @Inject constructor(private val walkingRepositor
         _startTime.value = selectedDetail.startTime
         _endTime.value = selectedDetail.endTime
     }
-    fun getWalkingData(){
+
+    fun getWalkingData() {
         updateTodayWalkCount()
         _walkingData.value = WalkingData(
             distance = _allDistance.value,

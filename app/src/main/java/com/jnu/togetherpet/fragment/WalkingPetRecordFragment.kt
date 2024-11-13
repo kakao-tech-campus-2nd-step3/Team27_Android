@@ -59,7 +59,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         binding.weekViewpager.adapter = calendarAdapter
         binding.weekViewpager.setCurrentItem(CalendarViewPagerAdapter.START_POSITION, false)
         binding.calendarDateText.text = selectedDate.toString()
-        sharedViewModel.getRecord(selectedDate)
+        sharedViewModel.getRecordToLocal(selectedDate)
 
     }
 
@@ -73,7 +73,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
             binding.calendarDateText.text = LocalDate.ofEpochDay(date).toString()
             selectedDate = LocalDate.ofEpochDay(date)
             Log.d("testt", "fragmentResultListener : $selectedDate")
-            sharedViewModel.getRecord(selectedDate)
+            sharedViewModel.getRecordToLocal(selectedDate)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -110,7 +110,7 @@ class WalkingPetRecordFragment : Fragment(), OnClickWalkingRecordListener {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sharedViewModel.selectDay.collectLatest {
-                    sharedViewModel.getRecord(selectedDate)
+                    sharedViewModel.getRecordToLocal(selectedDate)
                 }
             }
         }

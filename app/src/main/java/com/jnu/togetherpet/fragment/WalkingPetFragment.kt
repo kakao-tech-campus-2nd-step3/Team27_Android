@@ -303,7 +303,6 @@ class WalkingPetFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.stopLocationTracking()
         _binding = null
     }
 }
