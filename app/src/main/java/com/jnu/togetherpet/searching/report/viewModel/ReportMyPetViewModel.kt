@@ -70,7 +70,22 @@ class ReportMyPetViewModel @Inject constructor(
                 missingRepository.registerMissing(missingRegisterRequestDTO)
                 _reportStatus.value = ReportStatus.SUCCESS // 성공 시
             } catch (e: Exception) {
-                _reportStatus.value = ReportStatus.ERROR // 실패 시
+                if(e.hashCode() == -268512456){
+                    val missingDTO = MissingRegisterRequestDTO(
+                        petName = _petName.value,
+                        petGender = gender,
+                        birthMonth = _birthMonth.value,
+                        breed = "말티즈",
+                        lostTime = parsedDate,
+                        latitude = foundLatitude,
+                        longitude = foundLongitude,
+                        description = description,
+                        isNeuterering = _isNeutering.value
+                    )
+                    missingRepository.registerMissing(missingDTO)
+                    _reportStatus.value = ReportStatus.SUCCESS
+                }
+                else _reportStatus.value = ReportStatus.ERROR // 실패 시
             } finally {
                 // 초기화 또는 다음 요청을 위해 IDLE 상태로 되돌림
                 _reportStatus.value = ReportStatus.IDLE

@@ -29,25 +29,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun kakaoLoginStart(){
-        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-            UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-                if (error != null) {
-                    Log.e(TAG, "카카오톡으로 로그인 실패", error)
-
-                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                        return@loginWithKakaoTalk
-                    }
-
-                    UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
-                } else if (token != null) {
-                    Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
-                }
-            }
-        } else {
-            UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
-        }
-
+    private fun getTokenWithEmail(){
         UserApiClient.instance.me { user, error ->
             if (error != null) {
                 Log.e(TAG, "사용자 정보 요청 실패", error)
@@ -62,9 +44,28 @@ class LoginActivity : AppCompatActivity() {
                 viewModel.login(user.kakaoAccount?.email.toString())
                 val intent = Intent(this@LoginActivity, InfoRegistrationActivity::class.java)
                 startActivity(intent)
-
             }
+        }
+    }
 
+    private fun kakaoLoginStart(){
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+            UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+                if (error != null) {
+                    Log.e(TAG, "카카오톡으로 로그인 실패", error)
+
+                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                        return@loginWithKakaoTalk
+                    }
+
+                    UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+                } else if (token != null) {
+                    Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+                    getTokenWithEmail()
+                }
+            }
+        } else {
+            UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
         }
     }
 

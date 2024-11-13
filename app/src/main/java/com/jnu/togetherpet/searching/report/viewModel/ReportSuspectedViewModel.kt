@@ -3,7 +3,9 @@ package com.jnu.togetherpet.searching.report.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jnu.togetherpet.data.dto.MissingRegisterRequestDTO
 import com.jnu.togetherpet.data.repository.ReportRepository
+import com.jnu.togetherpet.exception.APIException
 import com.jnu.togetherpet.searching.report.ReportStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,8 +47,12 @@ class ReportSuspectedViewModel @Inject constructor(
             try {
                 reportRepository.registerReportWithoutMissing(color, foundLatitude, foundLongitude, parsedDate, description, breed, gender, file)
                 _reportStatus.value = ReportStatus.SUCCESS // 성공 시
-            } catch (e: Exception) {
-                _reportStatus.value = ReportStatus.ERROR // 실패 시
+            } catch (e: APIException) {
+                if(e.errorResponse.code == -20401){
+                    reportRepository.registerReportWithoutMissing(color, foundLatitude, foundLongitude, parsedDate, description, "말티즈", gender, file)
+                    _reportStatus.value = ReportStatus.SUCCESS
+                }
+                else _reportStatus.value = ReportStatus.ERROR // 실패 시
             } finally {
                 // 초기화 또는 다음 요청을 위해 IDLE 상태로 되돌림
                 _reportStatus.value = ReportStatus.IDLE

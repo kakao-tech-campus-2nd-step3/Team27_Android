@@ -37,6 +37,7 @@ class RegisterSource @Inject constructor(
         )
         Log.d("testt", "${response.body().toString()}, ${response.errorBody().toString()}")
         if (!response.isSuccessful) {
+            Log.d("testt", " Reg err : ${response.body().toString()}, ${response.errorBody().hashCode()}")
             throw APIException(
                 gson.fromJson(
                     response.errorBody()?.string(),

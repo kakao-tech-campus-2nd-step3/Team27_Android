@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -63,9 +64,7 @@ class RegistrationNicknameFragment : Fragment() {
                 sharedViewModel.petImage.collectLatest { petImage ->
                     Glide.with(requireContext())
                         .load(petImage)
-                        .apply(
-                            RequestOptions().centerCrop()
-                        )
+                        .centerCrop()
                         .into(binding.animalImage)
                 }
             }
@@ -78,7 +77,7 @@ class RegistrationNicknameFragment : Fragment() {
     }
 
     private fun goToHomeActivitiy() {
-        sharedViewModel.registerUserAndPet(File(absolutelyPath(sharedViewModel.petImage.value, requireContext())))
+        sharedViewModel.registerUserAndPet(getFileFromUri(sharedViewModel.petImage.value))
         //홈으로 이동
         navigateToHomeActivity()
     }
@@ -88,16 +87,38 @@ class RegistrationNicknameFragment : Fragment() {
         _binding = null
     }
 
-    fun absolutelyPath(path: Uri?, context : Context): String {
-        var proj: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
-        var c: Cursor? = context.contentResolver.query(path!!, proj, null, null, null)
-        var index = c?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        c?.moveToFirst()
+    private fun absolutelyPath(uri: Uri): String? {
+        Log.d("testt", "$uri")
+        val contentResolver = requireContext().contentResolver
+        var filePath: String? = null
 
-        var result = c?.getString(index!!)
+        if (uri.scheme == "content") {
+            val projection = arrayOf(android.provider.MediaStore.Images.Media.DATA)
+            contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+                val columnIndex = cursor.getColumnIndexOrThrow(android.provider.MediaStore.Images.Media.DATA)
+                if (cursor.moveToFirst()) {
+                    filePath = cursor.getString(columnIndex)
+                }
+                Log.d("testt", "filePath1 : $filePath ")
+            }
+        } else if (uri.scheme == "file") {
+            filePath = uri.path
+            Log.d("testt", "filePath2 : $filePath ")
+        }
 
-        return result!!
+        return filePath
     }
+
+    fun getFileFromUri(uri: Uri): File {
+        val contentResolver = requireContext().contentResolver
+        val inputStream = contentResolver.openInputStream(uri) ?: return File("null")
+        val file = File(requireContext().cacheDir, "temp_image.jpg")
+        file.outputStream().use { output ->
+            inputStream.copyTo(output)
+        }
+        return file
+    }
+
 
     private fun navigateToHomeActivity() {
         val intent = Intent(requireActivity(), DashboardActivity::class.java)

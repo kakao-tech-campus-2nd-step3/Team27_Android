@@ -1,10 +1,13 @@
 package com.jnu.togetherpet.searching.report.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jnu.togetherpet.data.repository.ReportRepository
+import com.jnu.togetherpet.exception.APIException
 import com.jnu.togetherpet.searching.report.ReportStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -16,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReportMissingViewModel @Inject constructor(
-    private val reportRepository : ReportRepository
+    private val reportRepository: ReportRepository
 ) : ViewModel() {
     private val _reportStatus = MutableStateFlow(ReportStatus.IDLE)
     val reportStatus: StateFlow<ReportStatus> = _reportStatus
@@ -29,18 +32,43 @@ class ReportMissingViewModel @Inject constructor(
         foundDate: String,
         foundLatitude: Double,
         foundLongitude: Double,
-        missingId : Long,
+        missingId: Long,
         file: List<File>
-    ){
+    ) {
         val parsedDate = convertDateFormat(foundDate)
 
+
         //HTTP 통신
-        viewModelScope.launch {
+        viewModelScope.launch() {
             try {
-                reportRepository.registerReportByMissing(color, foundLatitude, foundLongitude, parsedDate, description, breed, gender, missingId, file)
+                reportRepository.registerReportByMissing(
+                    color,
+                    foundLatitude,
+                    foundLongitude,
+                    parsedDate,
+                    description,
+                    breed,
+                    gender,
+                    missingId,
+                    file
+                )
                 _reportStatus.value = ReportStatus.SUCCESS // 성공 시
-            } catch (e: Exception) {
-                _reportStatus.value = ReportStatus.ERROR // 실패 시
+
+            } catch (e: APIException) {
+                if (e.errorResponse.code == -20401) {
+                    reportRepository.registerReportByMissing(
+                        color,
+                        foundLatitude,
+                        foundLongitude,
+                        parsedDate,
+                        description,
+                        "말티즈",
+                        gender,
+                        missingId,
+                        file
+                    )
+                    _reportStatus.value = ReportStatus.SUCCESS
+                }
             } finally {
                 // 초기화 또는 다음 요청을 위해 IDLE 상태로 되돌림
                 _reportStatus.value = ReportStatus.IDLE

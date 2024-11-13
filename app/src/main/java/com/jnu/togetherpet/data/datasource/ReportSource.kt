@@ -48,13 +48,15 @@ class ReportSource @Inject constructor(
             *fileParts.toTypedArray() // 변환한 파트를 배열로 전달
         )
 
+
         if (!response.isSuccessful) {
-            throw APIException(
+            val e = APIException(
                 gson.fromJson(
                     response.errorBody()?.string(),
                     ErrorResponse::class.java
                 )
             )
+            throw e
         }
     }
 

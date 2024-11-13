@@ -82,7 +82,6 @@
         android:id="@+id/walking_goal_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="목표까지 2000m 남았습니다!"
         android:textAppearance="@style/TogetherPetTextMedium"
         android:includeFontPadding="false"
         app:layout_constraintStart_toStartOf="@id/walking_display_board"

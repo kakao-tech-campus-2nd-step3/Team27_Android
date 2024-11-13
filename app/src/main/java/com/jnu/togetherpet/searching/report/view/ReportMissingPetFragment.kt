@@ -155,6 +155,7 @@ class ReportMissingPetFragment : Fragment() {
         resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
+            Log.d("testt", "$result, ${result.resultCode}, ${result.data}")
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.data?.let { uri ->
                     Glide.with(this)
@@ -199,6 +200,7 @@ class ReportMissingPetFragment : Fragment() {
     }
 
     private fun setImage() {
+        Log.d("testt", "setImage")
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             type = "image/*"
         }

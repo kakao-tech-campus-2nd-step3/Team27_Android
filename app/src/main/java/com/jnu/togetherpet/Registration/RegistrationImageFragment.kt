@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -57,9 +58,7 @@ class RegistrationImageFragment : Fragment() {
                         if (uri != null) {
                             Glide.with(requireContext())
                                 .load(uri)
-                                .apply(
-                                    RequestOptions().centerCrop()
-                                )
+                                .centerCrop()
                                 .into(binding.animalImage)
                             sharedViewModel.setPetImage(uri)
                         }
@@ -108,32 +107,6 @@ class RegistrationImageFragment : Fragment() {
         }
     }
 
-    private fun checkPermission(){
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                100
-            )
-        }
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_MEDIA_IMAGES
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                    101
-                )
-            }
-        }
-    }
 
     private fun checkPermissionAndRequest(){
         val permissions = mutableListOf(Manifest.permission.READ_EXTERNAL_STORAGE)

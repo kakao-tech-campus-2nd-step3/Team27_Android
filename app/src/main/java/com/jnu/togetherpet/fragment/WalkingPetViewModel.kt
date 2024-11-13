@@ -88,6 +88,7 @@ class WalkingPetViewModel @Inject constructor(
         val averageWeightKg = 15.0
 
         _calories.value = (averageWeightKg * distanceKilometer * 0.75).toInt()
+        Log.d("testt", "${_calories.value}")
     }
 
     fun setTimeBase() {

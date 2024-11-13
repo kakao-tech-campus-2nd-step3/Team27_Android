@@ -13,10 +13,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
+import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -24,9 +27,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(selfSigningHelper: SelfSigningHelper): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
+            .client(provideOkHttpClient(selfSigningHelper))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -87,5 +91,21 @@ class NetworkModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(
+        selfSigningHelper: SelfSigningHelper
+    ): OkHttpClient {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+            .setLevel(HttpLoggingInterceptor.Level.BODY)
+        return OkHttpClient.Builder()
+            .sslSocketFactory(
+                selfSigningHelper.sslContext.socketFactory,
+                selfSigningHelper.tmf.trustManagers[0] as X509TrustManager
+            )
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
     }
 }
