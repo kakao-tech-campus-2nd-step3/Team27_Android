@@ -89,6 +89,8 @@ class SearchingPetFragment : Fragment() {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
 
+    private var centerPos : LatLng = LatLng.from(0.0, 0.0)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -118,12 +120,18 @@ class SearchingPetFragment : Fragment() {
             override fun onMapReady(p0: KakaoMap) {
                 kakaoMap = p0
                 Log.d("testtt", "onMapReady")
+                kakaoMap?.setOnCameraMoveEndListener { _, cameraPosition, _ ->
+                    centerPos = cameraPosition.position
+                }
+
                 observeMissingReports()
 
                 //클릭 이벤트 활성화
                 kakaoMap!!.isPoiClickable = true
                 checkLocationPermission()
             }
+
+
 
             override fun getZoomLevel(): Int {
                 return 18
@@ -426,12 +434,12 @@ class SearchingPetFragment : Fragment() {
             when (reportDataViewModel.selectedButton.value) {
                 ButtonType.MISSING -> {
                     Log.d("parent", "Missing Data Fetch")
-                    reportDataViewModel.fetchMissingReports(latitude, longitude)
+                    reportDataViewModel.fetchMissingReports(centerPos.latitude, centerPos.longitude)
                 }
 
                 ButtonType.REPORT -> {
                     Log.d("parent", "Reported Data Fetch")
-                    reportDataViewModel.fetchSuspectedReports(latitude, longitude)
+                    reportDataViewModel.fetchSuspectedReports(centerPos.latitude, centerPos.longitude)
                 }
 
                 ButtonType.MyPET -> {
