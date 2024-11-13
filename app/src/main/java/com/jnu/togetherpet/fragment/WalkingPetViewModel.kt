@@ -88,7 +88,7 @@ class WalkingPetViewModel @Inject constructor(
         val averageWeightKg = 15.0
 
         _calories.value = (averageWeightKg * distanceKilometer * 0.75).toInt()
-        Log.d("testt", "${_calories.value}")
+        Log.d("testt", "cal :${averageWeightKg}, ${distanceKilometer}, ${_calories.value}")
     }
 
     fun setTimeBase() {
@@ -142,7 +142,6 @@ class WalkingPetViewModel @Inject constructor(
                         _lastLoc.value = newArrayLoc.last()
                         _arrayLoc.value = newArrayLoc
 //                    Log.d("testt", "array : ${arrayLoc.value}")
-                        calculateCalories()
                     }
                 }
             }

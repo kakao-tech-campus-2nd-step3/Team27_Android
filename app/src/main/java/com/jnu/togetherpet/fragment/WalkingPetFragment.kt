@@ -131,6 +131,7 @@ class WalkingPetFragment : Fragment() {
                     kakaoMap?.drawLine(ArrayList(array))
                     createLabel(viewModel.lastLoc.value)
                     viewModel.calculateBetweenTwoLocation(lastLocationIndex, arrayList.lastIndex)
+                    viewModel.calculateCalories()
                     if(arrayList.size != 0) lastLocationIndex = arrayList.lastIndex
                 }
             }
