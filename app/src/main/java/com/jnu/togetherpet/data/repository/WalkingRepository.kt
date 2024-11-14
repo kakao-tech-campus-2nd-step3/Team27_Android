@@ -6,7 +6,7 @@ import com.jnu.togetherpet.data.datasource.WalkingNetworkSource
 import com.jnu.togetherpet.data.dto.LocationDTO
 import com.jnu.togetherpet.data.dto.WalkingRequestDTO
 import com.jnu.togetherpet.data.entity.WalkEntity
-import com.jnu.togetherpet.testData.entity.WalkingRecord
+import com.jnu.togetherpet.data.entity.WalkingRecord
 import com.kakao.vectormap.LatLng
 import java.time.LocalDate
 import java.time.LocalDateTime

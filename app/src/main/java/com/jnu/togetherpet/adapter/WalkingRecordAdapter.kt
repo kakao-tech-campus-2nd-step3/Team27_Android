@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jnu.togetherpet.databinding.WalkingRecordItemBinding
 import com.jnu.togetherpet.extensions.drawLine
 import com.jnu.togetherpet.extensions.formattingLocalDateTimeToString
-import com.jnu.togetherpet.testData.entity.WalkingRecord
+import com.jnu.togetherpet.data.entity.WalkingRecord
 import com.kakao.vectormap.GestureType
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback

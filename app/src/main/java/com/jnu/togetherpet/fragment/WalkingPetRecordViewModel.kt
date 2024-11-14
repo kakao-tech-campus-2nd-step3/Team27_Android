@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jnu.togetherpet.data.repository.UserRepository
 import com.jnu.togetherpet.data.repository.WalkingRepository
-import com.jnu.togetherpet.testData.entity.WalkingRecord
+import com.jnu.togetherpet.data.entity.WalkingRecord
 import com.kakao.vectormap.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
