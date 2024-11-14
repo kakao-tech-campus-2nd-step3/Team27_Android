@@ -6,8 +6,10 @@
     tools:context=".fragment.DiaryFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Diary" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notice_ready"
+        android:textAppearance="@style/TogetherPetTextHeadingLarge"
+        android:layout_gravity="center"/>
 
 </FrameLayout>
