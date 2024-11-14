@@ -29,6 +29,7 @@ import com.jnu.togetherpet.extensions.drawLine
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.jnu.togetherpet.extensions.removeLine
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -93,7 +94,7 @@ class WalkingPetFragment : Fragment() {
                 permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
 
                 } else -> {
-                Toast.makeText(requireContext(), "권한 거절", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "권한 거절시 산책 기능이 제한될 수 있습니다.", Toast.LENGTH_SHORT).show()
             }
             }
         }
@@ -179,7 +180,6 @@ class WalkingPetFragment : Fragment() {
         binding.walkingSavePageButton.setOnClickListener{
             navigateToRecordPage()
         }
-
     }
 
     fun initMap(){
@@ -249,6 +249,21 @@ class WalkingPetFragment : Fragment() {
         binding.walkingGoalText.visibility = View.VISIBLE
     }
 
+    fun hideBoard(){
+        binding.walkingDisplayBoard.visibility = View.INVISIBLE
+        binding.walkingStopButton.visibility = View.INVISIBLE
+        binding.walkingStartButton.visibility = View.VISIBLE
+        binding.calorieText.visibility = View.INVISIBLE
+        binding.calorieValue.visibility = View.INVISIBLE
+        binding.timeText.visibility = View.INVISIBLE
+        binding.timeValue.visibility = View.INVISIBLE
+        binding.distanceText.visibility = View.INVISIBLE
+        binding.distanceValue.visibility = View.INVISIBLE
+        binding.walkingGoalText.visibility = View.INVISIBLE
+    }
+
+
+
     fun initBoard(){
         binding.calorieValue.text = "0"
         binding.timeValue.text = "00:00:00"
@@ -262,10 +277,16 @@ class WalkingPetFragment : Fragment() {
         val alertDialog = dialogBuilder.create()
 
         dialogBinding.dialogYesButton.setOnClickListener {
-            Toast.makeText(requireContext(), "취소 버튼 클릭", Toast.LENGTH_SHORT).show()
             viewModel.stopLocationTracking()
             binding.timeValue.stop()
-            navigateToResultPage()
+            if(!viewModel.isTimeUnderMinTime() && !viewModel.isDistanceUnderMinDistance()) navigateToResultPage()
+            else {
+                displayToastMessageAboutSave()
+                hideBoard()
+                viewModel.initValue()
+                kakaoMap?.removeLine()
+                lastLocationIndex = 0
+            }
             alertDialog.dismiss()
         }
         dialogBinding.dialogNoButton.setOnClickListener{
@@ -288,6 +309,7 @@ class WalkingPetFragment : Fragment() {
         transaction.commit()
     }
 
+
     private fun removeAllLabel(){
         kakaoMap?.labelManager?.clearAll()
     }
@@ -300,6 +322,14 @@ class WalkingPetFragment : Fragment() {
             ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.walking_my_location_pin).setAnchorPoint(0.5f, 0.5f).setApplyDpScale(true)))
         kakaoMap?.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style))
     }
+
+    private fun displayToastMessageAboutSave(){
+        if(viewModel.isTimeUnderMinTime())
+            Toast.makeText(requireContext(), "1분 이하의 기록은 저장되지 않습니다.", Toast.LENGTH_SHORT).show()
+        else if(viewModel.isDistanceUnderMinDistance())
+            Toast.makeText(requireContext(), "10m 이하의 기록은 저장되지 않습니다.", Toast.LENGTH_SHORT).show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

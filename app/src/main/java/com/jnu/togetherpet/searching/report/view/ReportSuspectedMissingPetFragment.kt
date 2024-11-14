@@ -39,7 +39,7 @@ class ReportSuspectedMissingPetFragment : Fragment() {
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent> //선택한 이미지 화면에 띄우기
 
-    private var selectedDateTime: String = ""
+    private var selectedDateTime: String = "1999년 1월 1일 10:00"
     private var latitude: Double = 37.0
     private var longitude: Double = 131.0
     private var imgUri: Uri? = null

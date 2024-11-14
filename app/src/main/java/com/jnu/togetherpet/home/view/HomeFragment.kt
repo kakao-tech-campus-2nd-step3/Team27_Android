@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -158,13 +159,14 @@ class HomeFragment : Fragment() {
 
         //---산책 정보 띄우기---
         viewLifecycleOwner.lifecycleScope.launch {
-            walkingPetRecordViewModel.getWalkingData()
             walkingPetRecordViewModel.walkingData.collectLatest { data ->
                 binding.homeTotalCount.text = "${data.todayWalkCount}"
                 binding.homeTotalDistance.text = "${data.distance}"
                 binding.homeTotalTime.text = "${data.time}"
             }
         }
+
+        walkingPetRecordViewModel.getRecordToLocal(LocalDate.now())
 
         //[추가할 부분] 평균 데이터 받아서 사용 (api 구현 여부 확인 필요)
         val avgCount = "-"

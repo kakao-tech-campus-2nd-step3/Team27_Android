@@ -29,4 +29,7 @@ interface ReportDao {
     // 근처 목격 제보 가져오기
     @Query("SELECT * FROM report WHERE isOwnReport = 0")
     fun getNearbyReports(): Flow<List<ReportEntity>>
+
+    @Query("DELETE FROM report")
+    fun deleteAllFromReportTable()
 }

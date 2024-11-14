@@ -70,6 +70,14 @@ class WalkingPetViewModel @Inject constructor(
         setPetName()
     }
 
+    fun initValue(){
+        _distance.value = 0
+        _calories.value = 0
+        _time.value = 0
+        _arrayLoc.value = arrayListOf()
+        _isWalking.value = false
+    }
+
     fun setPetImage(){
         viewModelScope.launch(Dispatchers.IO){
             _petImage.value = userRepository.getUserData().petImageUri
@@ -186,7 +194,7 @@ class WalkingPetViewModel @Inject constructor(
     }
 
     private fun sendWalkingData(){
-        if(_time.value > 60000) {
+        if(!isDistanceUnderMinDistance() && !isTimeUnderMinTime()) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     walkingRepository.sendWalkingDataToLocal(
@@ -209,5 +217,10 @@ class WalkingPetViewModel @Inject constructor(
     fun isTimeUnderMinTime(): Boolean{
         val minTime = 60000L
         return _time.value <= minTime
+    }
+
+    fun isDistanceUnderMinDistance(): Boolean{
+        val minDistance = 10
+        return _distance.value <= minDistance
     }
 }

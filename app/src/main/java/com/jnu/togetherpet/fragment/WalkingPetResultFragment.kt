@@ -48,7 +48,6 @@ class WalkingPetResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMap()
-        displayToastMessage()
     }
 
     fun initMap(){
@@ -130,10 +129,7 @@ class WalkingPetResultFragment : Fragment() {
         }
     }
 
-    private fun displayToastMessage(){
-        if(sharedViewModel.isTimeUnderMinTime())
-            Toast.makeText(requireContext(), "1분 이하의 기록은 저장되지 않습니다.", Toast.LENGTH_SHORT).show()
-    }
+
 
     override fun onDestroy() {
         super.onDestroy()

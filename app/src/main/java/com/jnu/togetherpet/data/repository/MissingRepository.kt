@@ -32,6 +32,7 @@ class MissingRepository @Inject constructor(
         longitude: Double
     ) {
         Log.d("yeong", "MissingRepository")
+        missingDao.deleteAllFromMissingTable()
         missingDao.insertMissing(
             missingSource.getMissingNearBy(latitude, longitude)
                 .map { missing ->

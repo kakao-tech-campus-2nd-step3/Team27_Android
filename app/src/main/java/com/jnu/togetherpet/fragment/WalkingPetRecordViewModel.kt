@@ -13,8 +13,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +56,7 @@ class WalkingPetRecordViewModel @Inject constructor(
 
     private var walkCount: Int = 0
 
-    private val _walkingData = MutableStateFlow(WalkingData(0, 0, 0))
+    private val _walkingData = MutableStateFlow(WalkingData(0, "0", 0))
     val walkingData: StateFlow<WalkingData> get() = _walkingData.asStateFlow()
 
     init {
@@ -83,6 +87,8 @@ class WalkingPetRecordViewModel @Inject constructor(
             _arrayRecord.value = walkingRecordList
             calculateAllDistance()
             calculateAllTime()
+            getWalkingData()
+            Log.d("testt", "getRecord : ${_allDistance.value} ${_allTime.value}")
         }
     }
 
@@ -114,11 +120,14 @@ class WalkingPetRecordViewModel @Inject constructor(
 
     fun getWalkingData() {
         updateTodayWalkCount()
+        val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         _walkingData.value = WalkingData(
             distance = _allDistance.value,
-            time = _allTime.value,
+            time = dateFormat.format(Date(_allTime.value)),
             todayWalkCount = walkCount
         )
+        Log.d("testt", "walking : ${_walkingData.value}, ${_arrayRecord.value}")
     }
 
     //오늘 산책 횟수
@@ -134,6 +143,6 @@ class WalkingPetRecordViewModel @Inject constructor(
 
 data class WalkingData(
     val distance: Long,
-    val time: Long,
+    val time: String,
     val todayWalkCount: Int
 )

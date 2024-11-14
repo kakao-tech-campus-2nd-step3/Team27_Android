@@ -78,6 +78,7 @@ class ReportRepository @Inject constructor(
     }
 
     suspend fun getReportOwnByUser() {
+        reportDao.deleteAllFromReportTable()
         reportDao.insertReports(
             reportSource.getRegisterOwnByUser(tokenRepository.getTokenOrThrow())
                 .map { report ->
@@ -113,6 +114,7 @@ class ReportRepository @Inject constructor(
                     false
                 )
             }
+        reportDao.deleteAllFromReportTable()
         reportDao.insertReports(reports)
     }
 

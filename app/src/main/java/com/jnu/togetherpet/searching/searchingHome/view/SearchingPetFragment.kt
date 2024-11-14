@@ -203,6 +203,8 @@ class SearchingPetFragment : Fragment() {
                         }
                     setMissingMarker(missings)
                 } else {
+                    MissingAdapter(emptyList(), kakaoLocalRepository) { }
+                    setMissingMarker(emptyList())
                     Log.d("SearchingPetFragment", "No Missing Data")
                 }
             }
@@ -361,6 +363,9 @@ class SearchingPetFragment : Fragment() {
                         }
                     setReportMarker(suspected)
                 } else {
+                    binding.searchingMissingList.adapter =
+                        SuspectedAdapter(emptyList(), kakaoLocalRepository) {}
+                    setReportMarker(emptyList())
                     Log.d("SearchingPetFragment", "No Suspected Missing Data")
                 }
             }
@@ -377,6 +382,8 @@ class SearchingPetFragment : Fragment() {
                         }
                     setReportMarker(reports)
                 } else {
+                    SuspectedAdapter(emptyList(), kakaoLocalRepository) { }
+                    setReportMarker(emptyList())
                     Log.d("SearchingPetFragment", "No My Pet Observing Data")
                 }
             }

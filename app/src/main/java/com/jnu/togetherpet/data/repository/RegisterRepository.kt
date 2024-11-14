@@ -28,7 +28,7 @@ class RegisterRepository @Inject constructor(
                 userName
             )
         } catch (e : APIException){
-            if (e.errorResponse.hashCode() == -20401) {
+            if (e.errorResponse.code == -20401) {
                 registerSource.registerUserAndPet(
                     tokenRepository.getTokenOrThrow(),
                     PetRegisterDTO(petRegisterDTO.petNAme, petRegisterDTO.petBirthMonth, "말티즈", petRegisterDTO.isNeutering, petRegisterDTO.petFeature),

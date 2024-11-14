@@ -17,4 +17,7 @@ interface MissingDao {
 
     @Query("SELECT * FROM missing")
     fun getAllMissingReports(): Flow<List<MissingEntity>>
+
+    @Query("DELETE FROM missing")
+    fun deleteAllFromMissingTable()
 }

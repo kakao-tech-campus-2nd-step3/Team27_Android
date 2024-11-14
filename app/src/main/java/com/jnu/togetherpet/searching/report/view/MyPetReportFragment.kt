@@ -38,7 +38,7 @@ class MyPetReportFragment : Fragment() {
     //가입시 사용한 이미지를 사용하도록 설계 되어 있어서 우선 주석 처리 함
     //private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
-    private var selectedDateTime: String = ""
+    private var selectedDateTime: String = "1999년 1월 1일 10:00"
     private var latitude: Double = 37.0
     private var longitude: Double = 131.0
     private var imgUri: Uri? = null

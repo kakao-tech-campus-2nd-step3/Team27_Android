@@ -9,6 +9,7 @@ import com.jnu.togetherpet.data.repository.MissingRepository
 import com.jnu.togetherpet.data.repository.ReportRepository
 import com.jnu.togetherpet.searching.searchingHome.ButtonType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -61,7 +62,7 @@ class ReportDataViewModel @Inject constructor(
     //근처 실종 의심 정보 가져 오기
     fun fetchSuspectedReports(latitude: Double, longitude: Double) {
         Log.d("child", "Reported Data Fetch")
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             reportRepository.getReportByLocation(latitude,longitude)
         }
     }
@@ -84,7 +85,7 @@ class ReportDataViewModel @Inject constructor(
     //근처 실종 정보 가져 오기
     fun fetchMissingReports(latitude: Double, longitude: Double) {
         Log.d("child", "Missing Data Fetch")
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             missingRepository.getMissingNearBy(latitude, longitude)
         }
     }
@@ -102,7 +103,7 @@ class ReportDataViewModel @Inject constructor(
     //받은 제보 정보 가져 오기
     fun fetchMyPetReports() {
         Log.d("child", "MyPet Data Fetch")
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             reportRepository.getReportOwnByUser()
         }
     }

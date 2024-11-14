@@ -8,6 +8,7 @@ import com.jnu.togetherpet.DataStoreRepository
 import com.jnu.togetherpet.data.dto.PetRegisterDTO
 import com.jnu.togetherpet.data.repository.RegisterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -86,7 +87,7 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun registerUserAndPet(file: File) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.d("testt", mapToRegisterDTO().toString())
             registerRepository.registerUserAndPet(
                 mapToRegisterDTO(),

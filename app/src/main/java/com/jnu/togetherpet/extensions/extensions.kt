@@ -28,6 +28,12 @@ fun KakaoMap.drawLine(arrayList: ArrayList<LatLng>){
     val routeLine = layer?.addRouteLine(options)
 }
 
+
+fun KakaoMap.removeLine(){
+    val layer = this.routeLineManager?.layer
+    val routeLine = layer?.removeAll()
+}
+
 fun LocalDateTime.formattingLocalDateTimeToString(): String{
     val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     return this.format(formatter)
