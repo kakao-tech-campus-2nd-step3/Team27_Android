@@ -203,7 +203,9 @@ com.jnu.togetherpet
 > 자세한 기능 구현 목록은 [Together_Pet_Wiki](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki)에서 확인 가능합니다
 
 ### [Oauth 인증](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EC%B9%B4%EC%B9%B4%EC%98%A4%EB%A1%9C%EA%B7%B8%EC%9D%B8)
-
+| 초기화면                                                                                                      |
+|-----------------------------------------------------------------------------------------------------------|
+| <img src = "https://github.com/user-attachments/assets/32f4cb4a-b6ee-437f-a2d0-d2287c3865f1" width=300px> |
 - Kakao Oauth를 활용하여 사용자가 Kakao 계정으로 회원가입 및 로그인을 할 수 있습니다.
   - 카카오 인증 후 프론트에서 사용자의 이메일을 전송받아 이메일의 형식을 검증합니다.
   - 이메일이 USER 데이터베이스에 존재하지 않을 경우 회원가입을, 존재할 경우 로그인을 수행합니다.
@@ -213,7 +215,9 @@ com.jnu.togetherpet
 <br>
 
 ### [사용자 및 반려동물 정보 입력](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EB%B0%98%EB%A0%A4-%EB%8F%99%EB%AC%BC-%EC%A0%95%EB%B3%B4-%EB%93%B1%EB%A1%9D)
-
+| 회원가입 |
+|----------|
+|<img src = "https://github.com/user-attachments/assets/64198c17-2850-42ca-89e4-e7401941c9e1" width=300px>|
 - 회원가입의 경우, 사용자의 정보와 반려동물 정보를 입력받아 저장할 수 있습니다.
   - 사용자의 정보는 닉네임, 거주 지역을 입력받습니다.
   - 반려동물의 정보는 이름, 개월수, 종, 중성화 여부, 상세 특징을 입력받습니다.
@@ -221,7 +225,9 @@ com.jnu.togetherpet
 <br>
 
 ### 사용자 및 반려동물 정보 가져오기
-
+| 로그인 |
+|-----------------------------------------------------------------------------------------------------------------|
+|<img src = "https://github.com/user-attachments/assets/8ea75212-dc2a-475b-8d3d-3db1885f04aa" width=300px>|
 - 로그인의 경우, 사용자의 정보 및 반려동물의 정보를 가져올 수 있습니다.
   - 사용자의 정보는 사용자의 닉네임을 가져옵니다.
   - 반려동물의 정보는 반려동물 이름, 반려동물 사진, 반려동물의 개월수를 가져옵니다.
@@ -229,7 +235,9 @@ com.jnu.togetherpet
 <br>
 
 ### [실종 제보 조회, 상세보기](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EA%B0%99%EC%9D%B4-%EC%B0%BE%EA%B8%B0-%E2%80%90-%EC%8B%A4%EC%A2%85-%EC%A0%95%EB%B3%B4-%ED%99%94%EB%A9%B4)
-
+| 실종 제보 조회, 상세보기                                                                                            |
+|-----------------------------------------------------------------------------------------------------------|
+| <img src = "https://github.com/user-attachments/assets/f8854355-ec85-44ee-bb76-a81d0ed36e94" width=300px> |
 - 현재 자신의 위치 주변의 실종 제보들을 조회할 수 있습니다.
   - 자신의 위치를 기반으로 주변의 실종 제보들을 확인할 수 있습니다.
   - 화면에 보이는 실종 제보 위치 아이콘을 클릭할 경우 해당 제보의 상세 내용을 확인할 수 있습니다. 
@@ -237,14 +245,18 @@ com.jnu.togetherpet
 <br>
 
 ### [실종동물 제보](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EA%B0%99%EC%9D%B4-%EC%B0%BE%EA%B8%B0-%E2%80%90-%EC%8B%A4%EC%A2%85-%EC%A0%95%EB%B3%B4-%ED%99%94%EB%A9%B4)
-
+| 실종동물 제보                                                                                                              |
+|----------------------------------------------------------------------------------------------------------------------|
+|<img src = "https://github.com/user-attachments/assets/ff587c7b-8402-4086-b115-81a678000e14" width=300px>|
 - 실종된 자신의 애완동물에 대한 정보를 입력하여 제보할 수 있습니다.
   - 애완동물의 정보는 이름, 성별, 개월수, 종, 중성화 여부, 실종 시간, 실종 위치, 상세 설명을 입력받을 수 있습니다.
 
 <br>
 
 ### [실종 의심 동물 목격 제보 조회, 상세보기](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EA%B0%99%EC%9D%B4-%EC%B0%BE%EA%B8%B0-%E2%80%90-%EC%A0%9C%EB%B3%B4-%EC%A0%95%EB%B3%B4-%ED%99%94%EB%A9%B4)
-
+| 실종 의심 동물 목격 제보 조회, 상세보기 |
+|----------|
+|<img src = "https://github.com/user-attachments/assets/356cf40f-bbd5-4393-9e45-80e384aee960" width=300px>|
 - 현재 자신의 위치 주변의 실종 의심 동물 목격 제보들을 조회할 수 있습니다.
   - 자신의 위치를 기반으로 주변의 실종 의심 동물 목격 제보들을 확인할 수 있습니다.
   - 화면에 보이는 실종 의심 동물 목격 제보 위치 아이콘을 클릭할 경우 해당 제보의 상세 내용을 확인할 수 있습니다.
@@ -252,38 +264,58 @@ com.jnu.togetherpet
 <br>
 
 ### [실종 의심 동물 목격 제보](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EA%B0%99%EC%9D%B4-%EC%B0%BE%EA%B8%B0-%E2%80%90-%EC%A0%9C%EB%B3%B4-%EC%A0%95%EB%B3%B4-%ED%99%94%EB%A9%B4)
-
+| 실종 의심 동물 목격 제보 |
+|----------|
+|<img src = "https://github.com/user-attachments/assets/7a5efcc6-01f4-43b7-93a2-9e74aace41ba" width=300px>|
 - 사용자가 목격한 실종 의심 동물에 대한 정보를 입력하여 제보할 수 있습니다.
   - 목격한 실종 의심 동물의 정보는 색깔, 종, 성별, 설명을 적을 수 있습니다.
   - 실종 의심 동물에 대한 사진을 업로드하여 등록할 수 있습니다.
 
 <br>
 
-### [실종 제보자에게 실종 동물 목격 제보](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EA%B0%99%EC%9D%B4-%EC%B0%BE%EA%B8%B0-%E2%80%90-%EB%82%B4-%EB%B0%98%EB%A0%A4-%EB%8F%99%EB%AC%BC-%ED%99%94%EB%A9%B4)
-
+### [실종 제보자에게 실종 동물 목격 제보](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EA%B0%99%EC%9D%B4-%EC%B0%BE%EA%B8%B0-%E2%80%90-%EC%8B%A4%EC%A2%85-%EC%A0%95%EB%B3%B4-%ED%99%94%EB%A9%B4)
+| 실종 제보자에게 실종 의심 동물 목격 제보 |
+|----------|
+|<img src = "https://github.com/user-attachments/assets/70c8155f-ce43-4634-b1e1-ed053a962af8" width=300px>|
 - 실종 제보에서 해당 제보자에게 자신이 목격한 실종 동물에 대한 정보를 제보할 수 있습니다.
   - 실종 제보 위치 아이콘에서 제보하기를 클릭할 경우 제보할 수 있습니다.
   - 목격한 실종 동물의 정보는 색깔, 종, 성별, 설명을 적을 수 있습니다.
   - 실종 동물에 대한 사진을 업로드하여 등록할 수 있습니다.
 
+### [나에게 온 실종 의심 동물 목격 제보 확인](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6-%EA%B0%99%EC%9D%B4-%EC%B0%BE%EA%B8%B0-%E2%80%90-%EB%82%B4-%EB%B0%98%EB%A0%A4-%EB%8F%99%EB%AC%BC-%ED%99%94%EB%A9%B4)
+| 나에게 온 실종 의심 동물 목격 제보 확인                                                                                   |
+|-----------------------------------------------------------------------------------------------------------|
+| <img src = "https://github.com/user-attachments/assets/49233edc-9e21-406e-bc72-bed0694246c4" width=300px> |
+- 다른 사용자가 나에게 제보한 목격 제보를 확인 할 수 있습니다.
+  - 다른 사용자가 나에게 제보한 목격 제보가 있을 경우 상단에 나의 반려동물 이름으로 된 탭이 생성됩니다.
+  - 해당 탭을 누를 경우, 목격 제보를 확인할 수 있습니다.
+  - 해당 제보는 사진, 색깔, 성별, 품종, 설명을 포함하고 있습니다.
+
 <br>
 
-### [산책 등록](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6%EC%82%B0%EC%B1%85-%E2%80%90-%EC%82%B0%EC%B1%85-%ED%99%94%EB%A9%B4)
-
+### [산책 후 산책 결과 등록](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6%EC%82%B0%EC%B1%85-%E2%80%90-%EC%82%B0%EC%B1%85-%ED%99%94%EB%A9%B4)
+| 산책 등록 |
+|----------------------------------------------------------------------------------------------------------------|
+|<img src = "https://github.com/user-attachments/assets/953b1cee-97e8-4372-ae3a-05c64265df09" width=300px>|
 - 산책 후 결과에 대한 정보를 서버에 등록할 수 있습니다.
   - 산책에 대한 정보는 산책 경로의 (위도,경도) 리스트, 산책 중 이동 거리, 산책 중 소요 시간을 담습니다.
-
+ 
 <br>
 
 ### [산책 정보 조회](https://github.com/kakao-tech-campus-2nd-step3/Team27_Android/wiki/%F0%9F%90%B6%EC%82%B0%EC%B1%85-%E2%80%90-%EC%82%B0%EC%B1%85-%EA%B8%B0%EB%A1%9D-%ED%99%94%EB%A9%B4)
-
-- 지금까지 한 산책에 대한 정보들을 조회할 수 있습니다.
+| 산책 정보 조회 |
+|-------------------------------------------------------------------------------------------------------------|
+|<img src = "https://github.com/user-attachments/assets/55cfd877-d952-4bf2-a0b6-0d7d6bb58ec1" width=300px>|
+- 지금까지 한 산책에 대한 정보들을 날짜에 따라 조회할 수 있습니다.
   - 산책에 대한 각 정보는 산책 경로의 (위도,경도) 리스트, 산책 중 이동 거리, 산책 시작 시간, 산책 종료 시간, 산책 중 소요 시간을 담고 있습니다.
+  - 클릭 시 해당 산책에 대한 세부사항을 볼 수 있습니다.
 
 <br>
 
-### 산책 통계 조회
-
+### [산책 통계 조회]
+| 산책 통계 조회 |
+|----------------------------------------------------------------------------------------------------------------|
+|<img src = "https://github.com/user-attachments/assets/e2f8ef43-39de-4741-bf10-a8f88e6e5f97" width=300px>|
 - 해당 날짜의 산책에 대한 통계를 조회할 수 있습니다.
   - 산책 통계에 대한 정보는 해당 날짜 산책 여부, 해당 날짜 산책 횟수, 해당 날짜 산책 총 산책 거리, 해당 날짜 산책 총 산책 시간, 전체 평균 산책 시간을 담고 있습니다.
 
