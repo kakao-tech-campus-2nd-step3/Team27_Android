@@ -84,13 +84,13 @@ class WalkingPetViewModel @Inject constructor(
             Log.d("testt", "image : ${_petImage.value}")
         }
     }
-    private fun setPetName(){
+    fun setPetName(){
         viewModelScope.launch(Dispatchers.IO) {
             _petName.value = userRepository.getUserData().petName
         }
     }
 
-    private fun calculateDistance(latLng1: LatLng, latLng2: LatLng) {
+    fun calculateDistance(latLng1: LatLng, latLng2: LatLng) {
         val r = 6372.8 * 1000
         val dLat = Math.toRadians(latLng1.latitude - latLng2.latitude)
         val dLon = Math.toRadians(latLng1.longitude - latLng2.longitude)
@@ -149,7 +149,7 @@ class WalkingPetViewModel @Inject constructor(
         sendWalkingData()
     }
 
-    private fun setLocationCallback(): LocationCallback {
+    fun setLocationCallback(): LocationCallback {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
@@ -193,7 +193,7 @@ class WalkingPetViewModel @Inject constructor(
         )
     }
 
-    private fun sendWalkingData(){
+    fun sendWalkingData(){
         if(!isDistanceUnderMinDistance() && !isTimeUnderMinTime()) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {

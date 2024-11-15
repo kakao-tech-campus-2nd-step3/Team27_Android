@@ -15,10 +15,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
-@ActivityRetainedScoped
+@Singleton
 class DataStoreRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
