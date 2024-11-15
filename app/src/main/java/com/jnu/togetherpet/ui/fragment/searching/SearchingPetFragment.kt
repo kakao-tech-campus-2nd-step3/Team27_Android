@@ -81,7 +81,7 @@ class SearchingPetFragment : Fragment() {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
 
-    private var centerPos : LatLng = LatLng.from(0.0, 0.0)
+    private var centerPos: LatLng = LatLng.from(0.0, 0.0)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -122,7 +122,6 @@ class SearchingPetFragment : Fragment() {
                 kakaoMap!!.isPoiClickable = true
                 checkLocationPermission()
             }
-
 
 
             override fun getZoomLevel(): Int {
@@ -273,13 +272,13 @@ class SearchingPetFragment : Fragment() {
 
     private fun showMissingBottomSheet(missingId: Long) {
         val bottomSheetFragment = MissingBottomSheetFragment.newInstance(missingId)
-        Log.d("yeong","miss Id: $missingId")
+        Log.d("yeong", "miss Id: $missingId")
         bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
     private fun showSuspectedBottomSheet(reportId: Long) {
         val bottomSheetFragment = SuspectedBottomSheetFragment.newInstance(reportId)
-        Log.d("yeong","miss Id: $reportId")
+        Log.d("yeong", "miss Id: $reportId")
         bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
@@ -300,7 +299,7 @@ class SearchingPetFragment : Fragment() {
                 .load(Uri.parse(pet.imageUrl.first()))
                 .apply(RequestOptions())
                 .placeholder(R.drawable.main_logo) // 기본 이미지 설정
-                .into(object: CustomTarget<Drawable>(){
+                .into(object : CustomTarget<Drawable>() {
                     override fun onResourceReady(
                         resource: Drawable,
                         transition: Transition<in Drawable>?
@@ -431,6 +430,7 @@ class SearchingPetFragment : Fragment() {
 
     private fun fetchData() {
         viewLifecycleOwner.lifecycleScope.launch {
+            reportDataViewModel.setCenterPos(centerPos.latitude, centerPos.longitude)
             when (reportDataViewModel.selectedButton.value) {
                 ButtonType.MISSING -> {
                     Log.d("parent", "Missing Data Fetch")
@@ -439,7 +439,10 @@ class SearchingPetFragment : Fragment() {
 
                 ButtonType.REPORT -> {
                     Log.d("parent", "Reported Data Fetch")
-                    reportDataViewModel.fetchSuspectedReports(centerPos.latitude, centerPos.longitude)
+                    reportDataViewModel.fetchSuspectedReports(
+                        centerPos.latitude,
+                        centerPos.longitude
+                    )
                 }
 
                 ButtonType.MyPET -> {
