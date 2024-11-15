@@ -10,6 +10,8 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.jnu.togetherpet.R
 import com.jnu.togetherpet.launchFragmentInHiltContainer
+import com.jnu.togetherpet.ui.fragment.registration.RegistrationPetFragment
+import com.jnu.togetherpet.ui.viewmodel.report.RegistrationViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Job

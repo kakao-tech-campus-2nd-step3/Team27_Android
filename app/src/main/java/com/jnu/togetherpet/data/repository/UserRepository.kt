@@ -1,7 +1,7 @@
 package com.jnu.togetherpet.data.repository
 
 import androidx.core.net.toUri
-import com.jnu.togetherpet.data.UserData
+import com.jnu.togetherpet.data.model.UserData
 import com.jnu.togetherpet.data.datasource.UserSource
 import javax.inject.Inject
 

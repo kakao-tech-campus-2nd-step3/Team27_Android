@@ -1,6 +1,5 @@
 package com.jnu.togetherpet.data.datasource
 
-import com.google.gson.Gson
 import com.jnu.togetherpet.data.dao.WalkDao
 import com.jnu.togetherpet.data.entity.WalkEntity
 import java.time.LocalDate
@@ -9,8 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WalkingLocalSource @Inject constructor(
-    private val walkDao: WalkDao,
-    private val gson: Gson
+    private val walkDao: WalkDao
 ) {
     suspend fun insertWalkingData(
         walkEntity: WalkEntity

@@ -10,7 +10,6 @@ data class MissingEntity(
     val petId: Long,
     val latitude: Double,
     val longitude: Double,
-    // TODO 여기서 이미지가 중복으로 저장될 가능성이 보임
     val petImageUrl: MutableList<String>,
     val name: String?,
     val breed: String?,

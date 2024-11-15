@@ -2,9 +2,7 @@ package com.jnu.togetherpet.data.repository
 
 import android.content.Context
 import android.util.Log
-import com.jnu.togetherpet.data.DatabaseProvider
 import com.jnu.togetherpet.data.dao.ReportDao
-import com.jnu.togetherpet.data.database.ReportDataBase
 import com.jnu.togetherpet.data.datasource.ReportSource
 import com.jnu.togetherpet.data.dto.ReportCreateRequestDTO
 import com.jnu.togetherpet.data.entity.ReportEntity

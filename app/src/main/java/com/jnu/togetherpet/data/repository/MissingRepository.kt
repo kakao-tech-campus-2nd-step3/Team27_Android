@@ -2,9 +2,7 @@ package com.jnu.togetherpet.data.repository
 
 import android.content.Context
 import android.util.Log
-import com.jnu.togetherpet.data.DatabaseProvider
 import com.jnu.togetherpet.data.dao.MissingDao
-import com.jnu.togetherpet.data.database.MissingDataBase
 import com.jnu.togetherpet.data.datasource.MissingSource
 import com.jnu.togetherpet.data.dto.MissingRegisterRequestDTO
 import com.jnu.togetherpet.data.entity.MissingEntity
@@ -63,7 +61,7 @@ class MissingRepository @Inject constructor(
             val updateMissing = findMissing.copy(
                 name = detailMissing.name,
                 breed = detailMissing.breed,
-                birthMonth = detailMissing.birth_month,
+                birthMonth = detailMissing.birthMonth,
                 description = detailMissing.description,
             )
             missingDao.updateMissing(updateMissing)

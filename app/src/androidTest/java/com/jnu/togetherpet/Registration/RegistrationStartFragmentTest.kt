@@ -10,6 +10,7 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.jnu.togetherpet.R
 import com.jnu.togetherpet.launchFragmentInHiltContainer
+import com.jnu.togetherpet.ui.fragment.registration.RegistrationStartFragment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before

@@ -1,7 +1,6 @@
 package com.jnu.togetherpet.di
 
 import com.jnu.togetherpet.BuildConfig
-import com.jnu.togetherpet.PetService
 import com.jnu.togetherpet.data.service.KakaoLocalService
 import com.jnu.togetherpet.data.service.LoginService
 import com.jnu.togetherpet.data.service.MissingService
@@ -9,6 +8,7 @@ import com.jnu.togetherpet.data.service.RegisterService
 import com.jnu.togetherpet.data.service.ReportService
 import com.jnu.togetherpet.data.service.UserService
 import com.jnu.togetherpet.data.service.WalkingService
+import com.jnu.togetherpet.security.SelfSigningHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,12 +67,6 @@ class NetworkModule {
     @Singleton
     fun provideReportService(retrofit: Retrofit): ReportService {
         return retrofit.create(ReportService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun providePetService(retrofit: Retrofit): PetService {
-        return retrofit.create(PetService::class.java)
     }
 
     @Provides

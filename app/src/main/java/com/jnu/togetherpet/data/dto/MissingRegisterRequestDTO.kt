@@ -11,5 +11,5 @@ data class MissingRegisterRequestDTO(
     @SerializedName("latitude") val latitude: Double,
     @SerializedName("longitude") val longitude: Double,
     @SerializedName("description") val description: String,
-    @SerializedName("is_neutering") val isNeuterering: Boolean,
+    @SerializedName("is_neutering") val isNeutering: Boolean,
 )

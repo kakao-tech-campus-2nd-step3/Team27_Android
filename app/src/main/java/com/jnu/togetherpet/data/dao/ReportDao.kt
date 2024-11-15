@@ -16,12 +16,6 @@ interface ReportDao {
     @Update
     suspend fun updateReport(reportEntity: ReportEntity)
 
-    @Query("SELECT id FROM report")
-    suspend fun getAllIds(): List<Long>
-
-    /*@Query("SELECT * FROM report")
-    fun getAllSuspectedReports(): Flow<List<ReportEntity>>*/
-
     // 내 반려동물 목격 제보 가져오기
     @Query("SELECT * FROM report WHERE isOwnReport = 1")
     fun getOwnReports(): Flow<List<ReportEntity>>
