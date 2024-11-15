@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.WalkingPetFragment">
+    tools:context=".ui.fragment.walking.WalkingPetFragment">
 
     <com.kakao.vectormap.MapView
         android:id="@+id/walking_map_view"
@@ -82,7 +82,7 @@
         android:id="@+id/walking_goal_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="목표까지 2000m 남았습니다!"
+        android:text="오늘도 열심히 산책해요!"
         android:textAppearance="@style/TogetherPetTextMedium"
         android:includeFontPadding="false"
         app:layout_constraintStart_toStartOf="@id/walking_display_board"

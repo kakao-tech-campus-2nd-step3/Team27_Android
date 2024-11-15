@@ -212,4 +212,6 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 app/src/main/res/xml/network_security_config.xml
+
+app/src/main/res/raw/*
 # End of https://www.toptal.com/developers/gitignore/api/kotlin,android,androidstudio,windows

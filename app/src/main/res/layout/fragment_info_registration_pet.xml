@@ -213,6 +213,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/age_sub"
+        android:inputType="number"
+        android:digits="0123456789"
         android:background="@drawable/stroke_red_box"
         android:layout_marginTop="17dp"
         android:paddingStart="23dp"

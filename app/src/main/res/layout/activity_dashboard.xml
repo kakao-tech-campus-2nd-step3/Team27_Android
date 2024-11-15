@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".dashboard.view.DashboardActivity">
+    tools:context=".ui.activity.dashboard.DashboardActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/home_title_layout"
@@ -31,6 +31,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
+            android:id="@+id/board_alarm_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -41,6 +42,7 @@
             app:layout_constraintTop_toTopOf="@id/home_title" />
 
         <ImageButton
+            android:id="@+id/board_setting_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
@@ -66,7 +68,8 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/home_bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="80dp"
         android:background="@color/white"
         app:itemActiveIndicatorStyle="@color/transparent"
         app:itemRippleColor="@color/transparent"
@@ -75,7 +78,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/home_frameLayout"
-        app:layout_constraintVertical_weight="0.8"
         app:menu="@menu/bottom_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

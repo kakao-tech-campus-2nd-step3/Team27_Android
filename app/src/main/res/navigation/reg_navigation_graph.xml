@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/registrationImageFragment"
-        android:name="com.example.togetherpet.Registration.RegistrationImageFragment"
+        android:name="com.jnu.togetherpet.ui.fragment.registration.RegistrationImageFragment"
         android:label="RegistrationImageFragment" >
         <action
             android:id="@+id/action_registrationImageFragment_to_registrationNicknameFragment"
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/registrationPetFragment"
-        android:name="com.example.togetherpet.Registration.RegistrationPetFragment"
+        android:name="com.jnu.togetherpet.ui.fragment.registration.RegistrationPetFragment"
         android:label="RegistrationPetFragment" >
         <action
             android:id="@+id/action_registrationPetFragment_to_registrationResidenceFragment"
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/registrationResidenceFragment"
-        android:name="com.example.togetherpet.Registration.RegistrationResidenceFragment"
+        android:name="com.jnu.togetherpet.ui.fragment.registration.RegistrationResidenceFragment"
         android:label="RegistrationResidenceFragment" >
         <action
             android:id="@+id/action_registrationResidenceFragment_to_registrationImageFragment"
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/registrationStartFragment"
-        android:name="com.example.togetherpet.Registration.RegistrationStartFragment"
+        android:name="com.jnu.togetherpet.ui.fragment.registration.RegistrationStartFragment"
         android:label="RegistrationStartFragment" >
         <action
             android:id="@+id/action_registrationStartFragment_to_registrationPetFragment"
@@ -38,6 +38,6 @@
     </fragment>
     <fragment
         android:id="@+id/registrationNicknameFragment"
-        android:name="com.example.togetherpet.Registration.RegistrationNicknameFragment"
+        android:name="com.jnu.togetherpet.ui.fragment.registration.RegistrationNicknameFragment"
         android:label="RegistrationNicknameFragment" />
 </navigation>
