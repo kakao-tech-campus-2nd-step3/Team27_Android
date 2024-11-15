@@ -5,7 +5,7 @@
     android:id="@+id/fragment_searching"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".searching.searchingHome.view.SearchingPetFragment">
+    tools:context=".ui.fragment.searching.SearchingPetFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

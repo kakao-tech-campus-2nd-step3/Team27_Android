@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/walkingPetFragment"
-        android:name="com.jnu.togetherpet.fragment.WalkingPetFragment"
+        android:name="com.jnu.togetherpet.ui.fragment.walking.WalkingPetFragment"
         android:label="fragment_walking_pet"
         tools:layout="@layout/fragment_walking_pet" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/walkingPetResultFragment"
-        android:name="com.jnu.togetherpet.fragment.WalkingPetResultFragment"
+        android:name="com.jnu.togetherpet.ui.fragment.walking.WalkingPetResultFragment"
         android:label="fragment_walking_pet_result"
         tools:layout="@layout/fragment_walking_pet_result" />
 </navigation>

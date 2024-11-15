@@ -16,6 +16,8 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.jnu.togetherpet.R
 import com.jnu.togetherpet.launchFragmentInHiltContainer
+import com.jnu.togetherpet.ui.fragment.registration.RegistrationImageFragment
+import com.jnu.togetherpet.ui.viewmodel.report.RegistrationViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After

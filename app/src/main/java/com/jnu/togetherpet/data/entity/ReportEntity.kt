@@ -12,6 +12,5 @@ data class ReportEntity(
     val description: String?,
     val reporterName: String?,
     val foundDate: String?,
-    //val foundDate: LocalDateTime?
     val isOwnReport: Boolean
 )

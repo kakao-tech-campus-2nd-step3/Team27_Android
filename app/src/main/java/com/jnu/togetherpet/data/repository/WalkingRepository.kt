@@ -6,7 +6,7 @@ import com.jnu.togetherpet.data.datasource.WalkingNetworkSource
 import com.jnu.togetherpet.data.dto.LocationDTO
 import com.jnu.togetherpet.data.dto.WalkingRequestDTO
 import com.jnu.togetherpet.data.entity.WalkEntity
-import com.jnu.togetherpet.testData.entity.WalkingRecord
+import com.jnu.togetherpet.data.entity.WalkingRecord
 import com.kakao.vectormap.LatLng
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,6 +20,7 @@ class WalkingRepository @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val walkingLocalSource : WalkingLocalSource
 ) {
+    // 배포용으로 GPS 기능을 통해 얻은 위치 정보를 데이터베이스에 저장하고 활용하도록 변경
     suspend fun sendWalkingDataToServer(
         distance : Int,
         time : Long,
@@ -55,16 +56,16 @@ class WalkingRepository @Inject constructor(
         try {
             val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-            val walkingResponseDTO = walkingNetworkSource.getWalkingDataWithDate(
+            val walkingResponse = walkingNetworkSource.getWalkingDataWithDate(
                 tokenRepository.getTokenOrThrow(),
                 formattedDate
             )
-            val walkingRecordData =  walkingResponseDTO?.map { walkingResponseDTO ->
+            val walkingRecordData =  walkingResponse?.map { walkingResponseDTO ->
                 val locationList: ArrayList<LatLng> =
                     walkingResponseDTO.locationList.map { locationDTO ->
                         LatLng.from(locationDTO.latitude, locationDTO.longitude)
                     } as ArrayList<LatLng>
-                Log.d("testt", "locationList : ${locationList}")
+                Log.d("testt", "locationList : $locationList")
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 WalkingRecord(
                     walkingResponseDTO.walkDistance.toLong(),
@@ -77,7 +78,7 @@ class WalkingRepository @Inject constructor(
                 )
             }
 
-            Log.d("testt", "walkingRecord : ${walkingRecordData}")
+            Log.d("testt", "walkingRecord : $walkingRecordData")
             return walkingRecordData?.let { ArrayList(it) } ?: arrayListOf()
         } catch (e : Exception){
             return arrayListOf()
@@ -94,10 +95,9 @@ class WalkingRepository @Inject constructor(
                     entity.locationList.map { location ->
                         LatLng.from(location.latitude, location.longitude)
                     } as ArrayList<LatLng>
-                Log.d("testt", "locationList : ${locationList}")
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                Log.d("testt", "locationList : $locationList")
                 WalkingRecord(
-                    entity.walkDistance.toLong(),
+                    entity.walkDistance,
                     date,
                     entity.walkTime,
                     entity.walkStartTime,
@@ -107,7 +107,7 @@ class WalkingRepository @Inject constructor(
                 )
             }
 
-            Log.d("testt", "walkingRecord : ${walkingRecordData}")
+            Log.d("testt", "walkingRecord : $walkingRecordData")
             return walkingRecordData?.let { ArrayList(it) } ?: arrayListOf()
         } catch (e : Exception){
             return arrayListOf()

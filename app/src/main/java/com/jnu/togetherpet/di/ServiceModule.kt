@@ -1,7 +1,7 @@
 package com.jnu.togetherpet.di
 
 import android.content.Context
-import com.jnu.togetherpet.fragment.LocationService
+import com.jnu.togetherpet.ui.fragment.common.LocationService
 import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
