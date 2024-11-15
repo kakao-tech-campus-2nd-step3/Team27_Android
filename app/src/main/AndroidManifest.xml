@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
@@ -20,23 +19,24 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_togetherpet"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_togetherpet_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TogetherPet"
         tools:targetApi="31">
         <activity
-            android:name=".dashboard.view.DashboardActivity"
+            android:name=".ui.activity.dashboard.DashboardActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
-            android:name=".InfoRegistrationActivity"
+            android:name=".ui.fragment.walking.InfoRegistrationActivity"
             android:exported="false" />
         <activity
-            android:name=".Login.LoginActivity"
+            android:name=".ui.activity.login.LoginActivity"
             android:exported="true"/>
         <activity
-            android:name=".SplashActivity"
+            android:name=".ui.activity.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.TogetherPet.Starting">
             <intent-filter>
@@ -61,7 +61,7 @@
         </activity>
 
         <service
-            android:name=".fragment.LocationService"
+            android:name=".ui.fragment.common.LocationService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />

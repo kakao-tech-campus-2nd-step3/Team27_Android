@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    tools:context=".searching.report.view.LocationSelectFragment">
+    tools:context=".ui.fragment.common.LocationSelectFragment">
 
     <com.kakao.vectormap.MapView
         android:id="@+id/find_location_map_view"

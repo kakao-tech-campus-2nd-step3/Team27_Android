@@ -3,14 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:background="@drawable/missing_bottom_sheet">
+    
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/bottom_sheet_line"/>
 
     <TextView
         android:id="@+id/missing_bottom_petName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="60dp"
         android:layout_marginBottom="10dp"
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         android:includeFontPadding="false"
@@ -32,6 +42,7 @@
         android:layout_marginBottom="10dp"
         android:text="@string/missing_bottom_species"
         android:textAppearance="@style/TogetherPetTextSmall"
+        android:includeFontPadding="false"
         app:layout_constraintStart_toStartOf="@id/missing_bottom_petName"
         app:layout_constraintTop_toBottomOf="@id/missing_bottom_petName" />
 
@@ -43,6 +54,7 @@
         android:layout_marginBottom="10dp"
         android:gravity="right"
         android:textAppearance="@style/TogetherPetTextSmall"
+        android:includeFontPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/missing_bottom_petName" />
 
@@ -50,7 +62,8 @@
         android:id="@+id/missing_bottom_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="38dp"
+        android:layout_marginBottom="10dp"
+        android:includeFontPadding="false"
         android:text="@string/missing_bottom_age"
         android:textAppearance="@style/TogetherPetTextSmall"
         app:layout_constraintStart_toStartOf="@id/missing_bottom_species"
@@ -62,6 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="208dp"
         android:layout_marginBottom="10dp"
+        android:includeFontPadding="false"
         android:gravity="right"
         android:textAppearance="@style/TogetherPetTextSmall"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +85,9 @@
         android:id="@+id/missing_bottom_missingPlace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
+        android:includeFontPadding="false"
         android:text="@string/missing_bottom_missingPlace"
         android:textAppearance="@style/TogetherPetTextSmall"
         app:layout_constraintStart_toStartOf="@id/missing_bottom_age"
@@ -81,17 +97,22 @@
         android:id="@+id/missing_bottom_missingPlace_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:includeFontPadding="false"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="10dp"
         android:gravity="right"
         android:textAppearance="@style/TogetherPetTextSmall"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/missing_bottom_age" />
+        app:layout_goneMarginEnd="32dp"
+        app:layout_constraintStart_toStartOf="@id/missing_bottom_missingPlace"
+        app:layout_constraintTop_toTopOf="@id/missing_bottom_missingPlace" />
 
     <TextView
         android:id="@+id/missing_bottom_addInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:layout_marginTop="30dp"
         android:text="@string/missing_bottom_addInfo"
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         app:layout_constraintStart_toStartOf="@id/missing_bottom_missingPlace"
@@ -99,11 +120,14 @@
 
     <TextView
         android:id="@+id/missing_bottom_addInfo_text"
-        android:layout_width="wrap_content"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TogetherPetTextSmall"
+        android:includeFontPadding="false"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="@id/missing_bottom_addInfo"
-        app:layout_constraintTop_toBottomOf="@id/missing_bottom_addInfo" />
+        app:layout_constraintTop_toBottomOf="@id/missing_bottom_addInfo"
+        android:breakStrategy="simple" />
 
     <TextView
         android:id="@+id/myPet_missingRegister_button"

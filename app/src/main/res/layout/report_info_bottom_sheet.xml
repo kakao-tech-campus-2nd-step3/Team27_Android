@@ -3,7 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:background="@drawable/missing_bottom_sheet">
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/bottom_sheet_line"/>
 
     <ImageView
         android:id="@+id/report_info_img"
@@ -12,69 +22,82 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="62dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="fitStart"/>
 
     <TextView
         android:id="@+id/report_info_locationNTime_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
+        android:layout_marginStart="10dp"
         android:text="@string/report_info_locationNTime"
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         app:layout_constraintStart_toEndOf="@id/report_info_img"
-        app:layout_constraintTop_toTopOf="@id/report_info_img" />
+        app:layout_constraintTop_toTopOf="@id/report_info_img"/>
 
     <TextView
         android:id="@+id/report_info_location"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TogetherPetTextSmall"
         app:layout_constraintStart_toStartOf="@id/report_info_locationNTime_title"
-        app:layout_constraintTop_toBottomOf="@id/report_info_locationNTime_title" />
+        app:layout_constraintTop_toBottomOf="@id/report_info_locationNTime_title"
+        android:includeFontPadding="false"
+        android:breakStrategy="simple" />
 
     <TextView
         android:id="@+id/report_info_date"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TogetherPetTextSmall"
         app:layout_constraintStart_toStartOf="@id/report_info_location"
-        app:layout_constraintTop_toBottomOf="@id/report_info_location" />
+        app:layout_constraintTop_toBottomOf="@id/report_info_location"
+        android:includeFontPadding="false"
+        android:breakStrategy="simple" />
 
     <TextView
         android:id="@+id/report_info_infoTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="25dp"
         android:includeFontPadding="false"
         android:text="@string/report_info_info"
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         app:layout_constraintStart_toStartOf="@id/report_info_location"
-        app:layout_constraintTop_toBottomOf="@id/report_info_location" />
+        app:layout_constraintTop_toBottomOf="@id/report_info_date" />
 
     <TextView
         android:id="@+id/report_info_infoText"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TogetherPetTextSmall"
         app:layout_constraintStart_toStartOf="@id/report_info_infoTitle"
-        app:layout_constraintTop_toBottomOf="@id/report_info_infoTitle" />
+        app:layout_constraintTop_toBottomOf="@id/report_info_infoTitle"
+        android:includeFontPadding="false"
+        android:breakStrategy="simple" />
 
     <TextView
         android:id="@+id/report_info_nickName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="25dp"
         android:text="@string/report_info_nickName"
         android:textAppearance="@style/TogetherPetTextHeadingLarge"
         app:layout_constraintStart_toStartOf="@id/report_info_infoText"
-        app:layout_constraintTop_toBottomOf="@id/report_info_infoText" />
+        app:layout_constraintTop_toBottomOf="@id/report_info_infoText"
+        android:includeFontPadding="false" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/report_info_nickNameText"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/report_info_nickName"
-        app:layout_constraintTop_toBottomOf="@id/report_info_nickName" />
+        app:layout_constraintTop_toBottomOf="@id/report_info_nickName"
+        android:layout_marginBottom="10dp"
+        android:includeFontPadding="false"
+        app:layout_goneMarginBottom="20dp"
+        android:breakStrategy="simple" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
