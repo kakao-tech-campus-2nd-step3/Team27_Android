@@ -141,7 +141,10 @@ class HomeFragment : Fragment() {
     private fun fetchMissingData() {
         viewLifecycleOwner.lifecycleScope.launch {
             if (latitude != 0.0 && longitude != 0.0) {
-                reportDataViewModel.fetchMissingReports(latitude, longitude)
+                reportDataViewModel.fetchMissingReports(
+                    reportDataViewModel.centerPos.value.latitude,
+                    reportDataViewModel.centerPos.value.longitude
+                )
             } else {
                 Log.d("HomeFragment", "위치 정보가 없습니다.")
             }

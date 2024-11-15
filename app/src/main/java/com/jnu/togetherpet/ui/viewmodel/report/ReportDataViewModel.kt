@@ -8,11 +8,13 @@ import com.jnu.togetherpet.data.entity.ReportEntity
 import com.jnu.togetherpet.data.repository.MissingRepository
 import com.jnu.togetherpet.data.repository.ReportRepository
 import com.jnu.togetherpet.ui.fragment.searching.enums.ButtonType
+import com.kakao.vectormap.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,6 +44,9 @@ class ReportDataViewModel @Inject constructor(
 
     private val _suspectedDetail = MutableStateFlow<ReportEntity?>(null)
     val suspectedDetail: StateFlow<ReportEntity?> = _suspectedDetail
+
+    private val _centerPos = MutableStateFlow<LatLng>(LatLng.from(0.0, 0.0))
+    val centerPos get() = _centerPos.asStateFlow()
 
     fun updateSelectedBtn(buttonType: ButtonType) {
         _selectedButton.value = buttonType
@@ -78,6 +83,9 @@ class ReportDataViewModel @Inject constructor(
         }
     }
 
+    fun setCenterPos(latitude: Double, longitude: Double){
+        _centerPos.value = LatLng.from(latitude, longitude)
+    }
     //근처 실종 정보 자세한 정보 가져 오기
     fun fetchMissingDetails(missingId:Long){
         Log.d("child","Missing Detail Fetch")
